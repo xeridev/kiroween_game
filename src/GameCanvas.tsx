@@ -1,13 +1,45 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import * as PIXI from "pixi.js";
 import type { PetTraits, PetStage } from "./types";
 import { logError } from "./errorLogger";
+import "./GameCanvas.css";
 
 interface GameCanvasProps {
   traits: PetTraits;
   stage: PetStage;
   sanity: number;
   corruption: number;
+}
+
+// Mobile breakpoint constant
+const MOBILE_BREAKPOINT = 768;
+// Minimum canvas dimensions to prevent rendering issues
+const MIN_CANVAS_WIDTH = 320;
+const MIN_CANVAS_HEIGHT = 240;
+
+/**
+ * Calculate canvas dimensions based on viewport size
+ * Desktop (>768px): 50vw × 70vh
+ * Mobile (≤768px): 100vw × 50vh
+ */
+export function calculateCanvasSize(): { width: number; height: number } {
+  const viewportWidth = window.innerWidth;
+  const viewportHeight = window.innerHeight;
+  const isMobile = viewportWidth <= MOBILE_BREAKPOINT;
+
+  const width = isMobile
+    ? viewportWidth // 100vw on mobile
+    : viewportWidth * 0.5; // 50vw on desktop
+
+  const height = isMobile
+    ? viewportHeight * 0.5 // 50vh on mobile
+    : viewportHeight * 0.7; // 70vh on desktop
+
+  // Enforce minimum dimensions
+  return {
+    width: Math.max(width, MIN_CANVAS_WIDTH),
+    height: Math.max(height, MIN_CANVAS_HEIGHT),
+  };
 }
 
 export function GameCanvas({
@@ -20,18 +52,56 @@ export function GameCanvas({
   const appRef = useRef<PIXI.Application | null>(null);
   const petGraphicsRef = useRef<PIXI.Graphics | null>(null);
   const animationTimeRef = useRef<number>(0);
+  const resizeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [renderError, setRenderError] = useState<string | null>(null);
+  const [canvasSize, setCanvasSize] = useState(calculateCanvasSize);
+
+  // Debounced resize handler to prevent rapid successive calls
+  const handleResize = useCallback(() => {
+    // Clear any pending resize timeout
+    if (resizeTimeoutRef.current) {
+      clearTimeout(resizeTimeoutRef.current);
+    }
+
+    // Debounce resize by 100ms
+    resizeTimeoutRef.current = setTimeout(() => {
+      const newSize = calculateCanvasSize();
+      setCanvasSize(newSize);
+
+      if (appRef.current) {
+        try {
+          // Update PixiJS renderer dimensions
+          appRef.current.renderer.resize(newSize.width, newSize.height);
+
+          // Recenter pet graphics after resize
+          if (petGraphicsRef.current) {
+            petGraphicsRef.current.x = newSize.width / 2;
+            petGraphicsRef.current.y = newSize.height / 2;
+          }
+        } catch (error) {
+          logError(
+            "Error during canvas resize",
+            error instanceof Error ? error : undefined,
+            { width: newSize.width, height: newSize.height }
+          );
+        }
+      }
+    }, 100);
+  }, []);
 
   useEffect(() => {
     if (!canvasRef.current) return;
+
+    // Get initial canvas size
+    const initialSize = calculateCanvasSize();
 
     // Initialize PixiJS application
     const app = new PIXI.Application();
 
     app
       .init({
-        width: 800,
-        height: 600,
+        width: initialSize.width,
+        height: initialSize.height,
         backgroundColor: 0x1a1a1a,
         antialias: true,
         resolution: window.devicePixelRatio || 1,
@@ -42,7 +112,7 @@ export function GameCanvas({
           canvasRef.current.appendChild(app.canvas);
           appRef.current = app;
 
-          // Create pet graphics
+          // Create pet graphics centered in canvas
           const petGraphics = new PIXI.Graphics();
           petGraphics.x = app.screen.width / 2;
           petGraphics.y = app.screen.height / 2;
@@ -74,31 +144,22 @@ export function GameCanvas({
         setRenderError("Failed to initialize graphics renderer");
       });
 
-    // Handle window resize
-    const handleResize = () => {
-      if (appRef.current && canvasRef.current) {
-        const parent = canvasRef.current;
-        appRef.current.renderer.resize(parent.clientWidth, parent.clientHeight);
-
-        // Recenter pet
-        if (petGraphicsRef.current) {
-          petGraphicsRef.current.x = appRef.current.screen.width / 2;
-          petGraphicsRef.current.y = appRef.current.screen.height / 2;
-        }
-      }
-    };
-
+    // Add resize event listener with debouncing
     window.addEventListener("resize", handleResize);
 
     // Cleanup
     return () => {
       window.removeEventListener("resize", handleResize);
+      // Clear any pending resize timeout
+      if (resizeTimeoutRef.current) {
+        clearTimeout(resizeTimeoutRef.current);
+      }
       if (appRef.current) {
         appRef.current.destroy(true, { children: true });
         appRef.current = null;
       }
     };
-  }, []);
+  }, [handleResize]);
 
   // Update pet graphics when props change
   useEffect(() => {
@@ -314,16 +375,14 @@ export function GameCanvas({
   return (
     <div
       ref={canvasRef}
+      className="game-canvas-container"
       role="img"
       aria-label={`${traits.name}, a ${
         traits.archetype
       } pet at ${stage} stage. Sanity: ${sanity.toFixed(0)}%`}
       style={{
-        width: "100%",
-        height: "100%",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
+        width: canvasSize.width,
+        height: canvasSize.height,
       }}
     />
   );

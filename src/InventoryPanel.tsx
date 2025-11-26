@@ -1,4 +1,3 @@
-import { useState } from "react";
 import type { Offering } from "./types";
 import "./InventoryPanel.css";
 
@@ -15,8 +14,6 @@ export function InventoryPanel({
   canScavenge,
   onScavenge,
 }: InventoryPanelProps) {
-  const [hoveredItemId, setHoveredItemId] = useState<string | null>(null);
-
   const maxInventory = 3;
   const currentCount = inventory.length;
 
@@ -32,34 +29,33 @@ export function InventoryPanel({
         </span>
       </div>
 
-      <div className="inventory-grid" role="list" aria-label="Inventory items">
+      <div className="inventory-cards" role="list" aria-label="Inventory items">
         {inventory.length === 0 ? (
           <div className="empty-inventory" role="status">
             No offerings found
           </div>
         ) : (
           inventory.map((offering) => (
-            <button
+            <div
               key={offering.id}
-              className="inventory-item"
+              className="offering-card"
               onClick={() => onFeed(offering.id)}
-              onMouseEnter={() => setHoveredItemId(offering.id)}
-              onMouseLeave={() => setHoveredItemId(null)}
-              onFocus={() => setHoveredItemId(offering.id)}
-              onBlur={() => setHoveredItemId(null)}
-              role="listitem"
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  onFeed(offering.id);
+                }
+              }}
+              tabIndex={0}
+              role="button"
               aria-label={`Feed offering: ${offering.description}`}
-              title={offering.description}
             >
-              <span className="item-icon" aria-hidden="true">
+              <div className="card-icon" aria-hidden="true">
                 {offering.icon}
-              </span>
-              {hoveredItemId === offering.id && (
-                <div className="item-tooltip" role="tooltip">
-                  {offering.description}
-                </div>
-              )}
-            </button>
+              </div>
+              <div className="card-title">Mystery Item</div>
+              <div className="card-description">{offering.description}</div>
+            </div>
           ))
         )}
       </div>

@@ -58,12 +58,12 @@ describe("Accessibility Features", () => {
       const region = screen.getByRole("region", { name: "Inventory" });
       expect(region).toBeInTheDocument();
 
-      // Check inventory items are keyboard accessible buttons
-      const itemButton = screen.getByRole("listitem", {
+      // Check inventory cards are keyboard accessible buttons
+      const itemButton = screen.getByRole("button", {
         name: /Feed offering: A glowing orb/i,
       });
       expect(itemButton).toBeInTheDocument();
-      expect(itemButton.tagName).toBe("BUTTON");
+      expect(itemButton).toHaveAttribute("tabindex", "0");
     });
 
     it("should have accessible scavenge button", () => {

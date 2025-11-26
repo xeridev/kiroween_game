@@ -1,0 +1,1057 @@
+/* =============================================================================
+   THEME SYSTEM - Stage-Responsive CSS Custom Properties
+   
+   This file defines all CSS custom properties for the 4 pet stages:
+   EGG → BABY → TEEN → ABOMINATION
+   
+   Plus sanity-based overrides when sanity < 30
+   ============================================================================= */
+
+/* -----------------------------------------------------------------------------
+   Default/Fallback Values (used when no data-stage is set)
+   ----------------------------------------------------------------------------- */
+:root {
+  /* Typography */
+  --font-primary: "Fredoka One", cursive;
+  --font-body: "Quicksand", sans-serif;
+  --font-log: "Comic Neue", cursive;
+
+  /* Colors */
+  --bg-primary: linear-gradient(135deg, #fff5f7 0%, #ffe6f0 100%);
+  --bg-secondary: #e8d5ff;
+  --accent-primary: #ffb3d9;
+  --accent-safe: #b8e0d2;
+  --accent-danger: #ff6b6b;
+  --text-primary: #4a4a68;
+  --text-glitch: #00ffff;
+
+  /* Visual Effects */
+  --border-style: 4px solid #d4a5d4;
+  --border-radius: 25px;
+  --shadow: 0 8px 24px rgba(255, 183, 217, 0.4);
+
+  /* Stat Bars */
+  --stat-hunger-gradient: linear-gradient(90deg, #b8e0d2 0%, #ffb3d9 100%);
+  --stat-sanity-gradient: linear-gradient(90deg, #d4a5d4 0%, #b8e0d2 100%);
+
+  /* Decorations */
+  --decoration: "✨🎀🌸";
+
+  /* Log Background */
+  --log-bg-color: #fff5f7;
+  --log-line-color: rgba(212, 165, 212, 0.3);
+}
+
+/* -----------------------------------------------------------------------------
+   EGG Stage - Cutesy Theme
+   Pastel pink/lavender, Fredoka One, rounded borders, soft shadows
+   ----------------------------------------------------------------------------- */
+[data-stage="EGG"] {
+  /* Typography */
+  --font-primary: "Fredoka One", cursive;
+  --font-body: "Quicksand", sans-serif;
+  --font-log: "Comic Neue", cursive;
+
+  /* Colors */
+  --bg-primary: linear-gradient(135deg, #fff5f7 0%, #ffe6f0 100%);
+  --bg-secondary: #e8d5ff;
+  --accent-primary: #ffb3d9;
+  --accent-safe: #b8e0d2;
+  --accent-danger: #ff6b6b;
+  --text-primary: #4a4a68;
+  --text-glitch: #00ffff;
+
+  /* Visual Effects */
+  --border-style: 4px solid #d4a5d4;
+  --border-radius: 25px;
+  --shadow: 0 8px 24px rgba(255, 183, 217, 0.4);
+
+  /* Stat Bars */
+  --stat-hunger-gradient: linear-gradient(90deg, #b8e0d2 0%, #ffb3d9 100%);
+  --stat-sanity-gradient: linear-gradient(90deg, #d4a5d4 0%, #b8e0d2 100%);
+
+  /* Decorations */
+  --decoration: "✨🎀🌸";
+
+  /* Log Background */
+  --log-bg-color: #fff5f7;
+  --log-line-color: rgba(212, 165, 212, 0.3);
+}
+
+/* -----------------------------------------------------------------------------
+   BABY Stage - Cute with Unease Theme
+   Deeper lavender, Baloo 2, purple accents, slightly bolder
+   ----------------------------------------------------------------------------- */
+[data-stage="BABY"] {
+  /* Typography */
+  --font-primary: "Baloo 2", cursive;
+  --font-body: "Nunito", sans-serif;
+  --font-log: "Patrick Hand", cursive;
+
+  /* Colors */
+  --bg-primary: linear-gradient(135deg, #e8d5ff 0%, #d4b8e0 100%);
+  --bg-secondary: #c8a8d8;
+  --accent-primary: #ff9ec7;
+  --accent-safe: #a0d8c0;
+  --accent-danger: #ff8080;
+  --text-primary: #3a3a58;
+  --text-glitch: #00ffff;
+
+  /* Visual Effects */
+  --border-style: 4px solid #b8a0c8;
+  --border-radius: 20px;
+  --shadow: 0 10px 30px rgba(212, 165, 212, 0.5);
+
+  /* Stat Bars */
+  --stat-hunger-gradient: linear-gradient(
+    90deg,
+    #a0d8c0 0%,
+    #ff9ec7 50%,
+    #ffb380 100%
+  );
+  --stat-sanity-gradient: linear-gradient(90deg, #b8a0c8 0%, #a0d8c0 100%);
+
+  /* Decorations */
+  --decoration: "✨🌙💫";
+
+  /* Log Background */
+  --log-bg-color: #f0e6f5;
+  --log-line-color: rgba(184, 160, 200, 0.4);
+}
+
+/* -----------------------------------------------------------------------------
+   TEEN Stage - Unsettling Theme
+   Dark purple, Creepster, magenta borders, glitch effects
+   ----------------------------------------------------------------------------- */
+[data-stage="TEEN"] {
+  /* Typography */
+  --font-primary: "Creepster", cursive;
+  --font-body: "Special Elite", monospace;
+  --font-log: "Courier Prime", monospace;
+
+  /* Colors */
+  --bg-primary: linear-gradient(135deg, #3a2a4a 0%, #2a1a3a 100%);
+  --bg-secondary: #1a0f2a;
+  --accent-primary: #ff6b9d;
+  --accent-safe: #6ba080;
+  --accent-danger: #ff4444;
+  --text-primary: #e0d0e0;
+  --text-glitch: #00ffff;
+
+  /* Visual Effects */
+  --border-style: 3px solid #8b4a7a;
+  --border-radius: 12px;
+  --shadow: 0 12px 40px rgba(139, 0, 0, 0.6);
+
+  /* Stat Bars */
+  --stat-hunger-gradient: linear-gradient(
+    90deg,
+    #6ba080 0%,
+    #ffa07a 50%,
+    #ff6b6b 100%
+  );
+  --stat-sanity-gradient: linear-gradient(
+    90deg,
+    #8b0000 0%,
+    #ffa07a 50%,
+    #d4a5d4 100%
+  );
+
+  /* Decorations */
+  --decoration: "🕷️💀🩸";
+
+  /* Log Background */
+  --log-bg-color: #1a0f2a;
+  --log-line-color: rgba(139, 74, 122, 0.5);
+}
+
+/* -----------------------------------------------------------------------------
+   ABOMINATION Stage - Full Horror Theme
+   Near-black, Nosifer, blood-red accents, glowing shadows
+   ----------------------------------------------------------------------------- */
+[data-stage="ABOMINATION"] {
+  /* Typography */
+  --font-primary: "Nosifer", cursive;
+  --font-body: "Creepster", cursive;
+  --font-log: "Special Elite", monospace;
+
+  /* Colors */
+  --bg-primary: linear-gradient(135deg, #1a0f1f 0%, #0a0010 100%);
+  --bg-secondary: #000000;
+  --accent-primary: #8b0000;
+  --accent-safe: #2a5a3a;
+  --accent-danger: #39ff14;
+  --text-primary: #ff00ff;
+  --text-glitch: #00ffff;
+
+  /* Visual Effects */
+  --border-style: 2px solid #8b0000;
+  --border-radius: 4px;
+  --shadow: 0 0 60px rgba(139, 0, 0, 1), 0 0 100px rgba(57, 255, 20, 0.5);
+
+  /* Stat Bars */
+  --stat-hunger-gradient: linear-gradient(90deg, #8b0000 0%, #ff0000 100%);
+  --stat-sanity-gradient: linear-gradient(90deg, #8b0000 0%, #39ff14 100%);
+
+  /* Decorations */
+  --decoration: "👁️🩸💀";
+
+  /* Log Background */
+  --log-bg-color: #0a0010;
+  --log-line-color: rgba(139, 0, 0, 0.6);
+}
+
+/* -----------------------------------------------------------------------------
+   Sanity Override - Critical State (sanity < 30)
+   Additional glitch effects regardless of stage
+   ----------------------------------------------------------------------------- */
+[data-sanity="critical"] {
+  /* Intensified visual effects */
+  --shadow: 0 0 40px rgba(139, 0, 0, 0.8), 0 0 80px rgba(0, 255, 255, 0.3);
+
+  /* Glitch text color override */
+  --text-glitch: #ff0000;
+}
+
+/* Sanity critical combined with specific stages for enhanced effects */
+[data-sanity="critical"][data-stage="EGG"] {
+  --shadow: 0 8px 24px rgba(255, 183, 217, 0.4), 0 0 20px rgba(139, 0, 0, 0.3);
+}
+
+[data-sanity="critical"][data-stage="BABY"] {
+  --shadow: 0 10px 30px rgba(212, 165, 212, 0.5), 0 0 30px rgba(139, 0, 0, 0.4);
+}
+
+[data-sanity="critical"][data-stage="TEEN"] {
+  --shadow: 0 12px 40px rgba(139, 0, 0, 0.8), 0 0 50px rgba(0, 255, 255, 0.4);
+}
+
+[data-sanity="critical"][data-stage="ABOMINATION"] {
+  --shadow: 0 0 80px rgba(139, 0, 0, 1), 0 0 120px rgba(57, 255, 20, 0.7),
+    0 0 150px rgba(255, 0, 255, 0.5);
+}
+
+/* -----------------------------------------------------------------------------
+   Theme Transitions
+   Smooth 0.5s transitions for theme property changes
+   ----------------------------------------------------------------------------- */
+[data-stage] {
+  transition: background 0.5s ease-in-out, color 0.5s ease-in-out,
+    border-color 0.5s ease-in-out, box-shadow 0.5s ease-in-out;
+}
+
+
+/* =============================================================================
+   STAGE-SPECIFIC ANIMATIONS
+   Hardware-accelerated animations using only transform and opacity
+   
+   Performance Notes:
+   - Primary animations use transform/opacity for GPU acceleration
+   - Some effects (text-shadow, filter, clip-path) are used sparingly for visual impact
+   - will-change hints are applied to frequently animated elements
+   - Mobile and reduced-motion overrides disable intensive animations
+   ============================================================================= */
+
+/* -----------------------------------------------------------------------------
+   Performance Optimization: will-change hints
+   Applied to elements that are frequently animated
+   ----------------------------------------------------------------------------- */
+[data-stage] .canvas-container,
+[data-stage] .game-canvas,
+[data-stage] .offering-card,
+[data-stage] .stat-bar,
+[data-stage] .stat-fill,
+[data-stage] .log-entry,
+[data-stage] .narrative-entry {
+  will-change: transform, opacity;
+}
+
+[data-stage="TEEN"] .ui-overlay,
+[data-stage="TEEN"] .stats-panel,
+[data-stage="TEEN"] .log-panel,
+[data-stage="ABOMINATION"] .ui-overlay,
+[data-stage="ABOMINATION"] .stats-panel,
+[data-stage="ABOMINATION"] .log-panel {
+  will-change: transform, filter;
+}
+
+[data-stage="ABOMINATION"]::before {
+  will-change: background-position, opacity;
+}
+
+/* -----------------------------------------------------------------------------
+   EGG Stage Animations - Gentle, Playful
+   Requirements: 6.1, 6.2, 6.3, 6.4
+   ----------------------------------------------------------------------------- */
+
+/* Gentle floating motion - translateY oscillation over 4 seconds */
+@keyframes gentle-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+/* Sparkle twinkle effect - opacity/scale/rotate variations */
+@keyframes sparkle-twinkle {
+  0%,
+  100% {
+    opacity: 0.6;
+    transform: scale(1) rotate(0deg);
+  }
+  25% {
+    opacity: 1;
+    transform: scale(1.2) rotate(15deg);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(0.9) rotate(-10deg);
+  }
+  75% {
+    opacity: 1;
+    transform: scale(1.1) rotate(5deg);
+  }
+}
+
+/* Stat bar calm pulse - brightness changes over 3 seconds */
+@keyframes stat-pulse-calm {
+  0%,
+  100% {
+    filter: brightness(1);
+  }
+  50% {
+    filter: brightness(1.15);
+  }
+}
+
+/* Button bounce on hover - scale transformation over 0.6s */
+@keyframes button-bounce {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  30% {
+    transform: scale(1.15);
+  }
+  50% {
+    transform: scale(0.95);
+  }
+  70% {
+    transform: scale(1.05);
+  }
+}
+
+/* Apply EGG stage animations */
+[data-stage="EGG"] .canvas-container,
+[data-stage="EGG"] .game-canvas {
+  animation: gentle-float 4s ease-in-out infinite;
+}
+
+[data-stage="EGG"] .decoration::before,
+[data-stage="EGG"] .sparkle {
+  animation: sparkle-twinkle 2s ease-in-out infinite;
+}
+
+[data-stage="EGG"] .stat-bar,
+[data-stage="EGG"] .stat-fill {
+  animation: stat-pulse-calm 3s ease-in-out infinite;
+}
+
+[data-stage="EGG"] button:hover,
+[data-stage="EGG"] .offering-card:hover,
+[data-stage="EGG"] .scavenge-button:hover {
+  animation: button-bounce 0.6s ease-in-out;
+}
+
+
+/* -----------------------------------------------------------------------------
+   BABY Stage Animations - Playful with Subtle Unease
+   Requirements: 7.1, 7.2, 7.3
+   ----------------------------------------------------------------------------- */
+
+/* Baby wobble - rotation oscillation over 2 seconds */
+@keyframes baby-wobble {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(3deg);
+  }
+  75% {
+    transform: rotate(-3deg);
+  }
+}
+
+/* Heartbeat effect - scale pulsing at 2-second intervals */
+@keyframes heartbeat {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  14% {
+    transform: scale(1.08);
+  }
+  28% {
+    transform: scale(1);
+  }
+  42% {
+    transform: scale(1.12);
+  }
+  56% {
+    transform: scale(1);
+  }
+}
+
+/* Slide in from right - translateX animation over 0.4s */
+@keyframes slide-in-right {
+  0% {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* Apply BABY stage animations */
+[data-stage="BABY"] .offering-card,
+[data-stage="BABY"] .inventory-item {
+  animation: baby-wobble 2s ease-in-out infinite;
+}
+
+[data-stage="BABY"] .stat-bar,
+[data-stage="BABY"] .stat-fill {
+  animation: heartbeat 2s ease-in-out infinite;
+}
+
+[data-stage="BABY"] .log-entry {
+  animation: slide-in-right 0.4s ease-out;
+}
+
+[data-stage="BABY"] .narrative-entry {
+  animation: slide-in-right 0.4s ease-out;
+}
+
+
+/* -----------------------------------------------------------------------------
+   TEEN Stage Animations - Erratic, Glitchy
+   Requirements: 8.1, 8.2, 8.3, 8.4
+   ----------------------------------------------------------------------------- */
+
+/* Horizontal glitch - translateX/skew/hue-rotate over 8 seconds */
+@keyframes glitch-horizontal {
+  0%,
+  100% {
+    transform: translateX(0) skewX(0deg);
+    filter: hue-rotate(0deg);
+  }
+  10% {
+    transform: translateX(-2px) skewX(0.5deg);
+    filter: hue-rotate(10deg);
+  }
+  20% {
+    transform: translateX(2px) skewX(-0.5deg);
+    filter: hue-rotate(-10deg);
+  }
+  30% {
+    transform: translateX(0) skewX(0deg);
+    filter: hue-rotate(0deg);
+  }
+  40% {
+    transform: translateX(3px) skewX(1deg);
+    filter: hue-rotate(20deg);
+  }
+  50% {
+    transform: translateX(-3px) skewX(-1deg);
+    filter: hue-rotate(-20deg);
+  }
+  60% {
+    transform: translateX(0) skewX(0deg);
+    filter: hue-rotate(0deg);
+  }
+  70% {
+    transform: translateX(-1px) skewX(0.3deg);
+    filter: hue-rotate(5deg);
+  }
+  80% {
+    transform: translateX(1px) skewX(-0.3deg);
+    filter: hue-rotate(-5deg);
+  }
+  90% {
+    transform: translateX(0) skewX(0deg);
+    filter: hue-rotate(0deg);
+  }
+}
+
+/* Stat flicker - opacity changes every 5 seconds */
+@keyframes stat-flicker {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  5% {
+    opacity: 0.8;
+  }
+  10% {
+    opacity: 1;
+  }
+  15% {
+    opacity: 0.6;
+  }
+  20% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 1;
+  }
+  52% {
+    opacity: 0.4;
+  }
+  54% {
+    opacity: 1;
+  }
+  80% {
+    opacity: 1;
+  }
+  82% {
+    opacity: 0.7;
+  }
+  84% {
+    opacity: 1;
+  }
+}
+
+/* Text distort - chromatic aberration using multi-colored text shadows over 3s */
+@keyframes text-distort {
+  0%,
+  100% {
+    text-shadow: 0 0 0 transparent;
+  }
+  25% {
+    text-shadow: -2px 0 #ff00ff, 2px 0 #00ffff;
+  }
+  50% {
+    text-shadow: 2px 0 #ff00ff, -2px 0 #00ffff;
+  }
+  75% {
+    text-shadow: -1px 0 #ff00ff, 1px 0 #00ffff, 0 1px #ffff00;
+  }
+}
+
+/* Crack spread - clip-path transformation over 10 seconds */
+@keyframes crack-spread {
+  0%,
+  100% {
+    clip-path: inset(0 0 0 0);
+  }
+  25% {
+    clip-path: polygon(
+      0 0,
+      100% 0,
+      100% 100%,
+      0 100%,
+      0 50%,
+      2% 48%,
+      0 46%
+    );
+  }
+  50% {
+    clip-path: polygon(
+      0 0,
+      100% 0,
+      98% 30%,
+      100% 32%,
+      100% 100%,
+      0 100%,
+      0 50%,
+      3% 48%,
+      0 46%
+    );
+  }
+  75% {
+    clip-path: polygon(
+      0 0,
+      100% 0,
+      97% 30%,
+      100% 33%,
+      100% 100%,
+      0 100%,
+      0 50%,
+      4% 47%,
+      0 44%
+    );
+  }
+}
+
+/* Apply TEEN stage animations */
+[data-stage="TEEN"] .ui-overlay,
+[data-stage="TEEN"] .stats-panel,
+[data-stage="TEEN"] .log-panel {
+  animation: glitch-horizontal 8s ease-in-out infinite;
+}
+
+[data-stage="TEEN"] .stat-bar,
+[data-stage="TEEN"] .stat-fill {
+  animation: stat-flicker 5s linear infinite;
+}
+
+[data-stage="TEEN"] h1,
+[data-stage="TEEN"] h2,
+[data-stage="TEEN"] .pet-name,
+[data-stage="TEEN"] .stage-indicator {
+  animation: text-distort 3s ease-in-out infinite;
+}
+
+[data-stage="TEEN"] .canvas-container,
+[data-stage="TEEN"] .game-canvas-wrapper {
+  animation: crack-spread 10s ease-in-out infinite;
+}
+
+
+/* -----------------------------------------------------------------------------
+   ABOMINATION Stage Animations - Violent, Chaotic
+   Requirements: 9.1, 9.2, 9.3, 9.4, 9.5
+   ----------------------------------------------------------------------------- */
+
+/* Violent shake - translate/rotate over 0.5 seconds */
+@keyframes violent-shake {
+  0%,
+  100% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  10% {
+    transform: translate(-4px, -2px) rotate(-1deg);
+  }
+  20% {
+    transform: translate(4px, 2px) rotate(1deg);
+  }
+  30% {
+    transform: translate(-3px, 3px) rotate(-0.5deg);
+  }
+  40% {
+    transform: translate(3px, -3px) rotate(0.5deg);
+  }
+  50% {
+    transform: translate(-2px, 2px) rotate(-1deg);
+  }
+  60% {
+    transform: translate(2px, -2px) rotate(1deg);
+  }
+  70% {
+    transform: translate(-4px, 1px) rotate(-0.5deg);
+  }
+  80% {
+    transform: translate(4px, -1px) rotate(0.5deg);
+  }
+  90% {
+    transform: translate(-1px, 2px) rotate(0deg);
+  }
+}
+
+/* Chromatic aberration - multi-color text-shadow over 1 second */
+@keyframes chromatic-aberration {
+  0%,
+  100% {
+    text-shadow: -2px 0 #ff0000, 2px 0 #00ffff, 0 2px #ff00ff;
+  }
+  25% {
+    text-shadow: 2px 0 #ff0000, -2px 0 #00ffff, 0 -2px #ff00ff;
+  }
+  50% {
+    text-shadow: -3px 1px #ff0000, 3px -1px #00ffff, 1px 3px #ff00ff;
+  }
+  75% {
+    text-shadow: 3px -1px #ff0000, -3px 1px #00ffff, -1px -3px #ff00ff;
+  }
+}
+
+/* Blood drip - clip-path/blur over 2 seconds */
+@keyframes blood-drip {
+  0% {
+    clip-path: inset(0 0 0 0);
+    filter: blur(0);
+  }
+  25% {
+    clip-path: polygon(
+      0 0,
+      100% 0,
+      100% 100%,
+      80% 100%,
+      78% 105%,
+      76% 100%,
+      50% 100%,
+      48% 108%,
+      46% 100%,
+      20% 100%,
+      18% 103%,
+      16% 100%,
+      0 100%
+    );
+    filter: blur(0.5px);
+  }
+  50% {
+    clip-path: polygon(
+      0 0,
+      100% 0,
+      100% 100%,
+      80% 100%,
+      78% 110%,
+      76% 100%,
+      50% 100%,
+      48% 115%,
+      46% 100%,
+      20% 100%,
+      18% 108%,
+      16% 100%,
+      0 100%
+    );
+    filter: blur(0.3px);
+  }
+  75% {
+    clip-path: polygon(
+      0 0,
+      100% 0,
+      100% 100%,
+      80% 100%,
+      78% 105%,
+      76% 100%,
+      50% 100%,
+      48% 110%,
+      46% 100%,
+      20% 100%,
+      18% 105%,
+      16% 100%,
+      0 100%
+    );
+    filter: blur(0.2px);
+  }
+  100% {
+    clip-path: inset(0 0 0 0);
+    filter: blur(0);
+  }
+}
+
+/* VHS static - background-position/opacity over 0.2 seconds */
+@keyframes vhs-static {
+  0% {
+    background-position: 0 0;
+    opacity: 0.03;
+  }
+  25% {
+    background-position: -5% 5%;
+    opacity: 0.05;
+  }
+  50% {
+    background-position: 5% -5%;
+    opacity: 0.02;
+  }
+  75% {
+    background-position: -3% -3%;
+    opacity: 0.04;
+  }
+  100% {
+    background-position: 3% 3%;
+    opacity: 0.03;
+  }
+}
+
+/* Eye appear - opacity/scale over 5 seconds */
+@keyframes eye-appear {
+  0%,
+  80%,
+  100% {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  85% {
+    opacity: 0.8;
+    transform: scale(1.2);
+  }
+  90% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  95% {
+    opacity: 0.6;
+    transform: scale(1.1);
+  }
+}
+
+/* Apply ABOMINATION stage animations */
+[data-stage="ABOMINATION"] body,
+[data-stage="ABOMINATION"].app {
+  animation: violent-shake 0.5s ease-in-out infinite;
+}
+
+[data-stage="ABOMINATION"] h1,
+[data-stage="ABOMINATION"] h2,
+[data-stage="ABOMINATION"] .pet-name,
+[data-stage="ABOMINATION"] .stage-indicator,
+[data-stage="ABOMINATION"] .stat-label {
+  animation: chromatic-aberration 1s linear infinite;
+}
+
+[data-stage="ABOMINATION"] .stat-bar,
+[data-stage="ABOMINATION"] .stat-fill {
+  animation: blood-drip 2s ease-in-out infinite;
+}
+
+/* VHS static overlay using ::before pseudo-element on body */
+[data-stage="ABOMINATION"]::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 9999;
+  background: repeating-linear-gradient(
+      0deg,
+      rgba(0, 0, 0, 0.1) 0px,
+      rgba(0, 0, 0, 0.1) 1px,
+      transparent 1px,
+      transparent 2px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      rgba(255, 0, 0, 0.03) 0px,
+      rgba(0, 255, 0, 0.03) 1px,
+      rgba(0, 0, 255, 0.03) 2px,
+      transparent 3px
+    );
+  animation: vhs-static 0.2s steps(4) infinite;
+}
+
+/* Eye blink effects in UI corners */
+[data-stage="ABOMINATION"] .stats-panel::after,
+[data-stage="ABOMINATION"] .log-panel::after {
+  content: "👁️";
+  position: absolute;
+  font-size: 2rem;
+  animation: eye-appear 5s ease-in-out infinite;
+  pointer-events: none;
+}
+
+[data-stage="ABOMINATION"] .stats-panel::after {
+  top: 10px;
+  right: 10px;
+  animation-delay: 0s;
+}
+
+[data-stage="ABOMINATION"] .log-panel::after {
+  bottom: 10px;
+  left: 10px;
+  animation-delay: 2.5s;
+}
+
+/* Glitch effect on inventory cards for ABOMINATION hover */
+[data-stage="ABOMINATION"] .offering-card:hover {
+  animation: glitch-horizontal 0.3s ease-in-out infinite;
+}
+
+
+/* -----------------------------------------------------------------------------
+   Sanity-Based Animation Overrides (sanity < 30)
+   Additional glitch effects regardless of stage
+   Requirements: 10.1, 10.2, 10.3
+   ----------------------------------------------------------------------------- */
+
+/* Apply glitch-horizontal to UI overlay when sanity is critical */
+[data-sanity="critical"] .ui-overlay,
+[data-sanity="critical"] .stats-panel,
+[data-sanity="critical"] .log-panel {
+  animation: glitch-horizontal 4s ease-in-out infinite;
+}
+
+/* Apply stat-flicker with faster timing when sanity is critical */
+[data-sanity="critical"] .stat-bar,
+[data-sanity="critical"] .stat-fill {
+  animation: stat-flicker 2s linear infinite;
+}
+
+/* Apply chromatic-aberration to log container when sanity is critical */
+[data-sanity="critical"] .log-container,
+[data-sanity="critical"] .narrative-log,
+[data-sanity="critical"] .narrative-log-section {
+  animation: chromatic-aberration 1.5s linear infinite;
+}
+
+/* Intensify text distortion when sanity is critical */
+[data-sanity="critical"] h1,
+[data-sanity="critical"] h2,
+[data-sanity="critical"] .pet-name {
+  animation: text-distort 1.5s ease-in-out infinite;
+}
+
+
+/* =============================================================================
+   MOBILE PERFORMANCE OPTIMIZATIONS
+   Disable or simplify intensive animations on mobile devices (≤768px)
+   Requirements: 16.1, 16.2, 16.3
+   ============================================================================= */
+
+@media (max-width: 768px) {
+  /* Disable violent-shake on body for mobile - Requirements: 16.1 */
+  [data-stage="ABOMINATION"] body,
+  [data-stage="ABOMINATION"].app {
+    animation: none;
+  }
+
+  /* Reduce or disable VHS static overlay on mobile - Requirements: 16.2 */
+  [data-stage="ABOMINATION"]::before {
+    animation: none;
+    opacity: 0.01;
+    background: repeating-linear-gradient(
+      0deg,
+      rgba(0, 0, 0, 0.05) 0px,
+      rgba(0, 0, 0, 0.05) 1px,
+      transparent 1px,
+      transparent 3px
+    );
+  }
+
+  /* Simplify glitch animations on mobile - Requirements: 16.3 */
+  [data-stage="TEEN"] .ui-overlay,
+  [data-stage="TEEN"] .stats-panel,
+  [data-stage="TEEN"] .log-panel,
+  [data-sanity="critical"] .ui-overlay,
+  [data-sanity="critical"] .stats-panel,
+  [data-sanity="critical"] .log-panel {
+    animation: none;
+  }
+
+  /* Disable crack-spread animation on mobile */
+  [data-stage="TEEN"] .canvas-container,
+  [data-stage="TEEN"] .game-canvas-wrapper {
+    animation: none;
+  }
+
+  /* Simplify blood-drip to basic opacity pulse on mobile */
+  [data-stage="ABOMINATION"] .stat-bar,
+  [data-stage="ABOMINATION"] .stat-fill {
+    animation: stat-flicker 3s linear infinite;
+  }
+
+  /* Disable eye-appear animations on mobile */
+  [data-stage="ABOMINATION"] .stats-panel::after,
+  [data-stage="ABOMINATION"] .log-panel::after {
+    display: none;
+  }
+
+  /* Simplify chromatic aberration to basic text on mobile */
+  [data-stage="ABOMINATION"] h1,
+  [data-stage="ABOMINATION"] h2,
+  [data-stage="ABOMINATION"] .pet-name,
+  [data-stage="ABOMINATION"] .stage-indicator,
+  [data-stage="ABOMINATION"] .stat-label,
+  [data-sanity="critical"] .log-container,
+  [data-sanity="critical"] .narrative-log,
+  [data-sanity="critical"] .narrative-log-section {
+    animation: none;
+    text-shadow: none;
+  }
+
+  /* Keep simple animations that are performant */
+  [data-stage="EGG"] .canvas-container,
+  [data-stage="EGG"] .game-canvas {
+    animation: gentle-float 4s ease-in-out infinite;
+  }
+
+  [data-stage="BABY"] .log-entry,
+  [data-stage="BABY"] .narrative-entry {
+    animation: slide-in-right 0.4s ease-out;
+  }
+
+  /* Remove will-change on mobile to save memory */
+  [data-stage] .canvas-container,
+  [data-stage] .game-canvas,
+  [data-stage] .offering-card,
+  [data-stage] .stat-bar,
+  [data-stage] .stat-fill,
+  [data-stage] .log-entry,
+  [data-stage] .narrative-entry,
+  [data-stage="TEEN"] .ui-overlay,
+  [data-stage="TEEN"] .stats-panel,
+  [data-stage="TEEN"] .log-panel,
+  [data-stage="ABOMINATION"] .ui-overlay,
+  [data-stage="ABOMINATION"] .stats-panel,
+  [data-stage="ABOMINATION"] .log-panel,
+  [data-stage="ABOMINATION"]::before {
+    will-change: auto;
+  }
+}
+
+
+/* =============================================================================
+   REDUCED MOTION PREFERENCES
+   Respect user's prefers-reduced-motion setting
+   Requirements: 15.1
+   ============================================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  /* Disable ALL non-essential animations */
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  /* Remove VHS static overlay completely */
+  [data-stage="ABOMINATION"]::before {
+    display: none;
+  }
+
+  /* Remove eye decorations */
+  [data-stage="ABOMINATION"] .stats-panel::after,
+  [data-stage="ABOMINATION"] .log-panel::after {
+    display: none;
+  }
+
+  /* Remove all text shadows that create visual noise */
+  [data-stage="TEEN"] h1,
+  [data-stage="TEEN"] h2,
+  [data-stage="TEEN"] .pet-name,
+  [data-stage="TEEN"] .stage-indicator,
+  [data-stage="ABOMINATION"] h1,
+  [data-stage="ABOMINATION"] h2,
+  [data-stage="ABOMINATION"] .pet-name,
+  [data-stage="ABOMINATION"] .stage-indicator,
+  [data-stage="ABOMINATION"] .stat-label,
+  [data-sanity="critical"] h1,
+  [data-sanity="critical"] h2,
+  [data-sanity="critical"] .pet-name {
+    text-shadow: none !important;
+  }
+
+  /* Remove will-change to save resources */
+  [data-stage] .canvas-container,
+  [data-stage] .game-canvas,
+  [data-stage] .offering-card,
+  [data-stage] .stat-bar,
+  [data-stage] .stat-fill,
+  [data-stage] .log-entry,
+  [data-stage] .narrative-entry,
+  [data-stage="TEEN"] .ui-overlay,
+  [data-stage="TEEN"] .stats-panel,
+  [data-stage="TEEN"] .log-panel,
+  [data-stage="ABOMINATION"] .ui-overlay,
+  [data-stage="ABOMINATION"] .stats-panel,
+  [data-stage="ABOMINATION"] .log-panel,
+  [data-stage="ABOMINATION"]::before {
+    will-change: auto !important;
+  }
+
+  /* Keep essential hover feedback but make it instant */
+  [data-stage] .offering-card:hover,
+  [data-stage] button:hover {
+    transform: translateY(-5px) scale(1.02);
+  }
+}

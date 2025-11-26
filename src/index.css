@@ -1,3 +1,5 @@
+@import "./themes.css";
+
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -24,10 +26,20 @@ a:hover {
 
 body {
   margin: 0;
-  display: flex;
-  place-items: center;
   min-width: 320px;
-  min-height: 100vh;
+  /* Full-page grid layout for desktop */
+  display: grid;
+  grid-template-rows: 10vh 1fr;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* Mobile: enable scrolling */
+@media (max-width: 768px) {
+  body {
+    height: auto;
+    overflow-y: auto;
+  }
 }
 
 h1 {

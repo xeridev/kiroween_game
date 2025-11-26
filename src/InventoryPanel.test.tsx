@@ -54,7 +54,7 @@ describe("InventoryPanel", () => {
     expect(screen.getByText("2/3")).toBeInTheDocument();
   });
 
-  it("calls onFeed when item is clicked", () => {
+  it("calls onFeed when card is clicked", () => {
     const onFeed = vi.fn();
     const onScavenge = vi.fn();
 
@@ -67,13 +67,13 @@ describe("InventoryPanel", () => {
       />
     );
 
-    const firstItem = screen.getByText("✨").closest(".inventory-item");
-    fireEvent.click(firstItem!);
+    const firstCard = screen.getByText("✨").closest(".offering-card");
+    fireEvent.click(firstCard!);
 
     expect(onFeed).toHaveBeenCalledWith("1");
   });
 
-  it("shows tooltip on hover", () => {
+  it("displays description in card", () => {
     const onFeed = vi.fn();
     const onScavenge = vi.fn();
 
@@ -86,15 +86,16 @@ describe("InventoryPanel", () => {
       />
     );
 
-    const firstItem = screen.getByText("✨").closest(".inventory-item");
-    fireEvent.mouseEnter(firstItem!);
-
+    // Descriptions are now always visible in cards (no tooltip)
     expect(
       screen.getByText("A glowing crystal that hums softly")
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText("A decaying bone that whispers secrets")
     ).toBeInTheDocument();
   });
 
-  it("hides tooltip on mouse leave", () => {
+  it("displays Mystery Item title on cards", () => {
     const onFeed = vi.fn();
     const onScavenge = vi.fn();
 
@@ -107,16 +108,9 @@ describe("InventoryPanel", () => {
       />
     );
 
-    const firstItem = screen.getByText("✨").closest(".inventory-item");
-    fireEvent.mouseEnter(firstItem!);
-    expect(
-      screen.getByText("A glowing crystal that hums softly")
-    ).toBeInTheDocument();
-
-    fireEvent.mouseLeave(firstItem!);
-    expect(
-      screen.queryByText("A glowing crystal that hums softly")
-    ).not.toBeInTheDocument();
+    // Each card should have "Mystery Item" title
+    const mysteryTitles = screen.getAllByText("Mystery Item");
+    expect(mysteryTitles).toHaveLength(2);
   });
 
   it("disables scavenge button when inventory is full", () => {
@@ -142,9 +136,11 @@ describe("InventoryPanel", () => {
       />
     );
 
-    const button = screen.getByRole("button");
-    expect(button).toBeDisabled();
-    expect(button).toHaveTextContent("Inventory Full");
+    const scavengeButton = screen.getByRole("button", {
+      name: /scavenge|inventory full/i,
+    });
+    expect(scavengeButton).toBeDisabled();
+    expect(scavengeButton).toHaveTextContent("Inventory Full");
   });
 
   it("enables scavenge button when inventory has space", () => {
@@ -160,9 +156,9 @@ describe("InventoryPanel", () => {
       />
     );
 
-    const button = screen.getByRole("button");
-    expect(button).not.toBeDisabled();
-    expect(button).toHaveTextContent("Scavenge for Offerings");
+    const scavengeButton = screen.getByRole("button", { name: /scavenge/i });
+    expect(scavengeButton).not.toBeDisabled();
+    expect(scavengeButton).toHaveTextContent("Scavenge for Offerings");
   });
 
   it("calls onScavenge when scavenge button is clicked", () => {
@@ -178,8 +174,8 @@ describe("InventoryPanel", () => {
       />
     );
 
-    const button = screen.getByRole("button");
-    fireEvent.click(button);
+    const scavengeButton = screen.getByRole("button", { name: /scavenge/i });
+    fireEvent.click(scavengeButton);
 
     expect(onScavenge).toHaveBeenCalledTimes(1);
   });

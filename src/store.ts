@@ -176,19 +176,19 @@ export const useGameStore = create<GameState>()(
           get().addLog(evolutionLog, "SYSTEM");
         }
 
-        // Check for critical events and add warnings
-        if (newHunger >= 100) {
+        // Check for critical events and add warnings (only on first occurrence)
+        if (newHunger >= 100 && state.stats.hunger < 100) {
           get().addLog(`WARNING: ${state.traits.name} is starving!`, "SYSTEM");
         }
 
-        if (newSanity <= 0) {
+        if (newSanity <= 0 && state.stats.sanity > 0) {
           get().addLog(
             `WARNING: ${state.traits.name} has lost all sanity!`,
             "SYSTEM"
           );
         }
 
-        if (newDailyFeeds > 3) {
+        if (newDailyFeeds > 3 && state.dailyFeeds === 3) {
           get().addLog(
             `WARNING: ${state.traits.name} has eaten too much today!`,
             "SYSTEM"
