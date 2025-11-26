@@ -1,0 +1,221 @@
+.creation-screen {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  padding: 2rem;
+}
+
+.creation-container {
+  max-width: 600px;
+  width: 100%;
+  background: rgba(30, 30, 46, 0.9);
+  border: 2px solid #4a4a6a;
+  border-radius: 12px;
+  padding: 3rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+}
+
+.creation-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #e0e0e0;
+  text-align: center;
+  margin-bottom: 0.5rem;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.creation-subtitle {
+  font-size: 1rem;
+  color: #a0a0b0;
+  text-align: center;
+  margin-bottom: 2rem;
+  font-style: italic;
+}
+
+.creation-form {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-label {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #d0d0d0;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.form-input {
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  background: rgba(20, 20, 30, 0.8);
+  border: 2px solid #4a4a6a;
+  border-radius: 6px;
+  color: #e0e0e0;
+  transition: all 0.3s ease;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: #6b4c9a;
+  box-shadow: 0 0 0 3px rgba(107, 76, 154, 0.2);
+}
+
+.form-input::placeholder {
+  color: #6a6a7a;
+}
+
+.input-error {
+  border-color: #d94a4a;
+}
+
+.error-message {
+  font-size: 0.875rem;
+  color: #d94a4a;
+  margin-top: 0.25rem;
+}
+
+.archetype-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.archetype-button {
+  padding: 1rem;
+  background: rgba(20, 20, 30, 0.8);
+  border: 2px solid #4a4a6a;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.archetype-button:hover,
+.archetype-button:focus {
+  border-color: #6b4c9a;
+  background: rgba(30, 30, 40, 0.9);
+  transform: translateX(4px);
+  outline: none;
+}
+
+.archetype-button:focus-visible {
+  outline: 2px solid #6b4c9a;
+  outline-offset: 2px;
+}
+
+.archetype-selected {
+  border-color: #6b4c9a;
+  background: rgba(107, 76, 154, 0.2);
+  box-shadow: 0 0 0 3px rgba(107, 76, 154, 0.2);
+}
+
+.archetype-name {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #e0e0e0;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.archetype-description {
+  font-size: 0.875rem;
+  color: #a0a0b0;
+  font-style: italic;
+}
+
+.color-picker-container {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.color-input {
+  width: 80px;
+  height: 50px;
+  border: 2px solid #4a4a6a;
+  border-radius: 6px;
+  cursor: pointer;
+  background: transparent;
+}
+
+.color-input:focus {
+  outline: 2px solid #6b4c9a;
+  outline-offset: 2px;
+}
+
+.color-input::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+
+.color-input::-webkit-color-swatch {
+  border: none;
+  border-radius: 4px;
+}
+
+.color-value {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #d0d0d0;
+  font-family: monospace;
+}
+
+.submit-button {
+  padding: 1rem 2rem;
+  font-size: 1.125rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  background: linear-gradient(135deg, #6b4c9a 0%, #8b5cb8 100%);
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 1rem;
+  box-shadow: 0 4px 12px rgba(107, 76, 154, 0.3);
+}
+
+.submit-button:hover,
+.submit-button:focus {
+  background: linear-gradient(135deg, #7b5caa 0%, #9b6cc8 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(107, 76, 154, 0.4);
+  outline: none;
+}
+
+.submit-button:focus-visible {
+  outline: 2px solid #ffffff;
+  outline-offset: 2px;
+}
+
+.submit-button:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(107, 76, 154, 0.3);
+}
+
+@media (max-width: 640px) {
+  .creation-container {
+    padding: 2rem;
+  }
+
+  .creation-title {
+    font-size: 2rem;
+  }
+
+  .creation-subtitle {
+    font-size: 0.875rem;
+  }
+}

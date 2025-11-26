@@ -1,0 +1,35 @@
+# Dependencies
+node_modules
+
+# Testing
+coverage
+*.test.ts
+*.test.tsx
+src/test
+
+# Development
+.env
+.env.local
+.env.development
+
+# IDE
+.vscode
+.idea
+.kiro
+
+# Git
+.git
+.gitignore
+
+# Documentation (optional - remove if you want docs deployed)
+*.md
+!README.md
+
+# Build artifacts (will be rebuilt)
+dist
+.cache
+
+# Logs
+logs
+*.log
+npm-debug.log*
