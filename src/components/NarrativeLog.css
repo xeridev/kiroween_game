@@ -10,7 +10,7 @@
 
 /* Theme-specific styling (Requirements 6.4, 6.5) */
 .narrative-log-panel--cute {
-  color: var(--theme-text, #4A4A4A);
+  color: #2d2d2d;
 }
 
 .narrative-log-panel--horror {
@@ -155,8 +155,8 @@
 }
 
 .narrative-log-panel--cute .log-system {
-  color: #2ecc71;
-  background: rgba(46, 204, 113, 0.1);
+  color: #1a7a3e;
+  background: rgba(46, 204, 113, 0.15);
   border-left-color: #2ecc71;
 }
 
@@ -167,9 +167,9 @@
 }
 
 .narrative-log-panel--cute .log-pet {
-  color: #e74c3c;
-  background: rgba(231, 76, 60, 0.1);
-  border-left-color: #e74c3c;
+  color: #8b0000;
+  background: rgba(139, 0, 0, 0.1);
+  border-left-color: #c0392b;
 }
 
 .log-timestamp {
