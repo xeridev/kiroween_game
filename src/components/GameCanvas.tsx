@@ -294,14 +294,14 @@ export function GameCanvas({
           }
 
           // Load texture and create sprite
-          // Explicitly tell PixiJS to load as image since URL lacks file extension
+          // Use PixiJS 8 syntax with 'parser' instead of deprecated 'loadParser'
           const texture = await PIXI.Assets.load({
             src: petArtUrl,
-            loadParser: 'loadTextures',
+            data: { parseAsGraphicsContext: false },
           });
 
           if (!texture || !texture.valid) {
-            throw new Error("Failed to load texture");
+            throw new Error(`Failed to load texture from: ${petArtUrl}`);
           }
 
           const sprite = new PIXI.Sprite(texture);
