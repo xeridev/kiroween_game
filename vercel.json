@@ -6,10 +6,11 @@
     "api/chat.ts": {
       "maxDuration": 30,
       "memory": 1024
+    },
+    "api/generateArt.ts": {
+      "maxDuration": 60,
+      "memory": 1024
     }
-  },
-  "env": {
-    "FEATHERLESS_API_KEY": "@featherless-api-key"
   },
   "headers": [
     {
