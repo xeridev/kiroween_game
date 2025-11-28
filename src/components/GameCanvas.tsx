@@ -112,7 +112,7 @@ export const GameCanvas = forwardRef<GameCanvasHandle, GameCanvasProps>(function
 
   /**
    * Capture the current pet sprite as a base64 data URL
-   * Uses PixiJS renderer.extract to capture the sprite or graphics
+   * Uses PixiJS renderer.extract to capture the entire stage (full canvas)
    */
   const capturePetSprite = useCallback(async (): Promise<string | null> => {
     const app = appRef.current;
@@ -122,15 +122,16 @@ export const GameCanvas = forwardRef<GameCanvasHandle, GameCanvasProps>(function
     }
 
     try {
-      // Prefer sprite if using AI art, otherwise use graphics
+      // Verify we have something to capture
       const target = petSpriteRef.current || petGraphicsRef.current;
       if (!target) {
         logError("Cannot capture sprite: No pet graphics available");
         return null;
       }
 
-      // Extract the sprite/graphics to a canvas
-      const canvas = app.renderer.extract.canvas(target);
+      // Extract the ENTIRE STAGE to get the full canvas with pet centered
+      // This ensures we capture the complete scene, not just the sprite bounds
+      const canvas = app.renderer.extract.canvas(app.stage);
       
       // Convert canvas to base64 data URL
       return new Promise((resolve) => {
