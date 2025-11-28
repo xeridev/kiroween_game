@@ -4,11 +4,51 @@ import { FadeIn } from "./animations/FadeIn";
 import { SplitText } from "./reactbits/SplitText";
 import { GlassPanel } from "./GlassPanel";
 import { useTheme } from "../contexts/ThemeContext";
+import { useGameStore } from "../store";
 import "./NarrativeLog.css";
 
 interface NarrativeLogProps {
   logs: NarrativeLogType[];
   sanityLevel: number;
+}
+
+// Image modal component for viewing generated images
+function ImageModal({ 
+  imageUrl, 
+  onClose 
+}: { 
+  imageUrl: string; 
+  onClose: () => void;
+}) {
+  // Close on escape key
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [onClose]);
+
+  return (
+    <div 
+      className="image-modal-overlay" 
+      onClick={onClose}
+      role="dialog"
+      aria-modal="true"
+      aria-label="Generated narrative image"
+    >
+      <div className="image-modal-content" onClick={(e) => e.stopPropagation()}>
+        <img src={imageUrl} alt="Generated narrative scene" />
+        <button 
+          className="image-modal-close" 
+          onClick={onClose}
+          aria-label="Close image"
+        >
+          ✕
+        </button>
+      </div>
+    </div>
+  );
 }
 
 // Stagger delay between log entry animations (Requirements 4.2)
@@ -41,6 +81,25 @@ export function NarrativeLog({ logs, sanityLevel }: NarrativeLogProps) {
   
   // Get theme mode for styling
   const { mode } = useTheme();
+
+  // Image generation state
+  const generateLogImage = useGameStore((state) => state.generateLogImage);
+  const currentPetSpriteUrl = useGameStore((state) => state.currentPetSpriteUrl);
+  const [selectedImageUrl, setSelectedImageUrl] = useState<string | null>(null);
+
+  // Handle log click for image generation
+  const handleLogClick = useCallback((log: NarrativeLogType) => {
+    // If image already exists, show it in modal
+    if (log.imageStatus === "completed" && log.imageUrl) {
+      setSelectedImageUrl(log.imageUrl);
+      return;
+    }
+
+    // If not generating and we have a pet sprite, start generation
+    if (log.imageStatus !== "generating" && currentPetSpriteUrl) {
+      generateLogImage(log.id);
+    }
+  }, [generateLogImage, currentPetSpriteUrl]);
 
   // Format age for display
   const formatAge = (ageInMinutes: number): string => {
@@ -198,16 +257,59 @@ export function NarrativeLog({ logs, sanityLevel }: NarrativeLogProps) {
               return <span className="log-text">{log.text}</span>;
             };
 
+            // Determine if log is clickable (has pet sprite available)
+            const isClickable = !isPending && currentPetSpriteUrl;
+            const isGenerating = log.imageStatus === "generating";
+            const hasImage = log.imageStatus === "completed" && log.imageUrl;
+            const hasFailed = log.imageStatus === "failed";
+
             const entryContent = (
               <div
                 key={log.id}
-                className={entryClassName}
+                className={`${entryClassName}${isClickable ? " log-clickable" : ""}${isGenerating ? " log-image-generating" : ""}${hasImage ? " log-has-image" : ""}${hasFailed ? " log-image-failed" : ""}`}
                 role="article"
+                onClick={isClickable ? () => handleLogClick(log) : undefined}
+                onKeyDown={isClickable ? (e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    handleLogClick(log);
+                  }
+                } : undefined}
+                tabIndex={isClickable ? 0 : undefined}
+                aria-label={isClickable ? `${log.text}. Click to ${hasImage ? "view" : "generate"} image.` : undefined}
               >
-                <span className="log-timestamp">
-                  [{formatAge(log.timestamp)}]
-                </span>
+                <div className="log-entry-header">
+                  <span className="log-timestamp">
+                    [{formatAge(log.timestamp)}]
+                  </span>
+                  {/* Image status indicators */}
+                  {isGenerating && (
+                    <span className="log-image-status generating" aria-label="Generating image">
+                      <span className="spinner" />
+                    </span>
+                  )}
+                  {hasImage && (
+                    <span className="log-image-status completed" aria-label="Image available">
+                      🖼️
+                    </span>
+                  )}
+                  {hasFailed && (
+                    <span className="log-image-status failed" aria-label="Image generation failed. Click to retry.">
+                      ⚠️
+                    </span>
+                  )}
+                </div>
                 {renderLogText()}
+                {/* Inline image preview */}
+                {hasImage && log.imageUrl && (
+                  <div className="log-image-preview">
+                    <img 
+                      src={log.imageUrl} 
+                      alt="Generated scene" 
+                      loading="lazy"
+                    />
+                  </div>
+                )}
               </div>
             );
 
@@ -235,6 +337,13 @@ export function NarrativeLog({ logs, sanityLevel }: NarrativeLogProps) {
           })
         )}
       </div>
+      {/* Image modal for viewing generated images */}
+      {selectedImageUrl && (
+        <ImageModal 
+          imageUrl={selectedImageUrl} 
+          onClose={() => setSelectedImageUrl(null)} 
+        />
+      )}
     </GlassPanel>
   );
 }

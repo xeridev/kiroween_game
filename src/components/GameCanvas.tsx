@@ -1,8 +1,8 @@
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useEffect, useRef, useState, useCallback, useImperativeHandle, forwardRef } from "react";
 import * as PIXI from "pixi.js";
 import { useDroppable } from "@dnd-kit/core";
 import type { PetTraits, PetStage } from "../utils/types";
-import { logError } from "../utils/errorLogger";
+import { logError, logInfo } from "../utils/errorLogger";
 import {
   generatePetArt,
   loadCachedArt,
@@ -14,6 +14,11 @@ import { AnimatedPetName } from "./AnimatedPetName";
 import { AnimatedStageIndicator } from "./AnimatedStageIndicator";
 import "./GameCanvas.css";
 
+// Expose capture method via ref
+export interface GameCanvasHandle {
+  capturePetSprite: () => Promise<string | null>;
+}
+
 interface GameCanvasProps {
   traits: PetTraits;
   stage: PetStage;
@@ -23,6 +28,7 @@ interface GameCanvasProps {
   isDropTarget?: boolean; // Whether an item is being dragged over this canvas
   reduceMotion?: boolean; // Whether to disable animations (Requirement 3.4)
   retroMode?: boolean; // Whether retro mode is enabled (Requirement 8.3)
+  onSpriteCapture?: (spriteUrl: string) => void; // Callback when sprite is captured
 }
 
 // Mobile breakpoint constant
@@ -66,7 +72,7 @@ export function calculateCanvasSize(containerElement?: HTMLElement | null): { wi
   };
 }
 
-export function GameCanvas({
+export const GameCanvas = forwardRef<GameCanvasHandle, GameCanvasProps>(function GameCanvas({
   traits,
   stage,
   sanity,
@@ -75,7 +81,8 @@ export function GameCanvas({
   isDropTarget = false,
   reduceMotion = false,
   retroMode = false,
-}: GameCanvasProps) {
+  onSpriteCapture,
+}, ref) {
   const canvasRef = useRef<HTMLDivElement>(null);
   
   // Set up droppable zone for drag-to-feed (Requirement 2.1)
@@ -102,6 +109,79 @@ export function GameCanvas({
   const [canvasSize, setCanvasSize] = useState(calculateCanvasSize);
   const [petArtUrl, setPetArtUrl] = useState<string | null>(null);
   const [useAIArt, setUseAIArt] = useState(true); // Toggle for AI art vs shapes
+
+  /**
+   * Capture the current pet sprite as a base64 data URL
+   * Uses PixiJS renderer.extract to capture the sprite or graphics
+   */
+  const capturePetSprite = useCallback(async (): Promise<string | null> => {
+    const app = appRef.current;
+    if (!app) {
+      logError("Cannot capture sprite: PixiJS app not initialized");
+      return null;
+    }
+
+    try {
+      // Prefer sprite if using AI art, otherwise use graphics
+      const target = petSpriteRef.current || petGraphicsRef.current;
+      if (!target) {
+        logError("Cannot capture sprite: No pet graphics available");
+        return null;
+      }
+
+      // Extract the sprite/graphics to a canvas
+      const canvas = app.renderer.extract.canvas(target);
+      
+      // Convert canvas to base64 data URL
+      return new Promise((resolve) => {
+        if (canvas instanceof HTMLCanvasElement) {
+          const dataUrl = canvas.toDataURL("image/png");
+          logInfo("Pet sprite captured", { size: dataUrl.length });
+          resolve(dataUrl);
+        } else {
+          // OffscreenCanvas - need to convert via blob
+          (canvas as OffscreenCanvas).convertToBlob({ type: "image/png" }).then((blob) => {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+              const dataUrl = reader.result as string;
+              logInfo("Pet sprite captured (offscreen)", { size: dataUrl.length });
+              resolve(dataUrl);
+            };
+            reader.onerror = () => {
+              logError("Failed to read sprite blob");
+              resolve(null);
+            };
+            reader.readAsDataURL(blob);
+          }).catch((err) => {
+            logError("Failed to convert offscreen canvas", err instanceof Error ? err : undefined);
+            resolve(null);
+          });
+        }
+      });
+    } catch (error) {
+      logError("Failed to capture pet sprite", error instanceof Error ? error : undefined);
+      return null;
+    }
+  }, []);
+
+  // Expose capture method via ref
+  useImperativeHandle(ref, () => ({
+    capturePetSprite,
+  }), [capturePetSprite]);
+
+  // Auto-capture sprite when pet art changes (for store caching)
+  useEffect(() => {
+    if (petArtUrl && onSpriteCapture) {
+      // Small delay to ensure sprite is rendered
+      const timer = setTimeout(async () => {
+        const spriteUrl = await capturePetSprite();
+        if (spriteUrl) {
+          onSpriteCapture(spriteUrl);
+        }
+      }, 500);
+      return () => clearTimeout(timer);
+    }
+  }, [petArtUrl, onSpriteCapture, capturePetSprite]);
 
   // Debounced resize handler to prevent rapid successive calls
   const handleResize = useCallback(() => {
@@ -666,4 +746,4 @@ export function GameCanvas({
       </div>
     </div>
   );
-}
+});

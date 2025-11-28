@@ -7,10 +7,9 @@
 /* Base glass panel styles */
 .glass-panel {
   border: 1px solid var(--theme-glass-border, rgba(255, 255, 255, 0.2));
-  border-radius: 12px;
-  box-shadow: 
-    0 4px 30px rgba(0, 0, 0, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  border-radius: var(--theme-border-radius, 12px);
+  box-shadow: var(--theme-shadow, 0 4px 30px rgba(0, 0, 0, 0.1));
+  background: var(--theme-glass-bg, rgba(255, 255, 255, 0.1));
 }
 
 /* Transition animation for theme changes */
@@ -38,19 +37,15 @@
 }
 
 .glass-panel--settings.glass-panel--cute {
-  background: rgba(255, 183, 217, 0.2) !important;
-  border-color: rgba(255, 255, 255, 0.35) !important;
-  box-shadow: 
-    0 8px 32px rgba(255, 183, 217, 0.15),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  background: var(--theme-glass-bg, rgba(255, 183, 217, 0.2)) !important;
+  border-color: var(--theme-glass-border, rgba(255, 255, 255, 0.35)) !important;
+  box-shadow: var(--theme-shadow, 0 8px 32px rgba(255, 183, 217, 0.15));
 }
 
 .glass-panel--settings.glass-panel--horror {
-  background: rgba(139, 0, 0, 0.25) !important;
-  border-color: rgba(233, 69, 96, 0.35) !important;
-  box-shadow: 
-    0 8px 32px rgba(139, 0, 0, 0.2),
-    inset 0 1px 0 rgba(233, 69, 96, 0.1);
+  background: var(--theme-glass-bg, rgba(139, 0, 0, 0.25)) !important;
+  border-color: var(--theme-glass-border, rgba(233, 69, 96, 0.35)) !important;
+  box-shadow: var(--theme-shadow, 0 8px 32px rgba(139, 0, 0, 0.2));
 }
 
 /* ============================================
@@ -63,19 +58,15 @@
 }
 
 .glass-panel--stats.glass-panel--cute {
-  background: rgba(232, 213, 242, 0.15) !important;
-  border-color: rgba(255, 255, 255, 0.25) !important;
-  box-shadow: 
-    0 4px 20px rgba(232, 213, 242, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  background: var(--theme-glass-bg, rgba(232, 213, 242, 0.15)) !important;
+  border-color: var(--theme-glass-border, rgba(255, 255, 255, 0.25)) !important;
+  box-shadow: var(--theme-shadow, 0 4px 20px rgba(232, 213, 242, 0.1));
 }
 
 .glass-panel--stats.glass-panel--horror {
-  background: rgba(26, 10, 26, 0.4) !important;
-  border-color: rgba(233, 69, 96, 0.2) !important;
-  box-shadow: 
-    0 4px 20px rgba(0, 0, 0, 0.3),
-    inset 0 1px 0 rgba(233, 69, 96, 0.05);
+  background: var(--theme-glass-bg, rgba(26, 10, 26, 0.4)) !important;
+  border-color: var(--theme-glass-border, rgba(233, 69, 96, 0.2)) !important;
+  box-shadow: var(--theme-shadow, 0 4px 20px rgba(0, 0, 0, 0.3));
 }
 
 /* ============================================
@@ -89,20 +80,15 @@
 }
 
 .glass-panel--narrative.glass-panel--cute {
-  background: rgba(74, 74, 74, 0.1) !important;
-  border-color: rgba(255, 183, 217, 0.2) !important;
-  box-shadow: 
-    0 4px 24px rgba(0, 0, 0, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  background: var(--theme-glass-bg, rgba(74, 74, 74, 0.1)) !important;
+  border-color: var(--theme-glass-border, rgba(255, 183, 217, 0.2)) !important;
+  box-shadow: var(--theme-shadow, 0 4px 24px rgba(0, 0, 0, 0.1));
 }
 
 .glass-panel--narrative.glass-panel--horror {
-  background: rgba(13, 13, 13, 0.6) !important;
-  border-color: rgba(139, 0, 0, 0.3) !important;
-  box-shadow: 
-    0 4px 24px rgba(0, 0, 0, 0.4),
-    inset 0 1px 0 rgba(233, 69, 96, 0.05),
-    inset 0 0 20px rgba(139, 0, 0, 0.1);
+  background: var(--theme-glass-bg, rgba(13, 13, 13, 0.6)) !important;
+  border-color: var(--theme-glass-border, rgba(139, 0, 0, 0.3)) !important;
+  box-shadow: var(--theme-shadow, 0 4px 24px rgba(0, 0, 0, 0.4));
 }
 
 /* ============================================
@@ -111,12 +97,14 @@
 
 /* Cute mode (Requirement 6.5): Increased transparency with pink/lavender tint */
 .glass-panel--cute {
-  --glass-tint: rgba(255, 183, 217, 0.1);
+  --glass-tint: var(--theme-hover-bg, rgba(255, 183, 217, 0.1));
+  color: var(--theme-text, #2D2D3A);
 }
 
 /* Horror mode (Requirement 6.4): Reduced transparency with red tint */
 .glass-panel--horror {
-  --glass-tint: rgba(139, 0, 0, 0.15);
+  --glass-tint: var(--theme-hover-bg, rgba(139, 0, 0, 0.15));
+  color: var(--theme-text, #E8E4EC);
 }
 
 /* ============================================

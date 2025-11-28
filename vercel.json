@@ -10,6 +10,10 @@
     "api/generateArt.ts": {
       "maxDuration": 60,
       "memory": 1024
+    },
+    "api/generateImage.ts": {
+      "maxDuration": 90,
+      "memory": 1024
     }
   },
   "headers": [

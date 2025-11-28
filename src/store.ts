@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import type { GameState, Archetype, LogSource, AudioState, SoundContext, Offering } from "./utils/types";
+import type { GameState, Archetype, LogSource, AudioState, SoundContext, Offering, Theme, ImageStatus } from "./utils/types";
 import { logError, logWarning, logCritical, logInfo } from "./utils/errorLogger";
 import { soundManager } from "./utils/soundManager";
 
@@ -24,6 +24,7 @@ const initialState = {
   gameDay: 0,
   logs: [],
   lastTickTime: Date.now(),
+  currentPetSpriteUrl: null as string | null,
 };
 
 // Default audio state (Requirements 4.1, 4.2)
@@ -41,6 +42,7 @@ const initialSettingsState = {
   crtEnabled: false,    // CRT scanline effect off by default (modern UI - Requirement 8.1)
   reduceMotion: false,  // Respect system preference by default
   retroMode: false,     // Modern UI by default (Requirement 8.1)
+  theme: "cute" as const,  // Default to cute theme (Requirement 1.4)
 };
 
 // Helper function to calculate offline decay
@@ -198,6 +200,141 @@ export const useGameStore = create<GameState>()(
        */
       setRetroMode: (enabled: boolean) => {
         set({ retroMode: enabled });
+      },
+
+      /**
+       * Set theme preference (cute or horror)
+       * Requirements 6.1, 6.2
+       */
+      setTheme: (theme: Theme) => {
+        if (theme === "cute" || theme === "horror") {
+          set({ theme });
+        }
+      },
+
+      // ============================================
+      // Pet Sprite Actions (Image Generation)
+      // ============================================
+
+      /**
+       * Update cached pet sprite URL
+       * Called when pet evolves or sprite is captured
+       */
+      updatePetSprite: (spriteUrl: string) => {
+        set({ currentPetSpriteUrl: spriteUrl });
+      },
+
+      /**
+       * Generate image for a narrative log entry
+       * Captures current pet sprite and calls RunPod API
+       */
+      generateLogImage: async (logId: string) => {
+        const state = get();
+        
+        // Find the log entry
+        const log = state.logs.find(l => l.id === logId);
+        if (!log) {
+          logWarning("Log not found for image generation", { logId });
+          return;
+        }
+
+        // Don't regenerate if already generating
+        if (log.imageStatus === "generating") {
+          return;
+        }
+
+        // Update log status to generating
+        set({
+          logs: state.logs.map(l =>
+            l.id === logId
+              ? { ...l, imageStatus: "generating" as ImageStatus }
+              : l
+          ),
+        });
+
+        try {
+          // Gather source images
+          const sourceImages: string[] = [];
+
+          // PRIMARY: Current pet sprite (required)
+          if (state.currentPetSpriteUrl) {
+            sourceImages.push(state.currentPetSpriteUrl);
+          } else {
+            // No pet sprite available - fail gracefully
+            logWarning("No pet sprite available for image generation");
+            set({
+              logs: get().logs.map(l =>
+                l.id === logId
+                  ? { ...l, imageStatus: "failed" as ImageStatus }
+                  : l
+              ),
+            });
+            return;
+          }
+
+          // SECONDARY: Previous narrative image from same log chain (for continuity)
+          const previousLogs = state.logs.filter(
+            l => l.id !== logId && l.imageUrl && l.imageStatus === "completed"
+          );
+          if (previousLogs.length > 0) {
+            // Get the most recent previous image
+            const lastImageLog = previousLogs[previousLogs.length - 1];
+            if (lastImageLog.imageUrl) {
+              sourceImages.push(lastImageLog.imageUrl);
+            }
+          }
+
+          // Call the API
+          const response = await fetch("/api/generateImage", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              narrativeText: log.text,
+              petName: state.traits.name,
+              archetype: state.traits.archetype,
+              stage: state.stage,
+              sourceImages,
+            }),
+          });
+
+          if (!response.ok) {
+            const errorData = await response.json().catch(() => ({}));
+            throw new Error(errorData.error || `API error: ${response.status}`);
+          }
+
+          const result = await response.json();
+
+          // Update log with generated image
+          set({
+            logs: get().logs.map(l =>
+              l.id === logId
+                ? {
+                    ...l,
+                    imageUrl: result.imageUrl,
+                    imageStatus: "completed" as ImageStatus,
+                    sourceImages,
+                  }
+                : l
+            ),
+          });
+
+          logInfo("Image generated for log", { logId });
+        } catch (error) {
+          logError(
+            "Failed to generate log image",
+            error instanceof Error ? error : new Error(String(error)),
+            { logId }
+          );
+
+          // Update log status to failed
+          set({
+            logs: get().logs.map(l =>
+              l.id === logId
+                ? { ...l, imageStatus: "failed" as ImageStatus }
+                : l
+            ),
+          });
+        }
       },
 
       /**
@@ -623,6 +760,8 @@ export const useGameStore = create<GameState>()(
         gameDay: state.gameDay,
         logs: state.logs,
         lastTickTime: state.lastTickTime,
+        // Pet sprite state (for image generation continuity)
+        currentPetSpriteUrl: state.currentPetSpriteUrl,
         // Audio state (Requirement 4.1: Persist audio preferences)
         masterVolume: state.masterVolume,
         sfxVolume: state.sfxVolume,
@@ -633,6 +772,7 @@ export const useGameStore = create<GameState>()(
         crtEnabled: state.crtEnabled,
         reduceMotion: state.reduceMotion,
         retroMode: state.retroMode,
+        theme: state.theme,
         // Note: hasUserInteracted is NOT persisted - must be re-established each session
       }),
       // Custom storage with error handling

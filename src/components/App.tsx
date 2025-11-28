@@ -17,7 +17,7 @@ import { sortableKeyboardCoordinates } from '@dnd-kit/sortable';
 import { useGameStore } from "../store";
 import { ThemeProvider } from "../contexts/ThemeContext";
 import CreationScreen from "./CreationScreen";
-import { GameCanvas } from "./GameCanvas";
+import { GameCanvas, type GameCanvasHandle } from "./GameCanvas";
 import { InventoryPanel } from "./InventoryPanel";
 import { StatsPanel } from "./StatsPanel";
 import { NarrativeLog } from "./NarrativeLog";
@@ -73,6 +73,7 @@ function getInitialAmbient(stage: PetStage, sanity: number): string {
 function AppContent() {
   const gameLoopRef = useRef<GameLoop | null>(null);
   const canvasRef = useRef<HTMLDivElement | null>(null);
+  const gameCanvasRef = useRef<GameCanvasHandle | null>(null);
   const [debugPanelOpen, setDebugPanelOpen] = useState(false);
   const [settingsPanelOpen, setSettingsPanelOpen] = useState(false);
   const [zenMode, setZenMode] = useState(false);
@@ -106,6 +107,8 @@ function AppContent() {
   const crtEnabled = useGameStore((state) => state.crtEnabled);
   const reduceMotion = useGameStore((state) => state.reduceMotion);
   const retroMode = useGameStore((state) => state.retroMode);
+  const theme = useGameStore((state) => state.theme);
+  const updatePetSprite = useGameStore((state) => state.updatePetSprite);
   
   // Get the currently dragged item for DragOverlay
   const activeItem: Offering | undefined = activeId 
@@ -335,6 +338,11 @@ function AppContent() {
     previousStageRef.current = stage;
   }, [stage]);
 
+  // Apply theme to document root on mount and when theme changes (Requirements 1.3, 6.4)
+  useEffect(() => {
+    document.documentElement.setAttribute("data-theme", theme);
+  }, [theme]);
+
   // Keyboard shortcuts (D key for debug, Z key for zen mode, Escape)
   useEffect(() => {
     const handleKeyPress = (event: KeyboardEvent) => {
@@ -558,6 +566,7 @@ function AppContent() {
 
           <section className={`canvas-container ${feedSuccess ? 'feed-success-container' : ''} ${evolutionFlash ? 'evolution-flash' : ''}`} ref={canvasRef}>
             <GameCanvas
+              ref={gameCanvasRef}
               traits={traits}
               stage={stage}
               sanity={stats.sanity}
@@ -566,6 +575,7 @@ function AppContent() {
               isDropTarget={activeId !== null}
               reduceMotion={reduceMotion}
               retroMode={retroMode}
+              onSpriteCapture={updatePetSprite}
             />
             {zenMode && (
               <button

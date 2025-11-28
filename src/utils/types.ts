@@ -3,6 +3,7 @@ export type PetStage = "EGG" | "BABY" | "TEEN" | "ABOMINATION";
 export type Archetype = "GLOOM" | "SPARK" | "ECHO";
 export type ItemType = "PURITY" | "ROT";
 export type LogSource = "SYSTEM" | "PET";
+export type Theme = "cute" | "horror";
 
 // Pet Identity
 export interface PetTraits {
@@ -27,12 +28,17 @@ export interface Offering {
 }
 
 // Narrative System
+export type ImageStatus = "idle" | "generating" | "completed" | "failed";
+
 export interface NarrativeLog {
   id: string;
   text: string;
   source: LogSource;
   timestamp: number; // Game time in minutes
   isPending?: boolean; // True while AI is generating text
+  imageUrl?: string; // Generated image URL (base64 data URL)
+  imageStatus?: ImageStatus; // Image generation status
+  sourceImages?: string[]; // Source images used for generation
 }
 
 // Sound System Types
@@ -129,6 +135,7 @@ export interface SettingsState {
   crtEnabled: boolean;      // CRT scanline effect toggle
   reduceMotion: boolean;    // Disable animations
   retroMode: boolean;       // Retro mode: CRT overlay + disable React Bits animations
+  theme: Theme;             // Visual theme: "cute" or "horror"
 }
 
 export interface SettingsActions {
@@ -136,10 +143,21 @@ export interface SettingsActions {
   setCrtEnabled: (enabled: boolean) => void;
   setReduceMotion: (enabled: boolean) => void;
   setRetroMode: (enabled: boolean) => void;
+  setTheme: (theme: Theme) => void;
+}
+
+// Pet Sprite Capture
+export interface PetSpriteState {
+  currentPetSpriteUrl: string | null; // Cached pet sprite as base64 data URL
+}
+
+export interface PetSpriteActions {
+  updatePetSprite: (spriteUrl: string) => void;
+  generateLogImage: (logId: string) => Promise<void>;
 }
 
 // Game State Interface (includes Audio State and Actions)
-export interface GameState extends AudioState, AudioActions, SettingsState, SettingsActions {
+export interface GameState extends AudioState, AudioActions, SettingsState, SettingsActions, PetSpriteState, PetSpriteActions {
   // Initialization
   isInitialized: boolean;
 

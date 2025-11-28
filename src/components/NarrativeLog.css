@@ -1,5 +1,5 @@
 /* Narrative Log Panel - Right sidebar component with dark-tinted glassmorphism */
-/* Requirements: 6.3, 6.4, 6.5 */
+/* Requirements: 6.3, 6.4, 6.5, 2.1, 2.3, 5.1 */
 .narrative-log-panel {
   height: 100%;
   display: flex;
@@ -8,13 +8,13 @@
   color: var(--theme-text, var(--retro-text));
 }
 
-/* Theme-specific styling (Requirements 6.4, 6.5) */
+/* Theme-specific styling (Requirements 6.4, 6.5, 2.1, 2.3) */
 .narrative-log-panel--cute {
-  color: #2d2d2d;
+  color: var(--theme-text, #2D2D3A);
 }
 
 .narrative-log-panel--horror {
-  color: var(--theme-text, #E0E0E0);
+  color: var(--theme-text, #E8E4EC);
 }
 
 /* Sanity-based styling */
@@ -50,21 +50,21 @@
   font-size: 1rem;
   text-transform: uppercase;
   padding: 0.75rem 1rem;
-  color: var(--theme-accent, var(--retro-accent));
+  color: var(--theme-primary, var(--retro-accent));
   border-bottom: 1px solid var(--theme-glass-border, rgba(255, 255, 255, 0.1));
   background: var(--theme-glass-bg, rgba(0, 0, 0, 0.2));
 }
 
 .narrative-log-panel--cute .log-header {
-  background: rgba(232, 213, 242, 0.2);
-  border-bottom-color: rgba(255, 183, 217, 0.3);
-  color: var(--theme-primary, #FFB7D9);
+  background: var(--theme-hover-bg, rgba(232, 213, 242, 0.2));
+  border-bottom-color: var(--theme-glass-border, rgba(255, 183, 217, 0.3));
+  color: var(--theme-primary, #E85A9C);
 }
 
 .narrative-log-panel--horror .log-header {
-  background: rgba(139, 0, 0, 0.2);
-  border-bottom-color: rgba(233, 69, 96, 0.3);
-  color: var(--theme-accent, #E94560);
+  background: var(--theme-hover-bg, rgba(139, 0, 0, 0.2));
+  border-bottom-color: var(--theme-glass-border, rgba(233, 69, 96, 0.3));
+  color: var(--theme-accent, #39FF14);
 }
 
 /* Log Container - Terminal style with glass effect */
@@ -78,16 +78,16 @@
 }
 
 .narrative-log-panel--cute .log-container {
-  background: rgba(74, 74, 74, 0.15);
+  background: var(--theme-background-secondary, rgba(74, 74, 74, 0.15));
 }
 
 .narrative-log-panel--horror .log-container {
-  background: rgba(13, 13, 13, 0.5);
-  box-shadow: inset 0 0 20px rgba(139, 0, 0, 0.1);
+  background: var(--theme-background-secondary, rgba(13, 13, 13, 0.5));
+  box-shadow: inset 0 0 20px var(--theme-hover-bg, rgba(139, 0, 0, 0.1));
 }
 
 .log-container:focus {
-  outline: 2px dashed var(--theme-accent, var(--retro-accent));
+  outline: 2px dashed var(--theme-primary, var(--retro-accent));
   outline-offset: 2px;
 }
 
@@ -97,23 +97,23 @@
 }
 
 .log-container::-webkit-scrollbar-track {
-  background: var(--theme-glass-bg, rgba(0, 0, 0, 0.2));
+  background: var(--theme-background-tertiary, rgba(0, 0, 0, 0.2));
   border-radius: 4px;
 }
 
 .log-container::-webkit-scrollbar-thumb {
-  background: var(--theme-glass-border, rgba(255, 255, 255, 0.2));
+  background: var(--theme-text-muted, rgba(255, 255, 255, 0.2));
   border-radius: 4px;
 }
 
 .log-container::-webkit-scrollbar-thumb:hover {
-  background: var(--theme-accent, rgba(255, 255, 255, 0.3));
+  background: var(--theme-primary, rgba(255, 255, 255, 0.3));
 }
 
 /* Log Empty State */
 .log-empty {
   text-align: center;
-  color: var(--theme-text, #666);
+  color: var(--theme-text-muted, var(--theme-text, #666));
   opacity: 0.6;
   font-style: normal;
   padding: 2rem;
@@ -149,31 +149,31 @@
 }
 
 .log-system {
-  color: #00ff00;
-  border-left-color: #00ff00;
-  background: rgba(0, 255, 0, 0.08);
+  color: var(--theme-success, #00ff00);
+  border-left-color: var(--theme-success, #00ff00);
+  background: var(--theme-hover-bg, rgba(0, 255, 0, 0.08));
 }
 
 .narrative-log-panel--cute .log-system {
-  color: #1a7a3e;
-  background: rgba(46, 204, 113, 0.15);
-  border-left-color: #2ecc71;
+  color: var(--theme-success, #5CB85C);
+  background: var(--theme-hover-bg, rgba(92, 184, 92, 0.15));
+  border-left-color: var(--theme-success, #5CB85C);
 }
 
 .log-pet {
-  color: #ff0000;
-  border-left-color: #ff0000;
-  background: rgba(255, 0, 0, 0.08);
+  color: var(--theme-danger, #ff0000);
+  border-left-color: var(--theme-danger, #ff0000);
+  background: var(--theme-hover-bg, rgba(255, 0, 0, 0.08));
 }
 
 .narrative-log-panel--cute .log-pet {
-  color: #8b0000;
-  background: rgba(139, 0, 0, 0.1);
-  border-left-color: #c0392b;
+  color: var(--theme-danger, #D9534F);
+  background: var(--theme-hover-bg, rgba(217, 83, 79, 0.1));
+  border-left-color: var(--theme-danger, #D9534F);
 }
 
 .log-timestamp {
-  color: var(--theme-text, #666);
+  color: var(--theme-text-secondary, var(--theme-text, #666));
   opacity: 0.6;
   font-size: 0.9rem;
   white-space: nowrap;
@@ -198,19 +198,19 @@
   }
   20% {
     transform: translate(-2px, 1px);
-    text-shadow: 2px 0 #ff0000, -2px 0 #00ffff;
+    text-shadow: 2px 0 var(--theme-danger, #ff0000), -2px 0 var(--theme-accent, #00ffff);
   }
   40% {
     transform: translate(2px, -1px);
-    text-shadow: -2px 0 #ff0000, 2px 0 #00ffff;
+    text-shadow: -2px 0 var(--theme-danger, #ff0000), 2px 0 var(--theme-accent, #00ffff);
   }
   60% {
     transform: translate(-1px, 2px);
-    text-shadow: 1px 0 #ff0000, -1px 0 #00ffff;
+    text-shadow: 1px 0 var(--theme-danger, #ff0000), -1px 0 var(--theme-accent, #00ffff);
   }
   80% {
     transform: translate(1px, -2px);
-    text-shadow: -1px 0 #ff0000, 1px 0 #00ffff;
+    text-shadow: -1px 0 var(--theme-danger, #ff0000), 1px 0 var(--theme-accent, #00ffff);
   }
   100% {
     transform: translate(0);
@@ -312,7 +312,7 @@ Pending log entry - shimmer effect while AI generates text */
   background: linear-gradient(
     90deg,
     transparent 0%,
-    rgba(233, 69, 96, 0.2) 50%,
+    var(--theme-hover-bg, rgba(233, 69, 96, 0.2)) 50%,
     transparent 100%
   );
 }
@@ -322,7 +322,7 @@ Pending log entry - shimmer effect while AI generates text */
   background: linear-gradient(
     90deg,
     transparent 0%,
-    rgba(255, 183, 217, 0.2) 50%,
+    var(--theme-hover-bg, rgba(255, 183, 217, 0.2)) 50%,
     transparent 100%
   );
 }
@@ -338,7 +338,7 @@ Pending log entry - shimmer effect while AI generates text */
 
 /* Hover effect for better readability */
 .log-entry:hover {
-  background: rgba(0, 0, 0, 0.85);
+  background: var(--theme-active-bg, rgba(0, 0, 0, 0.85));
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   transform: translateX(2px);
@@ -351,25 +351,257 @@ Pending log entry - shimmer effect while AI generates text */
 
 /* System logs show green on hover */
 .log-system:hover {
-  color: #00ff00;
-  border-left-color: #00ff00;
+  color: var(--theme-success, #00ff00);
+  border-left-color: var(--theme-success, #00ff00);
 }
 
 /* Pet logs show red on hover */
 .log-pet:hover {
-  color: #ff4444;
-  border-left-color: #ff4444;
+  color: var(--theme-danger, #ff4444);
+  border-left-color: var(--theme-danger, #ff4444);
 }
 
 /* Cute theme hover - still use dark background for contrast */
 .narrative-log-panel--cute .log-entry:hover {
-  background: rgba(0, 0, 0, 0.9);
+  background: var(--theme-active-bg, rgba(0, 0, 0, 0.9));
 }
 
 .narrative-log-panel--cute .log-system:hover {
-  color: #00ff00;
+  color: var(--theme-success, #5CB85C);
 }
 
 .narrative-log-panel--cute .log-pet:hover {
-  color: #ff4444;
+  color: var(--theme-danger, #D9534F);
+}
+
+
+/* ============================================
+   Image Generation Styles
+   ============================================ */
+
+/* Clickable log entries */
+.log-clickable {
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.log-clickable:hover {
+  transform: translateX(4px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.log-clickable:focus {
+  outline: 2px solid var(--theme-primary, var(--retro-accent));
+  outline-offset: 2px;
+}
+
+/* Log entry header with timestamp and status */
+.log-entry-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Image status indicators */
+.log-image-status {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+}
+
+.log-image-status.generating .spinner {
+  width: 12px;
+  height: 12px;
+  border: 2px solid var(--theme-text-muted, rgba(255, 255, 255, 0.3));
+  border-top-color: var(--theme-primary, var(--retro-accent));
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.log-image-status.completed {
+  opacity: 0.8;
+}
+
+.log-image-status.failed {
+  color: var(--theme-danger, #ff4444);
+}
+
+/* Log with generating state */
+.log-image-generating {
+  position: relative;
+  overflow: hidden;
+}
+
+.log-image-generating::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.1) 50%,
+    transparent 100%
+  );
+  animation: shimmer 2s infinite;
+}
+
+/* Log with completed image */
+.log-has-image {
+  border-left-color: var(--theme-accent, #39FF14);
+}
+
+/* Log with failed image generation */
+.log-image-failed {
+  border-left-color: var(--theme-danger, #ff4444);
+}
+
+/* Inline image preview */
+.log-image-preview {
+  margin-top: 0.5rem;
+  border-radius: 4px;
+  overflow: hidden;
+  max-height: 150px;
+}
+
+.log-image-preview img {
+  width: 100%;
+  height: auto;
+  max-height: 150px;
+  object-fit: cover;
+  border-radius: 4px;
+  transition: transform 0.2s ease;
+}
+
+.log-clickable:hover .log-image-preview img {
+  transform: scale(1.02);
+}
+
+/* ============================================
+   Image Modal Styles
+   ============================================ */
+
+.image-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.image-modal-content {
+  position: relative;
+  max-width: 90vw;
+  max-height: 90vh;
+  animation: scaleIn 0.2s ease;
+}
+
+@keyframes scaleIn {
+  from {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.image-modal-content img {
+  max-width: 100%;
+  max-height: 85vh;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+}
+
+.image-modal-close {
+  position: absolute;
+  top: -40px;
+  right: 0;
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
+}
+
+.image-modal-close:hover {
+  opacity: 1;
+}
+
+.image-modal-close:focus {
+  outline: 2px solid var(--theme-primary, var(--retro-accent));
+  outline-offset: 2px;
+}
+
+/* Theme-specific modal styles */
+.narrative-log-panel--horror .image-modal-overlay {
+  background: rgba(13, 0, 0, 0.95);
+}
+
+.narrative-log-panel--cute .image-modal-overlay {
+  background: rgba(45, 45, 58, 0.95);
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .log-image-preview {
+    max-height: 100px;
+  }
+
+  .log-image-preview img {
+    max-height: 100px;
+  }
+
+  .image-modal-content {
+    max-width: 95vw;
+  }
+
+  .image-modal-close {
+    top: -35px;
+    font-size: 1.25rem;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .log-image-generating::after {
+    animation: none !important;
+  }
+
+  .log-image-status.generating .spinner {
+    animation: none !important;
+  }
+
+  .image-modal-overlay,
+  .image-modal-content {
+    animation: none !important;
+  }
 }

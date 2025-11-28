@@ -1,6 +1,7 @@
 import { useGameStore } from "../store";
 import { GlassPanel } from "./GlassPanel";
 import { useTheme } from "../contexts/ThemeContext";
+import type { Theme } from "../utils/types";
 import "./SettingsPanel.css";
 
 interface SettingsPanelProps {
@@ -18,7 +19,7 @@ const SPEED_OPTIONS = [
 /**
  * SettingsPanel - Game settings modal with glassmorphism styling
  * 
- * Requirements: 6.1, 6.4, 6.5
+ * Requirements: 1.1, 1.2, 6.1, 6.4, 6.5
  */
 export function SettingsPanel({ isOpen, onClose }: SettingsPanelProps) {
   const gameSpeed = useGameStore((state) => state.gameSpeed);
@@ -29,7 +30,18 @@ export function SettingsPanel({ isOpen, onClose }: SettingsPanelProps) {
   const setReduceMotion = useGameStore((state) => state.setReduceMotion);
   const retroMode = useGameStore((state) => state.retroMode);
   const setRetroMode = useGameStore((state) => state.setRetroMode);
+  const theme = useGameStore((state) => state.theme);
+  const setTheme = useGameStore((state) => state.setTheme);
   const { mode } = useTheme();
+
+  /**
+   * Handle theme toggle - switches between cute and horror themes
+   * Requirement 1.2: Immediately apply selected theme to all UI components
+   */
+  const handleThemeToggle = (newTheme: Theme) => {
+    setTheme(newTheme);
+    document.documentElement.setAttribute("data-theme", newTheme);
+  };
 
   if (!isOpen) return null;
 
@@ -55,6 +67,34 @@ export function SettingsPanel({ isOpen, onClose }: SettingsPanelProps) {
         </div>
 
         <div className="settings-content">
+          {/* Theme Toggle - Requirements 1.1, 1.2 */}
+          <div className="setting-group">
+            <span className="setting-label">Theme</span>
+            <div className="theme-toggle" role="radiogroup" aria-label="Theme selection">
+              <button
+                type="button"
+                className={`theme-toggle-btn theme-toggle-btn--cute ${theme === "cute" ? "theme-toggle-btn--active" : ""}`}
+                onClick={() => handleThemeToggle("cute")}
+                aria-checked={theme === "cute"}
+                role="radio"
+              >
+                Cute 🌸
+              </button>
+              <button
+                type="button"
+                className={`theme-toggle-btn theme-toggle-btn--horror ${theme === "horror" ? "theme-toggle-btn--active" : ""}`}
+                onClick={() => handleThemeToggle("horror")}
+                aria-checked={theme === "horror"}
+                role="radio"
+              >
+                Horror 💀
+              </button>
+            </div>
+            <span className="setting-hint">
+              Choose your visual style
+            </span>
+          </div>
+
           {/* Game Speed */}
           <div className="setting-group">
             <label className="setting-label" htmlFor="game-speed">

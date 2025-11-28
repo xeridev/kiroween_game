@@ -68,6 +68,113 @@
   --retro-shadow: 4px 4px 0 #000;
 }
 
+/* =============================================================================
+   THEME SYSTEM - Cute and Horror Themes
+   WCAG AA compliant color schemes for accessibility
+   Requirements: 2.1, 2.2, 2.3, 2.4, 2.5, 3.1, 3.2, 3.3, 3.4, 4.1, 4.2, 4.3, 4.4, 4.5, 5.1, 5.4
+   ============================================================================= */
+
+/* -----------------------------------------------------------------------------
+   Cute Theme - Cheerful and Inviting
+   Light pastel backgrounds with dark text for WCAG AA compliance
+   Requirements: 3.1, 3.2, 3.3, 3.4, 5.1, 5.4
+   ----------------------------------------------------------------------------- */
+[data-theme="cute"] {
+  /* Backgrounds - Light pastels */
+  --theme-background: #FFF5F8;
+  --theme-background-secondary: #F5E6F0;
+  --theme-background-tertiary: #FFE6F0;
+  
+  /* Text - Dark colors for contrast (4.5:1+ ratio) */
+  --theme-text: #2D2D3A;
+  --theme-text-secondary: #4A4A5E;
+  --theme-text-muted: #6B6B7A;
+  
+  /* Accents - Pastel colors */
+  --theme-primary: #E85A9C;
+  --theme-secondary: #9B7BB8;
+  --theme-accent: #5BBAA7;
+  
+  /* States */
+  --theme-success: #5CB85C;
+  --theme-warning: #D4A017;
+  --theme-danger: #D9534F;
+  
+  /* Effects - Soft shadows and rounded borders */
+  --theme-shadow: 0 4px 12px rgba(232, 90, 156, 0.15);
+  --theme-border-radius: 16px;
+  --theme-border: 2px solid #E8D5F2;
+  
+  /* Glass effects */
+  --theme-glass-bg: rgba(255, 245, 248, 0.85);
+  --theme-glass-border: rgba(232, 90, 156, 0.2);
+  --theme-glass-blur: 12px;
+  
+  /* Interactive states */
+  --theme-hover-bg: rgba(232, 90, 156, 0.1);
+  --theme-active-bg: rgba(232, 90, 156, 0.2);
+  --theme-disabled-bg: #E8E8E8;
+  --theme-disabled-text: #9A9A9A;
+  
+  /* Stat bar gradients */
+  --theme-stat-hunger: linear-gradient(90deg, #5BBAA7 0%, #E85A9C 100%);
+  --theme-stat-sanity: linear-gradient(90deg, #9B7BB8 0%, #5BBAA7 100%);
+  --theme-stat-corruption: linear-gradient(90deg, #E85A9C 0%, #9B7BB8 100%);
+}
+
+/* -----------------------------------------------------------------------------
+   Horror Theme - Atmospheric and Unsettling
+   Dark backgrounds with light text for WCAG AA compliance
+   Requirements: 4.1, 4.2, 4.3, 4.4, 4.5, 5.1, 5.4
+   ----------------------------------------------------------------------------- */
+[data-theme="horror"] {
+  /* Backgrounds - Deep dark colors */
+  --theme-background: #0D0A12;
+  --theme-background-secondary: #1A1520;
+  --theme-background-tertiary: #251D2D;
+  
+  /* Text - Light colors for contrast (4.5:1+ ratio) */
+  --theme-text: #E8E4EC;
+  --theme-text-secondary: #B8B0C0;
+  --theme-text-muted: #8A8090;
+  
+  /* Accents - Blood red and toxic green */
+  --theme-primary: #8B0000;
+  --theme-secondary: #4A0E4E;
+  --theme-accent: #39FF14;
+  
+  /* States */
+  --theme-success: #2E7D32;
+  --theme-warning: #FF6B00;
+  --theme-danger: #FF1744;
+  
+  /* Effects - Sharp shadows */
+  --theme-shadow: 0 4px 20px rgba(139, 0, 0, 0.4);
+  --theme-border-radius: 4px;
+  --theme-border: 1px solid #8B0000;
+  
+  /* Glass effects */
+  --theme-glass-bg: rgba(13, 10, 18, 0.9);
+  --theme-glass-border: rgba(139, 0, 0, 0.3);
+  --theme-glass-blur: 8px;
+  
+  /* Interactive states */
+  --theme-hover-bg: rgba(139, 0, 0, 0.2);
+  --theme-active-bg: rgba(139, 0, 0, 0.3);
+  --theme-disabled-bg: #1A1520;
+  --theme-disabled-text: #5A5060;
+  
+  /* Stat bar gradients */
+  --theme-stat-hunger: linear-gradient(90deg, #8B0000 0%, #FF0000 100%);
+  --theme-stat-sanity: linear-gradient(90deg, #8B0000 0%, #39FF14 100%);
+  --theme-stat-corruption: linear-gradient(90deg, #4A0E4E 0%, #8B0000 100%);
+}
+
+/* =============================================================================
+   STAGE-SPECIFIC THEME OVERRIDES
+   Stage-based styling that works with both cute and horror themes
+   ============================================================================= */
+
 /* -----------------------------------------------------------------------------
    EGG Stage - Cutesy Theme
    Pastel pink/lavender, Fredoka One, rounded borders, soft shadows

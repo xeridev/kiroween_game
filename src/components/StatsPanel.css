@@ -1,22 +1,26 @@
 /* Stats Panel Content - Left sidebar component with glassmorphism */
-/* Requirements: 6.2, 6.4, 6.5 */
+/* Requirements: 6.2, 6.4, 6.5, 2.5, 5.1 */
 .stats-panel-content {
   padding: 1rem;
   font-family: 'VT323', monospace;
   color: var(--theme-text, var(--retro-text));
   
-  /* Stat color variables for StatDisplay integration */
-  --stat-hunger-color: #cc0000;
-  --stat-sanity-color: #0000cc;
+  /* Stat color variables for StatDisplay integration - theme-aware */
+  --stat-hunger-color: var(--theme-danger, #cc0000);
+  --stat-sanity-color: var(--theme-secondary, #0000cc);
 }
 
-/* Theme-specific styling (Requirements 6.4, 6.5) */
+/* Theme-specific styling (Requirements 6.4, 6.5, 2.5, 5.1) */
 .stats-panel-content--cute {
-  color: var(--theme-text, #4A4A4A);
+  color: var(--theme-text, #2D2D3A);
+  --stat-hunger-color: var(--theme-danger, #D9534F);
+  --stat-sanity-color: var(--theme-secondary, #9B7BB8);
 }
 
 .stats-panel-content--horror {
-  color: var(--theme-text, #E0E0E0);
+  color: var(--theme-text, #E8E4EC);
+  --stat-hunger-color: var(--theme-danger, #FF1744);
+  --stat-sanity-color: var(--theme-accent, #39FF14);
 }
 
 /* Sanity-based styling */
@@ -25,11 +29,11 @@
 }
 
 .stats-panel-content.warning {
-  box-shadow: inset 0 0 0 2px rgba(255, 152, 0, 0.5);
+  box-shadow: inset 0 0 0 2px var(--theme-warning, rgba(255, 152, 0, 0.5));
 }
 
 .stats-panel-content.critical {
-  box-shadow: inset 0 0 0 2px rgba(244, 67, 54, 0.6);
+  box-shadow: inset 0 0 0 2px var(--theme-danger, rgba(244, 67, 54, 0.6));
   animation: pulse-critical-border 0.5s steps(2) infinite;
 }
 
@@ -37,11 +41,11 @@
 
   0%,
   100% {
-    box-shadow: inset 0 0 0 4px #f44336;
+    box-shadow: inset 0 0 0 4px var(--theme-danger, #f44336);
   }
 
   50% {
-    box-shadow: inset 0 0 0 4px #fff;
+    box-shadow: inset 0 0 0 4px var(--theme-background, #fff);
   }
 }
 
@@ -61,20 +65,20 @@
 
 /* StatDisplay integration - hunger stat styling */
 .stat-group .hunger-stat .stat-display__bar {
-  background: repeating-linear-gradient(45deg,
-      #cc0000,
-      #cc0000 10px,
-      #ff3333 10px,
-      #ff3333 20px);
+  background: var(--theme-stat-hunger, repeating-linear-gradient(45deg,
+      var(--theme-danger, #cc0000),
+      var(--theme-danger, #cc0000) 10px,
+      var(--theme-primary, #ff3333) 10px,
+      var(--theme-primary, #ff3333) 20px));
 }
 
 /* StatDisplay integration - sanity stat styling */
 .stat-group .sanity-stat .stat-display__bar {
-  background: repeating-linear-gradient(45deg,
-      #0000cc,
-      #0000cc 10px,
-      #3333ff 10px,
-      #3333ff 20px);
+  background: var(--theme-stat-sanity, repeating-linear-gradient(45deg,
+      var(--theme-secondary, #0000cc),
+      var(--theme-secondary, #0000cc) 10px,
+      var(--theme-accent, #3333ff) 10px,
+      var(--theme-accent, #3333ff) 20px));
 }
 
 /* Pet Info Section - with subtle glass effect */
@@ -85,19 +89,19 @@
   padding: 1rem;
   background: var(--theme-glass-bg, rgba(0, 0, 0, 0.3));
   border: 1px solid var(--theme-glass-border, rgba(255, 255, 255, 0.1));
-  border-radius: 8px;
+  border-radius: var(--theme-border-radius, 8px);
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
 }
 
 .stats-panel-content--cute .pet-info-section {
-  background: rgba(232, 213, 242, 0.2);
-  border-color: rgba(255, 183, 217, 0.3);
+  background: var(--theme-hover-bg, rgba(232, 213, 242, 0.2));
+  border-color: var(--theme-glass-border, rgba(255, 183, 217, 0.3));
 }
 
 .stats-panel-content--horror .pet-info-section {
-  background: rgba(13, 13, 13, 0.5);
-  border-color: rgba(233, 69, 96, 0.2);
+  background: var(--theme-hover-bg, rgba(13, 13, 13, 0.5));
+  border-color: var(--theme-glass-border, rgba(233, 69, 96, 0.2));
 }
 
 .info-item {
@@ -109,7 +113,7 @@
 .info-label {
   font-family: 'VT323', monospace;
   font-size: 1rem;
-  color: var(--theme-text, #888);
+  color: var(--theme-text-secondary, var(--theme-text, #888));
   opacity: 0.7;
   text-transform: uppercase;
 }
@@ -117,7 +121,7 @@
 .info-value {
   font-family: 'Press Start 2P', cursive;
   font-size: 0.8rem;
-  color: var(--theme-accent, var(--retro-accent));
+  color: var(--theme-primary, var(--theme-accent, var(--retro-accent)));
 }
 
 /* Mobile Responsive */

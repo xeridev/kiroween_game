@@ -125,6 +125,51 @@
   padding-left: 0.25rem;
 }
 
+/* Theme Toggle - Requirements 1.1, 1.2 */
+.theme-toggle {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.theme-toggle-btn {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  font-family: "VT323", monospace;
+  font-size: 1.1rem;
+  background: var(--theme-glass-bg, rgba(0, 0, 0, 0.3));
+  color: var(--theme-text, #fff);
+  border: 2px solid var(--theme-glass-border, rgba(255, 255, 255, 0.2));
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.theme-toggle-btn:hover {
+  background: var(--theme-glass-bg, rgba(0, 0, 0, 0.4));
+  border-color: var(--theme-accent, #e94560);
+}
+
+.theme-toggle-btn:focus {
+  outline: 2px dashed var(--theme-accent, #e94560);
+  outline-offset: 2px;
+}
+
+.theme-toggle-btn--active {
+  background: var(--theme-accent, #e94560);
+  border-color: var(--theme-accent, #e94560);
+  color: #fff;
+}
+
+.theme-toggle-btn--cute.theme-toggle-btn--active {
+  background: #E85A9C;
+  border-color: #E85A9C;
+}
+
+.theme-toggle-btn--horror.theme-toggle-btn--active {
+  background: #8B0000;
+  border-color: #8B0000;
+}
+
 .settings-footer {
   padding: 1rem;
   border-top: 1px solid var(--theme-glass-border, rgba(255, 255, 255, 0.1));
