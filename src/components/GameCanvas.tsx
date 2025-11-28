@@ -296,7 +296,7 @@ export function GameCanvas({
           // Load texture and create sprite
           const texture = await PIXI.Assets.load(petArtUrl);
 
-          if (!texture || !texture.valid) {
+          if (!texture) {
             throw new Error(`Failed to load texture from: ${petArtUrl}`);
           }
 
@@ -436,33 +436,25 @@ export function GameCanvas({
     const radiusY = baseSize * stretch;
 
     // Main body
-    graphics.beginFill(color);
-    if (horrorActive) {
-      graphics.alpha = 0.7 + Math.random() * 0.3;
-    } else {
-      graphics.alpha = 1;
-    }
-    graphics.drawEllipse(offsetX, offsetY, radiusX, radiusY);
-    graphics.endFill();
+    const bodyAlpha = horrorActive ? 0.7 + Math.random() * 0.3 : 1;
+    graphics.ellipse(offsetX, offsetY, radiusX, radiusY);
+    graphics.fill({ color, alpha: bodyAlpha });
 
     // Eyes
-    graphics.alpha = 1;
     const eyeSize = baseSize * 0.15;
     const eyeSpacing = baseSize * 0.4;
 
     // Left eye
-    graphics.beginFill(0x000000);
-    graphics.drawCircle(offsetX - eyeSpacing, offsetY - baseSize * 0.2, eyeSize);
-    graphics.endFill();
+    graphics.circle(offsetX - eyeSpacing, offsetY - baseSize * 0.2, eyeSize);
+    graphics.fill({ color: 0x000000 });
 
     // Right eye
-    graphics.beginFill(0x000000);
-    graphics.drawCircle(offsetX + eyeSpacing, offsetY - baseSize * 0.2, eyeSize);
-    graphics.endFill();
+    graphics.circle(offsetX + eyeSpacing, offsetY - baseSize * 0.2, eyeSize);
+    graphics.fill({ color: 0x000000 });
 
     // Glow effect (outer ring)
-    graphics.lineStyle(3, color, 0.3);
-    graphics.drawEllipse(offsetX, offsetY, radiusX * 1.2, radiusY * 1.2);
+    graphics.ellipse(offsetX, offsetY, radiusX * 1.2, radiusY * 1.2);
+    graphics.stroke({ width: 3, color, alpha: 0.3 });
   };
 
   const drawSparkPet = (
@@ -482,12 +474,7 @@ export function GameCanvas({
     const halfBase = baseSize * 0.866; // sqrt(3)/2 for equilateral triangle
 
     // Main triangle body
-    graphics.beginFill(color);
-    if (horrorActive) {
-      graphics.alpha = 0.6 + Math.random() * 0.4;
-    } else {
-      graphics.alpha = 1;
-    }
+    const bodyAlpha = horrorActive ? 0.6 + Math.random() * 0.4 : 1;
 
     graphics.moveTo(offsetX + jitterX, offsetY - height / 2 + jitterY);
     graphics.lineTo(
@@ -499,25 +486,21 @@ export function GameCanvas({
       offsetY + height / 2 + jitterY
     );
     graphics.closePath();
-    graphics.endFill();
+    graphics.fill({ color, alpha: bodyAlpha });
 
     // Eyes
-    graphics.alpha = 1;
     const eyeSize = baseSize * 0.12;
     const eyeY = offsetY - baseSize * 0.2;
 
     // Left eye
-    graphics.beginFill(0x000000);
-    graphics.drawCircle(offsetX - baseSize * 0.25, eyeY, eyeSize);
-    graphics.endFill();
+    graphics.circle(offsetX - baseSize * 0.25, eyeY, eyeSize);
+    graphics.fill({ color: 0x000000 });
 
     // Right eye
-    graphics.beginFill(0x000000);
-    graphics.drawCircle(offsetX + baseSize * 0.25, eyeY, eyeSize);
-    graphics.endFill();
+    graphics.circle(offsetX + baseSize * 0.25, eyeY, eyeSize);
+    graphics.fill({ color: 0x000000 });
 
     // Energy outline
-    graphics.lineStyle(4, color, 0.5);
     graphics.moveTo(offsetX + jitterX, offsetY - height / 2 + jitterY - 15);
     graphics.lineTo(
       offsetX - halfBase + jitterX - 15,
@@ -528,10 +511,10 @@ export function GameCanvas({
       offsetY + height / 2 + jitterY + 15
     );
     graphics.closePath();
+    graphics.stroke({ width: 4, color, alpha: 0.5 });
 
     // Electric spark lines
     const time = animationTimeRef.current * 0.1;
-    graphics.lineStyle(2, 0xffffff, 0.8);
     for (let i = 0; i < 3; i++) {
       const angle = (time + i * 2) % 6.28;
       const sparkLength = baseSize * 0.5;
@@ -541,6 +524,7 @@ export function GameCanvas({
         offsetY + Math.sin(angle) * sparkLength
       );
     }
+    graphics.stroke({ width: 2, color: 0xffffff, alpha: 0.8 });
   };
 
   const drawEchoPet = (
@@ -558,58 +542,48 @@ export function GameCanvas({
     const size = baseSize * 1.2;
 
     // Main diamond body
-    graphics.beginFill(color);
-    if (horrorActive) {
-      graphics.alpha = pulse * (0.3 + Math.random() * 0.4);
-    } else {
-      graphics.alpha = pulse;
-    }
+    const bodyAlpha = horrorActive ? pulse * (0.3 + Math.random() * 0.4) : pulse;
 
     graphics.moveTo(offsetX, offsetY - size);
     graphics.lineTo(offsetX + size, offsetY);
     graphics.lineTo(offsetX, offsetY + size);
     graphics.lineTo(offsetX - size, offsetY);
     graphics.closePath();
-    graphics.endFill();
+    graphics.fill({ color, alpha: bodyAlpha });
 
     // Eyes
-    graphics.alpha = 1;
     const eyeSize = baseSize * 0.12;
 
     // Left eye
-    graphics.beginFill(0x000000);
-    graphics.drawCircle(offsetX - baseSize * 0.3, offsetY - baseSize * 0.15, eyeSize);
-    graphics.endFill();
+    graphics.circle(offsetX - baseSize * 0.3, offsetY - baseSize * 0.15, eyeSize);
+    graphics.fill({ color: 0x000000 });
 
     // Right eye
-    graphics.beginFill(0x000000);
-    graphics.drawCircle(offsetX + baseSize * 0.3, offsetY - baseSize * 0.15, eyeSize);
-    graphics.endFill();
+    graphics.circle(offsetX + baseSize * 0.3, offsetY - baseSize * 0.15, eyeSize);
+    graphics.fill({ color: 0x000000 });
 
     // Echo trail effect (multiple fading diamonds)
     for (let i = 1; i <= 2; i++) {
       const trailSize = size * (1 + i * 0.15);
       const trailAlpha = pulse * (0.3 / i);
 
-      graphics.lineStyle(3, color, trailAlpha);
       graphics.moveTo(offsetX, offsetY - trailSize);
       graphics.lineTo(offsetX + trailSize, offsetY);
       graphics.lineTo(offsetX, offsetY + trailSize);
       graphics.lineTo(offsetX - trailSize, offsetY);
       graphics.closePath();
+      graphics.stroke({ width: 3, color, alpha: trailAlpha });
     }
 
     // Floating particles around ECHO
-    graphics.lineStyle(0);
     for (let i = 0; i < 4; i++) {
       const angle = (time * 2 + i * Math.PI / 2) % (Math.PI * 2);
       const distance = baseSize * 1.5;
       const particleX = offsetX + Math.cos(angle) * distance;
       const particleY = offsetY + Math.sin(angle) * distance;
 
-      graphics.beginFill(color, 0.6);
-      graphics.drawCircle(particleX, particleY, 5);
-      graphics.endFill();
+      graphics.circle(particleX, particleY, 5);
+      graphics.fill({ color, alpha: 0.6 });
     }
   };
 
