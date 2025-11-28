@@ -30,3 +30,9 @@ dist-ssr
 *.sw?
 .vercel
 .env*.local
+
+# Large audio files (excluded from git)
+public/sounds/Ambient/Suburban Neighborhood_morning.wav
+public/sounds/Ambient/Crying_moaning_ambience_2.wav
+public/sounds/Ambient/Rain_Heavy.wav
+public/sounds/House & Office/Gas funace_running.wav

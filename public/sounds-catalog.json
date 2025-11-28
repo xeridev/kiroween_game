@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "generatedAt": "2025-11-28T13:16:37.175Z",
+  "generatedAt": "2025-11-28T17:11:06.917Z",
   "categories": {
     "monster": [
       {
@@ -720,20 +720,6 @@
         "description": "Creepy ambience 5 (Ambient)"
       },
       {
-        "id": "ambient_crying_moaning_ambience_2",
-        "path": "sounds/Ambient/Crying_moaning_ambience_2.wav",
-        "category": "ambient",
-        "tags": [
-          "atmosphere",
-          "background",
-          "crying",
-          "moaning",
-          "ambience"
-        ],
-        "loop": true,
-        "description": "Crying moaning ambience 2 (Ambient)"
-      },
-      {
         "id": "ambient_crying_moaning_ambience_3",
         "path": "sounds/Ambient/Crying_moaning_ambience_3.wav",
         "category": "ambient",
@@ -903,19 +889,6 @@
         "description": "Radio static (Ambient)"
       },
       {
-        "id": "ambient_rain_heavy",
-        "path": "sounds/Ambient/Rain_Heavy.wav",
-        "category": "ambient",
-        "tags": [
-          "atmosphere",
-          "background",
-          "rain",
-          "heavy"
-        ],
-        "loop": true,
-        "description": "Rain Heavy (Ambient)"
-      },
-      {
         "id": "ambient_rain_medium_2",
         "path": "sounds/Ambient/Rain_Medium_2.wav",
         "category": "ambient",
@@ -953,20 +926,6 @@
         ],
         "loop": true,
         "description": "Screech metalic dragging 3 (Ambient)"
-      },
-      {
-        "id": "ambient_suburban_neighborhood_morning",
-        "path": "sounds/Ambient/Suburban Neighborhood_morning.wav",
-        "category": "ambient",
-        "tags": [
-          "atmosphere",
-          "background",
-          "suburban",
-          "neighborhood",
-          "morning"
-        ],
-        "loop": true,
-        "description": "Suburban Neighborhood morning (Ambient)"
       },
       {
         "id": "ambient_tap_reverb",
@@ -2090,20 +2049,6 @@
         "description": "Garage door (House & Office)"
       },
       {
-        "id": "household_gas_funace_running",
-        "path": "sounds/House & Office/Gas funace_running.wav",
-        "category": "household",
-        "tags": [
-          "environment",
-          "mundane",
-          "gas",
-          "funace",
-          "running"
-        ],
-        "loop": false,
-        "description": "Gas funace running (House & Office)"
-      },
-      {
         "id": "household_gas_stove_lighting",
         "path": "sounds/House & Office/Gas Stove_lighting.wav",
         "category": "household",
@@ -2620,20 +2565,6 @@
       "description": "Creepy ambience 5 (Ambient)"
     },
     {
-      "id": "ambient_crying_moaning_ambience_2",
-      "path": "sounds/Ambient/Crying_moaning_ambience_2.wav",
-      "category": "ambient",
-      "tags": [
-        "atmosphere",
-        "background",
-        "crying",
-        "moaning",
-        "ambience"
-      ],
-      "loop": true,
-      "description": "Crying moaning ambience 2 (Ambient)"
-    },
-    {
       "id": "ambient_crying_moaning_ambience_3",
       "path": "sounds/Ambient/Crying_moaning_ambience_3.wav",
       "category": "ambient",
@@ -2803,19 +2734,6 @@
       "description": "Radio static (Ambient)"
     },
     {
-      "id": "ambient_rain_heavy",
-      "path": "sounds/Ambient/Rain_Heavy.wav",
-      "category": "ambient",
-      "tags": [
-        "atmosphere",
-        "background",
-        "rain",
-        "heavy"
-      ],
-      "loop": true,
-      "description": "Rain Heavy (Ambient)"
-    },
-    {
       "id": "ambient_rain_medium_2",
       "path": "sounds/Ambient/Rain_Medium_2.wav",
       "category": "ambient",
@@ -2853,20 +2771,6 @@
       ],
       "loop": true,
       "description": "Screech metalic dragging 3 (Ambient)"
-    },
-    {
-      "id": "ambient_suburban_neighborhood_morning",
-      "path": "sounds/Ambient/Suburban Neighborhood_morning.wav",
-      "category": "ambient",
-      "tags": [
-        "atmosphere",
-        "background",
-        "suburban",
-        "neighborhood",
-        "morning"
-      ],
-      "loop": true,
-      "description": "Suburban Neighborhood morning (Ambient)"
     },
     {
       "id": "ambient_tap_reverb",
@@ -3982,20 +3886,6 @@
       ],
       "loop": false,
       "description": "Garage door (House & Office)"
-    },
-    {
-      "id": "household_gas_funace_running",
-      "path": "sounds/House & Office/Gas funace_running.wav",
-      "category": "household",
-      "tags": [
-        "environment",
-        "mundane",
-        "gas",
-        "funace",
-        "running"
-      ],
-      "loop": false,
-      "description": "Gas funace running (House & Office)"
     },
     {
       "id": "household_gas_stove_lighting",
