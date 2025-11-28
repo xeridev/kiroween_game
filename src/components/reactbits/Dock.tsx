@@ -48,6 +48,8 @@ export interface DockProps {
   orientation?: 'horizontal' | 'vertical';
   /** Whether to disable animations */
   disableAnimation?: boolean;
+  /** Debug: Hidden */
+  hidden?: boolean
 }
 
 /**
@@ -65,7 +67,12 @@ export function Dock({
   spring: _spring = { mass: 0.1, stiffness: 150, damping: 12 },
   orientation = 'horizontal',
   disableAnimation = false,
+  hidden = true,
 }: DockProps) {
+
+  if (hidden) {
+    return null
+  }
 
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [itemSizes, setItemSizes] = useState<number[]>(items.map(() => baseItemSize));
