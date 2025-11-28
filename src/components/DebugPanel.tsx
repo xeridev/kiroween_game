@@ -1,6 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useGameStore } from "../store";
 import type { PetStage } from "../utils/types";
+import { 
+  getPerformanceState, 
+  onPerformanceChange,
+  startPerformanceMonitoring,
+} from "../utils/animationUtils";
 import "./DebugPanel.css";
 
 interface DebugPanelProps {
@@ -15,6 +20,35 @@ export function DebugPanel({ isOpen, onClose }: DebugPanelProps) {
     corruption: "",
   });
   const [ageInput, setAgeInput] = useState("");
+  
+  // Performance monitoring state (Requirement 1.5, 7.4)
+  const [performanceState, setPerformanceState] = useState(() => getPerformanceState());
+  
+  // Subscribe to performance changes when panel is open
+  useEffect(() => {
+    if (!isOpen) return;
+    
+    // Ensure monitoring is started
+    startPerformanceMonitoring();
+    
+    // Update state immediately
+    setPerformanceState(getPerformanceState());
+    
+    // Subscribe to changes
+    const unsubscribe = onPerformanceChange((state) => {
+      setPerformanceState(state);
+    });
+    
+    // Also poll for updates since FPS changes frequently
+    const interval = setInterval(() => {
+      setPerformanceState(getPerformanceState());
+    }, 500);
+    
+    return () => {
+      unsubscribe();
+      clearInterval(interval);
+    };
+  }, [isOpen]);
 
   const stats = useGameStore((state) => state.stats);
   const stage = useGameStore((state) => state.stage);
@@ -168,6 +202,31 @@ export function DebugPanel({ isOpen, onClose }: DebugPanelProps) {
               <div className="debug-stat">
                 <span className="debug-stat-label">LOGS:</span>
                 <span className="debug-stat-value">{logs.length}</span>
+              </div>
+            </div>
+          </section>
+          
+          {/* Performance Monitoring Section (Requirement 1.5, 7.4) */}
+          <section className="debug-section">
+            <h3 className="debug-section-title">&gt; PERFORMANCE</h3>
+            <div className="debug-grid">
+              <div className="debug-stat">
+                <span className="debug-stat-label">FPS:</span>
+                <span className={`debug-stat-value ${performanceState.currentFps < 30 ? 'debug-stat-warning' : ''}`}>
+                  {performanceState.currentFps}
+                </span>
+              </div>
+              <div className="debug-stat">
+                <span className="debug-stat-label">LOW-END:</span>
+                <span className="debug-stat-value">
+                  {performanceState.isLowEndDevice ? "YES" : "NO"}
+                </span>
+              </div>
+              <div className="debug-stat">
+                <span className="debug-stat-label">REDUCE:</span>
+                <span className="debug-stat-value">
+                  {performanceState.shouldReduceAnimations ? "YES" : "NO"}
+                </span>
               </div>
             </div>
           </section>

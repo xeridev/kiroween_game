@@ -1,7 +1,13 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render } from "@testing-library/react";
+import { DndContext } from "@dnd-kit/core";
 import { GameCanvas } from "./components/GameCanvas";
 import type { PetTraits } from "./utils/types";
+
+// Wrapper component to provide DndContext for tests
+function TestWrapper({ children }: { children: React.ReactNode }) {
+  return <DndContext>{children}</DndContext>;
+}
 
 // Mock PixiJS to avoid canvas rendering issues in test environment
 vi.mock("pixi.js", () => {
@@ -64,59 +70,69 @@ describe("GameCanvas", () => {
 
   it("should render without crashing", () => {
     const { container } = render(
-      <GameCanvas traits={mockTraits} stage="EGG" sanity={100} corruption={0} petName="Test Pet" />
+      <TestWrapper>
+        <GameCanvas traits={mockTraits} stage="EGG" sanity={100} corruption={0} petName="Test Pet" />
+      </TestWrapper>
     );
     expect(container).toBeTruthy();
   });
 
   it("should render with GLOOM archetype", () => {
     const { container } = render(
-      <GameCanvas
-        traits={{ ...mockTraits, archetype: "GLOOM" }}
-        stage="BABY"
-        sanity={80}
-        corruption={10}
-        petName="Gloom Pet"
-      />
+      <TestWrapper>
+        <GameCanvas
+          traits={{ ...mockTraits, archetype: "GLOOM" }}
+          stage="BABY"
+          sanity={80}
+          corruption={10}
+          petName="Gloom Pet"
+        />
+      </TestWrapper>
     );
     expect(container).toBeTruthy();
   });
 
   it("should render with SPARK archetype", () => {
     const { container } = render(
-      <GameCanvas
-        traits={{ ...mockTraits, archetype: "SPARK" }}
-        stage="TEEN"
-        sanity={50}
-        corruption={30}
-        petName="Spark Pet"
-      />
+      <TestWrapper>
+        <GameCanvas
+          traits={{ ...mockTraits, archetype: "SPARK" }}
+          stage="TEEN"
+          sanity={50}
+          corruption={30}
+          petName="Spark Pet"
+        />
+      </TestWrapper>
     );
     expect(container).toBeTruthy();
   });
 
   it("should render with ECHO archetype", () => {
     const { container } = render(
-      <GameCanvas
-        traits={{ ...mockTraits, archetype: "ECHO" }}
-        stage="ABOMINATION"
-        sanity={20}
-        corruption={90}
-        petName="Echo Pet"
-      />
+      <TestWrapper>
+        <GameCanvas
+          traits={{ ...mockTraits, archetype: "ECHO" }}
+          stage="ABOMINATION"
+          sanity={20}
+          corruption={90}
+          petName="Echo Pet"
+        />
+      </TestWrapper>
     );
     expect(container).toBeTruthy();
   });
 
   it("should handle low sanity (horror effects)", () => {
     const { container } = render(
-      <GameCanvas
-        traits={mockTraits}
-        stage="TEEN"
-        sanity={15}
-        corruption={50}
-        petName="Horror Pet"
-      />
+      <TestWrapper>
+        <GameCanvas
+          traits={mockTraits}
+          stage="TEEN"
+          sanity={15}
+          corruption={50}
+          petName="Horror Pet"
+        />
+      </TestWrapper>
     );
     expect(container).toBeTruthy();
   });
@@ -131,13 +147,15 @@ describe("GameCanvas", () => {
 
     stages.forEach((stage) => {
       const { container } = render(
-        <GameCanvas
-          traits={mockTraits}
-          stage={stage}
-          sanity={100}
-          corruption={0}
-          petName="Stage Test Pet"
-        />
+        <TestWrapper>
+          <GameCanvas
+            traits={mockTraits}
+            stage={stage}
+            sanity={100}
+            corruption={0}
+            petName="Stage Test Pet"
+          />
+        </TestWrapper>
       );
       expect(container).toBeTruthy();
     });

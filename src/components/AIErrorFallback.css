@@ -85,3 +85,20 @@
 .ai-error-button:active {
   transform: translateY(0);
 }
+
+
+/* Reduced motion support (Requirement 6.4) */
+@media (prefers-reduced-motion: reduce) {
+  .ai-error-fallback {
+    animation: none !important;
+  }
+
+  .ai-error-button {
+    transition: none !important;
+  }
+
+  .ai-error-button.retry:hover,
+  .ai-error-button.dismiss:hover {
+    transform: none !important;
+  }
+}

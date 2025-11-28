@@ -1,0 +1,59 @@
+/**
+ * BackgroundLayer styles
+ * Positions the animated background behind all game content
+ * 
+ * Requirements: 1.1, 1.2, 1.3, 1.4, 1.5, 7.1, 7.2
+ */
+
+.background-layer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+/* Waves canvas fills the entire background */
+.background-layer .background-waves {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* Transition state - smooth color changes (Requirement 1.4) */
+.background-layer.transitioning {
+  /* Color transitions handled by GSAP in component */
+}
+
+/* Theme mode indicators for debugging/styling hooks */
+.background-layer[data-mode="cute"] {
+  /* Cute mode - soft pastel background (Requirement 1.2) */
+}
+
+.background-layer[data-mode="horror"] {
+  /* Horror mode - dark ominous background (Requirement 1.3) */
+}
+
+/* Reduce motion - static background (Requirement 1.5) */
+@media (prefers-reduced-motion: reduce) {
+  .background-layer .background-waves {
+    /* Animation disabled via disableAnimation prop */
+    /* Color transitions are instant when reduce motion is enabled */
+  }
+}
+
+/* Ensure background doesn't interfere with interactions */
+.background-layer canvas {
+  pointer-events: none;
+}
+
+/* Retro mode - solid background instead of animated waves (Requirement 8.3) */
+.background-layer--retro {
+  /* Simple solid background, no animations */
+  transition: background-color 0.3s ease;
+}

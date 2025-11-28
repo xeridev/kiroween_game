@@ -1,9 +1,15 @@
 import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
+import { DndContext } from "@dnd-kit/core";
 import CreationScreen from "./components/CreationScreen";
 import { InventoryPanel } from "./components/InventoryPanel";
 import { UIOverlay } from "./components/UIOverlay";
 import type { Offering, PetStats, NarrativeLog } from "./utils/types";
+
+// Wrapper component to provide DndContext for tests
+function TestWrapper({ children }: { children: React.ReactNode }) {
+  return <DndContext>{children}</DndContext>;
+}
 
 describe("Accessibility Features", () => {
   describe("CreationScreen", () => {
@@ -46,12 +52,14 @@ describe("Accessibility Features", () => {
       ];
 
       render(
-        <InventoryPanel
-          inventory={mockOfferings}
-          onFeed={vi.fn()}
-          canScavenge={true}
-          onScavenge={vi.fn()}
-        />
+        <TestWrapper>
+          <InventoryPanel
+            inventory={mockOfferings}
+            onFeed={vi.fn()}
+            canScavenge={true}
+            onScavenge={vi.fn()}
+          />
+        </TestWrapper>
       );
 
       // Check region has aria-label
@@ -68,12 +76,14 @@ describe("Accessibility Features", () => {
 
     it("should have accessible scavenge button", () => {
       render(
-        <InventoryPanel
-          inventory={[]}
-          onFeed={vi.fn()}
-          canScavenge={true}
-          onScavenge={vi.fn()}
-        />
+        <TestWrapper>
+          <InventoryPanel
+            inventory={[]}
+            onFeed={vi.fn()}
+            canScavenge={true}
+            onScavenge={vi.fn()}
+          />
+        </TestWrapper>
       );
 
       const scavengeButton = screen.getByRole("button", {
@@ -91,12 +101,14 @@ describe("Accessibility Features", () => {
       ];
 
       render(
-        <InventoryPanel
-          inventory={fullInventory}
-          onFeed={vi.fn()}
-          canScavenge={false}
-          onScavenge={vi.fn()}
-        />
+        <TestWrapper>
+          <InventoryPanel
+            inventory={fullInventory}
+            onFeed={vi.fn()}
+            canScavenge={false}
+            onScavenge={vi.fn()}
+          />
+        </TestWrapper>
       );
 
       const scavengeButton = screen.getByRole("button", {

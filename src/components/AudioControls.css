@@ -4,6 +4,7 @@
    ============================================================================= */
 
 .audio-controls {
+  flex-direction: column;
   display: flex;
   align-items: center;
   gap: 1rem;

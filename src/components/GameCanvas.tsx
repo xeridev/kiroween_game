@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import * as PIXI from "pixi.js";
+import { useDroppable } from "@dnd-kit/core";
 import type { PetTraits, PetStage } from "../utils/types";
 import { logError } from "../utils/errorLogger";
 import {
@@ -9,6 +10,8 @@ import {
   getPlaceholderPath,
   placeholderExists,
 } from "../utils/petArtGenerator";
+import { AnimatedPetName } from "./AnimatedPetName";
+import { AnimatedStageIndicator } from "./AnimatedStageIndicator";
 import "./GameCanvas.css";
 
 interface GameCanvasProps {
@@ -17,6 +20,9 @@ interface GameCanvasProps {
   sanity: number;
   corruption: number;
   petName: string;
+  isDropTarget?: boolean; // Whether an item is being dragged over this canvas
+  reduceMotion?: boolean; // Whether to disable animations (Requirement 3.4)
+  retroMode?: boolean; // Whether retro mode is enabled (Requirement 8.3)
 }
 
 // Mobile breakpoint constant
@@ -66,8 +72,27 @@ export function GameCanvas({
   sanity,
   corruption,
   petName,
+  isDropTarget = false,
+  reduceMotion = false,
+  retroMode = false,
 }: GameCanvasProps) {
   const canvasRef = useRef<HTMLDivElement>(null);
+  
+  // Set up droppable zone for drag-to-feed (Requirement 2.1)
+  const { setNodeRef, isOver } = useDroppable({
+    id: 'game-canvas',
+  });
+  
+  // Combine refs for both PixiJS and droppable
+  const combinedRef = useCallback((node: HTMLDivElement | null) => {
+    // Set the ref for PixiJS
+    (canvasRef as React.MutableRefObject<HTMLDivElement | null>).current = node;
+    // Set the ref for droppable
+    setNodeRef(node);
+  }, [setNodeRef]);
+  
+  // Show drop indicator when dragging over (Requirement 2.1, 2.4)
+  const showDropIndicator = isOver || isDropTarget;
   const appRef = useRef<PIXI.Application | null>(null);
   const petGraphicsRef = useRef<PIXI.Graphics | null>(null);
   const petSpriteRef = useRef<PIXI.Sprite | null>(null);
@@ -631,21 +656,46 @@ export function GameCanvas({
   return (
     <div className="game-canvas-wrapper">
       <div className="canvas-overlay">
-        <h1 className="overlay-pet-name">{petName}</h1>
-        <div className="overlay-stage-indicator">{stage}</div>
+        {/* Requirement 3.1: Animated pet name with character-by-character fade-in */}
+        {/* Requirement 3.3: Glitch effect when sanity < 30 */}
+        {/* Requirement 8.3: Disable React Bits animations in retro mode */}
+        <AnimatedPetName
+          name={petName}
+          sanity={sanity}
+          disableAnimation={reduceMotion || retroMode}
+          className="overlay-pet-name"
+        />
+        {/* Requirement 3.2: Animated stage indicator with dramatic reveal */}
+        {/* Requirement 8.3: Disable React Bits animations in retro mode */}
+        <AnimatedStageIndicator
+          stage={stage}
+          disableAnimation={reduceMotion || retroMode}
+          className="overlay-stage-indicator"
+        />
       </div>
       <div
-        ref={canvasRef}
-        className="game-canvas-container"
+        ref={combinedRef}
+        className={`game-canvas-container ${showDropIndicator ? 'drop-target-active' : ''}`}
         role="img"
         aria-label={`${petName}, a ${
           traits.archetype
         } pet at ${stage} stage. Sanity: ${sanity.toFixed(0)}%`}
+        aria-dropeffect={showDropIndicator ? "execute" : "none"}
         style={{
           width: canvasSize.width,
           height: canvasSize.height,
         }}
-      />
+      >
+        {/* Drop indicator overlay (Requirement 2.1) */}
+        {showDropIndicator && (
+          <div 
+            className="drop-indicator" 
+            aria-hidden="true"
+          >
+            <span className="drop-indicator-text">Drop to Feed</span>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

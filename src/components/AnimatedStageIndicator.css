@@ -1,0 +1,65 @@
+/**
+ * AnimatedStageIndicator styles
+ * Requirements: 3.2, 3.4
+ */
+
+.animated-stage-indicator {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  background-color: transparent;
+  transition: background-color 0.2s ease;
+}
+
+.animated-stage-indicator .stage-text {
+  display: inline-block;
+  font-family: var(--font-display, 'Courier New', monospace);
+  font-size: 1rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-secondary, #aaa);
+}
+
+/* Stage-specific colors */
+.animated-stage-indicator.stage-egg .stage-text {
+  color: var(--stage-egg-color, #98d9c2);
+}
+
+.animated-stage-indicator.stage-baby .stage-text {
+  color: var(--stage-baby-color, #ffb7d9);
+}
+
+.animated-stage-indicator.stage-teen .stage-text {
+  color: var(--stage-teen-color, #e8d5f2);
+}
+
+.animated-stage-indicator.stage-abomination .stage-text {
+  color: var(--stage-abomination-color, #e94560);
+  text-shadow: 0 0 10px rgba(233, 69, 96, 0.5);
+  animation: abomination-pulse 2s infinite ease-in-out;
+}
+
+@keyframes abomination-pulse {
+  0%, 100% {
+    text-shadow: 0 0 10px rgba(233, 69, 96, 0.5);
+  }
+  50% {
+    text-shadow: 0 0 20px rgba(233, 69, 96, 0.8), 0 0 30px rgba(233, 69, 96, 0.4);
+  }
+}
+
+/* Respect reduce motion preference (Requirement 3.4) */
+@media (prefers-reduced-motion: reduce) {
+  .animated-stage-indicator .stage-text {
+    animation: none !important;
+  }
+  
+  .animated-stage-indicator.stage-abomination .stage-text {
+    animation: none;
+    text-shadow: 0 0 10px rgba(233, 69, 96, 0.5);
+  }
+}

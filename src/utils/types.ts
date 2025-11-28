@@ -93,8 +93,52 @@ export interface AudioActions {
   playSound: (eventType: string, context?: SoundContext) => Promise<void>;
 }
 
+// Drag-and-drop types
+export type DragItemType = 'inventory-item';
+
+export interface DragData {
+  type: DragItemType;
+  item: Offering;
+}
+
+// Animation component props
+export interface CountUpProps {
+  value: number;
+  duration?: number;        // Default: 500ms
+  decimals?: number;        // Default: 1
+  onComplete?: () => void;
+  className?: string;
+}
+
+export interface FadeInProps {
+  children: React.ReactNode;
+  duration?: number;        // Default: 400ms
+  delay?: number;           // Default: 0ms
+  blur?: boolean;           // Default: true
+  className?: string;
+  onComplete?: () => void;  // Callback when animation completes
+}
+
+// Droppable zone identifiers
+export type DroppableId = 'game-canvas' | `inventory-slot-${number}`;
+
+// Settings State Types
+export interface SettingsState {
+  gameSpeed: number;        // 0.5, 1, 2, 4 - game time multiplier
+  crtEnabled: boolean;      // CRT scanline effect toggle
+  reduceMotion: boolean;    // Disable animations
+  retroMode: boolean;       // Retro mode: CRT overlay + disable React Bits animations
+}
+
+export interface SettingsActions {
+  setGameSpeed: (speed: number) => void;
+  setCrtEnabled: (enabled: boolean) => void;
+  setReduceMotion: (enabled: boolean) => void;
+  setRetroMode: (enabled: boolean) => void;
+}
+
 // Game State Interface (includes Audio State and Actions)
-export interface GameState extends AudioState, AudioActions {
+export interface GameState extends AudioState, AudioActions, SettingsState, SettingsActions {
   // Initialization
   isInitialized: boolean;
 
@@ -123,6 +167,7 @@ export interface GameState extends AudioState, AudioActions {
   tick: () => void;
   scavenge: () => Promise<void>;
   feed: (itemId: string) => void;
+  reorderInventory: (newInventory: Offering[]) => void;
   addLog: (text: string, source: LogSource) => void;
   reset: () => void;
 }

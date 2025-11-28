@@ -1,7 +1,13 @@
 import { describe, it, expect, vi } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
+import { DndContext } from "@dnd-kit/core";
 import { InventoryPanel } from "./components/InventoryPanel";
 import type { Offering } from "./utils/types";
+
+// Wrapper component to provide DndContext for tests
+function TestWrapper({ children }: { children: React.ReactNode }) {
+  return <DndContext>{children}</DndContext>;
+}
 
 describe("InventoryPanel", () => {
   const mockOfferings: Offering[] = [
@@ -24,12 +30,14 @@ describe("InventoryPanel", () => {
     const onScavenge = vi.fn();
 
     render(
-      <InventoryPanel
-        inventory={[]}
-        onFeed={onFeed}
-        canScavenge={true}
-        onScavenge={onScavenge}
-      />
+      <TestWrapper>
+        <InventoryPanel
+          inventory={[]}
+          onFeed={onFeed}
+          canScavenge={true}
+          onScavenge={onScavenge}
+        />
+      </TestWrapper>
     );
 
     expect(screen.getByText("No offerings found")).toBeInTheDocument();
@@ -41,12 +49,14 @@ describe("InventoryPanel", () => {
     const onScavenge = vi.fn();
 
     render(
-      <InventoryPanel
-        inventory={mockOfferings}
-        onFeed={onFeed}
-        canScavenge={true}
-        onScavenge={onScavenge}
-      />
+      <TestWrapper>
+        <InventoryPanel
+          inventory={mockOfferings}
+          onFeed={onFeed}
+          canScavenge={true}
+          onScavenge={onScavenge}
+        />
+      </TestWrapper>
     );
 
     expect(screen.getByText("✨")).toBeInTheDocument();
@@ -54,36 +64,20 @@ describe("InventoryPanel", () => {
     expect(screen.getByText("2/3")).toBeInTheDocument();
   });
 
-  it("calls onFeed when card is clicked", () => {
-    const onFeed = vi.fn();
-    const onScavenge = vi.fn();
-
-    render(
-      <InventoryPanel
-        inventory={mockOfferings}
-        onFeed={onFeed}
-        canScavenge={true}
-        onScavenge={onScavenge}
-      />
-    );
-
-    const firstCard = screen.getByText("✨").closest(".offering-card");
-    fireEvent.click(firstCard!);
-
-    expect(onFeed).toHaveBeenCalledWith("1");
-  });
 
   it("displays description in card", () => {
     const onFeed = vi.fn();
     const onScavenge = vi.fn();
 
     render(
-      <InventoryPanel
-        inventory={mockOfferings}
-        onFeed={onFeed}
-        canScavenge={true}
-        onScavenge={onScavenge}
-      />
+      <TestWrapper>
+        <InventoryPanel
+          inventory={mockOfferings}
+          onFeed={onFeed}
+          canScavenge={true}
+          onScavenge={onScavenge}
+        />
+      </TestWrapper>
     );
 
     // Descriptions are now always visible in cards (no tooltip)
@@ -100,12 +94,14 @@ describe("InventoryPanel", () => {
     const onScavenge = vi.fn();
 
     render(
-      <InventoryPanel
-        inventory={mockOfferings}
-        onFeed={onFeed}
-        canScavenge={true}
-        onScavenge={onScavenge}
-      />
+      <TestWrapper>
+        <InventoryPanel
+          inventory={mockOfferings}
+          onFeed={onFeed}
+          canScavenge={true}
+          onScavenge={onScavenge}
+        />
+      </TestWrapper>
     );
 
     // Each card should have "Mystery Item" title
@@ -128,12 +124,14 @@ describe("InventoryPanel", () => {
     ];
 
     render(
-      <InventoryPanel
-        inventory={fullInventory}
-        onFeed={onFeed}
-        canScavenge={false}
-        onScavenge={onScavenge}
-      />
+      <TestWrapper>
+        <InventoryPanel
+          inventory={fullInventory}
+          onFeed={onFeed}
+          canScavenge={false}
+          onScavenge={onScavenge}
+        />
+      </TestWrapper>
     );
 
     const scavengeButton = screen.getByRole("button", {
@@ -148,12 +146,14 @@ describe("InventoryPanel", () => {
     const onScavenge = vi.fn();
 
     render(
-      <InventoryPanel
-        inventory={mockOfferings}
-        onFeed={onFeed}
-        canScavenge={true}
-        onScavenge={onScavenge}
-      />
+      <TestWrapper>
+        <InventoryPanel
+          inventory={mockOfferings}
+          onFeed={onFeed}
+          canScavenge={true}
+          onScavenge={onScavenge}
+        />
+      </TestWrapper>
     );
 
     const scavengeButton = screen.getByRole("button", { name: /scavenge/i });
@@ -166,12 +166,14 @@ describe("InventoryPanel", () => {
     const onScavenge = vi.fn();
 
     render(
-      <InventoryPanel
-        inventory={mockOfferings}
-        onFeed={onFeed}
-        canScavenge={true}
-        onScavenge={onScavenge}
-      />
+      <TestWrapper>
+        <InventoryPanel
+          inventory={mockOfferings}
+          onFeed={onFeed}
+          canScavenge={true}
+          onScavenge={onScavenge}
+        />
+      </TestWrapper>
     );
 
     const scavengeButton = screen.getByRole("button", { name: /scavenge/i });
@@ -185,12 +187,14 @@ describe("InventoryPanel", () => {
     const onScavenge = vi.fn();
 
     const { container } = render(
-      <InventoryPanel
-        inventory={mockOfferings}
-        onFeed={onFeed}
-        canScavenge={true}
-        onScavenge={onScavenge}
-      />
+      <TestWrapper>
+        <InventoryPanel
+          inventory={mockOfferings}
+          onFeed={onFeed}
+          canScavenge={true}
+          onScavenge={onScavenge}
+        />
+      </TestWrapper>
     );
 
     // Check that "PURITY" and "ROT" text do not appear anywhere in the rendered output

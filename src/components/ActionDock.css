@@ -1,0 +1,103 @@
+/**
+ * ActionDock component styles
+ * Requirements: 5.1, 5.2, 5.4, 5.5
+ */
+
+/* Wrapper for responsive positioning */
+.action-dock-wrapper {
+  position: fixed;
+  z-index: 100;
+  pointer-events: auto;
+}
+
+/* Desktop: Position at right side (Requirement 5.5) */
+@media (min-width: 769px) {
+  .action-dock-wrapper {
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+}
+
+/* Mobile: Position at bottom center (Requirement 5.4) */
+@media (max-width: 768px) {
+  .action-dock-wrapper {
+    bottom: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    right: auto;
+    top: auto;
+  }
+  
+  /* Override dock orientation for mobile */
+  .action-dock-wrapper .dock {
+    flex-direction: row !important;
+  }
+  
+  .action-dock-wrapper .dock-panel {
+    flex-direction: row !important;
+  }
+}
+
+/* Theme-based styling */
+.action-dock-wrapper[data-mode="cute"] {
+  --dock-bg: rgba(255, 183, 217, 0.2);
+  --dock-border: rgba(255, 255, 255, 0.3);
+  --dock-item-bg: rgba(255, 255, 255, 0.15);
+  --dock-item-hover-bg: rgba(255, 255, 255, 0.25);
+  --dock-icon-color: #4A4A4A;
+}
+
+.action-dock-wrapper[data-mode="horror"] {
+  --dock-bg: rgba(139, 0, 0, 0.3);
+  --dock-border: rgba(233, 69, 96, 0.4);
+  --dock-item-bg: rgba(0, 0, 0, 0.3);
+  --dock-item-hover-bg: rgba(233, 69, 96, 0.3);
+  --dock-icon-color: #E0E0E0;
+}
+
+/* Action-specific styles */
+.action-scavenge {
+  /* Scavenge button styling */
+}
+
+.action-settings {
+  /* Settings button styling */
+}
+
+.action-zen {
+  /* Zen mode button styling */
+}
+
+/* Disabled state for scavenge */
+.action-disabled {
+  opacity: 0.5;
+  cursor: not-allowed !important;
+}
+
+.action-disabled:hover {
+  background: var(--dock-item-bg) !important;
+  transform: none !important;
+}
+
+/* Scavenging animation */
+.action-scavenge:not(.action-disabled) .dock-item-icon {
+  animation: none;
+}
+
+@keyframes scavenge-pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+/* Reduce motion support */
+@media (prefers-reduced-motion: reduce) {
+  .action-dock-wrapper * {
+    animation: none !important;
+    transition: none !important;
+  }
+}

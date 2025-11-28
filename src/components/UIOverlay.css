@@ -248,3 +248,19 @@
     transform: translate(2px, 2px);
   }
 }
+
+/*
+ Reduced motion support (Requirement 6.4) */
+@media (prefers-reduced-motion: reduce) {
+  .ui-overlay.critical {
+    animation: none !important;
+  }
+
+  .stat-bar {
+    transition: none !important;
+  }
+
+  .ui-overlay.critical .log-container {
+    animation: none !important;
+  }
+}

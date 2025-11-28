@@ -1,0 +1,221 @@
+# Implementation Plan
+
+- [x] 1. Install dependencies and set up project structure
+  - [x] 1.1 Install @dnd-kit packages and gsap
+    - Run `npm install @dnd-kit/core @dnd-kit/sortable @dnd-kit/utilities gsap`
+    - Verify installation in package.json
+    - _Requirements: 1.1, 2.1_
+  - [x] 1.2 Create animations directory structure
+    - Create `src/components/animations/` directory
+    - Create placeholder files: CountUp.tsx, CountUp.css, FadeIn.tsx, FadeIn.css
+    - _Requirements: 3.1, 4.1_
+  - [x] 1.3 Add type definitions to types.ts
+    - Add DragItemType, DragData, CountUpProps, FadeInProps, DroppableId types
+    - _Requirements: 1.1, 3.1, 4.1_
+
+- [x] 2. Implement animation components (React Bits adaptations)
+  - [x] 2.1 Implement CountUp component
+    - Create CountUp.tsx with GSAP animation
+    - Add TypeScript types for props
+    - Handle reduced motion preference
+    - Add error handling with fallback to instant display
+    - _Requirements: 3.1, 3.2, 6.4, 8.5_
+  - [ ]* 2.2 Write property test for CountUp interpolation
+    - **Property 4: CountUp interpolation correctness**
+    - **Validates: Requirements 3.1**
+  - [x] 2.3 Implement CountUp CSS with theme integration
+    - Use CSS custom properties (--font-body, --text-primary)
+    - Add mobile responsive styles
+    - Add reduced motion styles
+    - _Requirements: 9.4_
+  - [x] 2.4 Implement FadeIn component
+    - Create FadeIn.tsx with GSAP fade + blur animation
+    - Add TypeScript types for props
+    - Handle reduced motion preference
+    - Support configurable delay for staggering
+    - _Requirements: 4.1, 6.4_
+  - [x] 2.5 Implement FadeIn CSS with theme integration
+    - Use transform/opacity for GPU acceleration
+    - Add mobile responsive styles
+    - _Requirements: 8.4_
+
+- [x] 3. Implement inventory reorder utility
+  - [x] 3.1 Create reorderInventory utility function
+    - Implement array reordering logic
+    - Export from a new file or add to existing utils
+    - _Requirements: 1.3_
+  - [ ]* 3.2 Write property test for inventory reorder
+    - **Property 1: Inventory reorder preserves items**
+    - **Validates: Requirements 1.3**
+  - [ ]* 3.3 Write property test for invalid drop
+    - **Property 2: Invalid drop preserves inventory state**
+    - **Validates: Requirements 1.4**
+
+- [ ] 4. Checkpoint - Ensure all tests pass
+  - Ensure all tests pass, ask the user if questions arise.
+
+- [x] 5. Implement draggable inventory system
+  - [x] 5.1 Create SortableItem component
+    - Implement useSortable hook integration
+    - Apply transform styles from @dnd-kit
+    - Preserve existing offering-card styling
+    - Add isDragging visual state
+    - _Requirements: 1.1, 1.5_
+  - [x] 5.2 Modify InventoryPanel with DndContext
+    - Wrap inventory in DndContext provider
+    - Add SortableContext for inventory items
+    - Implement onDragStart, onDragEnd handlers
+    - Add DragOverlay for drag preview
+    - _Requirements: 1.1, 1.2, 1.3_
+  - [x] 5.3 Add keyboard navigation support
+    - Configure KeyboardSensor for @dnd-kit
+    - Support Tab, Enter/Space, Arrow keys, Escape
+    - Add ARIA attributes for accessibility
+    - _Requirements: 6.1, 6.2, 6.3_
+  - [x] 5.4 Add touch support with delay activation
+    - Configure TouchSensor with 200ms activation delay
+    - Prevent scroll during drag
+    - Ensure quick taps trigger click-to-feed
+    - _Requirements: 7.1, 7.2, 7.3_
+  - [ ]* 5.5 Write property test for quick tap behavior
+    - **Property 9: Quick tap triggers click behavior**
+    - **Validates: Requirements 7.3**
+  - [x] 5.6 Style DragOverlay with theme integration
+    - Apply stage-based CSS custom properties
+    - Add ABOMINATION glitch animation
+    - _Requirements: 9.3, 9.5_
+  - [ ]* 5.7 Write property test for ABOMINATION drag glitch
+    - **Property 14: ABOMINATION drag glitch**
+    - **Validates: Requirements 9.5**
+
+- [x] 6. Implement drag-to-feed interaction
+  - [x] 6.1 Make GameCanvas a droppable zone
+    - Add useDroppable hook to GameCanvas
+    - Create visual indicator for active drop target
+    - _Requirements: 2.1, 2.4_
+  - [x] 6.2 Implement drop-to-feed logic
+    - Handle onDragEnd when over GameCanvas
+    - Call existing feed() action with dropped item ID
+    - Add visual feedback animation on successful feed
+    - _Requirements: 2.2, 2.3, 2.5_
+  - [ ]* 6.3 Write property test for drag-feed equivalence
+    - **Property 3: Drag-feed equivalence**
+    - **Validates: Requirements 2.2, 2.3**
+  - [x] 6.4 Add ARIA attributes for droppable zone
+    - Add aria-dropeffect, aria-grabbed attributes
+    - Announce drop actions to screen readers
+    - _Requirements: 6.5_
+
+- [ ] 7. Checkpoint - Ensure all tests pass
+  - Ensure all tests pass, ask the user if questions arise.
+
+- [x] 8. Integrate CountUp into StatsPanel
+  - [x] 8.1 Replace static stat values with CountUp
+    - Wrap hunger and sanity values in CountUp component
+    - Configure 500ms duration
+    - Add entrance animation on first render
+    - _Requirements: 3.1, 3.2, 3.4_
+  - [x] 8.2 Implement stat change batching
+    - Add throttle/debounce logic for rapid changes
+    - Batch changes within 100ms window
+    - _Requirements: 3.3_
+  - [ ]* 8.3 Write property test for stat change batching
+    - **Property 5: Stat change batching**
+    - **Validates: Requirements 3.3**
+  - [x] 8.4 Implement emphasis animation for large changes
+    - Add scale pulse when change > 10 points
+    - Use GSAP for emphasis animation
+    - _Requirements: 3.5_
+  - [ ]* 8.5 Write property test for emphasis threshold
+    - **Property 6: Emphasis animation threshold**
+    - **Validates: Requirements 3.5**
+  - [x] 8.6 Implement tick throttling for CountUp
+    - Only trigger animation every 5 ticks
+    - Prevent excessive re-renders during gameplay
+    - _Requirements: 8.3_
+  - [ ]* 8.7 Write property test for animation throttle
+    - **Property 10: Animation throttle on tick**
+    - **Validates: Requirements 8.3**
+
+- [x] 9. Enhance NarrativeLog with animations
+  - [x] 9.1 Wrap new log entries in FadeIn component
+    - Track which entries are new vs existing
+    - Only animate new additions
+    - _Requirements: 4.1, 4.5_
+  - [x] 9.2 Implement staggered animation delays
+    - Calculate delay based on entry index in batch
+    - Use 150ms stagger between entries
+    - _Requirements: 4.2_
+  - [ ]* 9.3 Write property test for stagger timing
+    - **Property 7: Log entry stagger timing**
+    - **Validates: Requirements 4.2**
+  - [x] 9.4 Add auto-scroll after animation completes
+    - Scroll to newest entry when animation finishes
+    - _Requirements: 4.3_
+  - [x] 9.5 Add sanity-based glitch effects
+    - Apply glitch animation when sanity < 30
+    - Remove glitch when sanity >= 30
+    - _Requirements: 4.4_
+  - [ ]* 9.6 Write property test for sanity glitch effects
+    - **Property 8: Sanity-based glitch effects**
+    - **Validates: Requirements 4.4**
+
+- [ ] 10. Checkpoint - Ensure all tests pass
+  - Ensure all tests pass, ask the user if questions arise.
+
+- [x] 11. Add visual feedback enhancements
+  - [x] 11.1 Enhance scavenge button hover animation
+    - Add subtle scale animation on hover
+    - Preserve retro aesthetic
+    - _Requirements: 5.1_
+  - [x] 11.2 Add scavenge button loading animation
+    - Implement pulsing animation during isScavenging
+    - _Requirements: 5.2_
+  - [x] 11.3 Add feed item fade-out animation
+    - Animate item removal on feed
+    - _Requirements: 5.3_
+  - [x] 11.4 Add evolution flash effect
+    - Trigger flash/pulse on stage change
+    - Integrate with existing evolution logic
+    - _Requirements: 5.4_
+  - [x] 11.5 Enhance inventory card hover animation
+    - Add lift effect (translateY + shadow)
+    - Respect stage theming
+    - _Requirements: 5.5_
+
+- [-] 12. Implement theme reactivity
+  - [x] 12.1 Ensure all animation components use CSS custom properties
+    - Verify CountUp, FadeIn, DragOverlay use theme variables
+    - _Requirements: 9.1, 9.2_
+  - [ ]* 12.2 Write property test for stage theme reactivity
+    - **Property 12: Stage theme reactivity**
+    - **Validates: Requirements 9.1**
+  - [ ]* 12.3 Write property test for sanity theme reactivity
+    - **Property 13: Sanity state theme reactivity**
+    - **Validates: Requirements 9.2**
+
+- [x] 13. Implement error handling and graceful degradation
+  - [x] 13.1 Add try-catch wrappers for GSAP animations
+    - Log errors via errorLogger
+    - Fall back to instant state changes
+    - _Requirements: 8.5_
+  - [ ]* 13.2 Write property test for animation error handling
+    - **Property 11: Animation error graceful degradation**
+    - **Validates: Requirements 8.5**
+  - [x] 13.3 Add reduced motion support
+    - Check prefers-reduced-motion media query
+    - Disable non-essential animations when active
+    - _Requirements: 6.4_
+
+- [x] 14. Mobile optimization
+  - [x] 14.1 Simplify animations for mobile viewports
+    - Reduce animation complexity at ≤768px
+    - Ensure 30fps minimum on mobile
+    - _Requirements: 7.4, 8.2_
+  - [x] 14.2 Configure touch offset for DragOverlay
+    - Position overlay for finger visibility
+    - _Requirements: 7.5_
+
+- [x] 15. Final Checkpoint - Ensure all tests pass
+  - Ensure all tests pass, ask the user if questions arise.
+

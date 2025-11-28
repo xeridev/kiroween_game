@@ -1,0 +1,71 @@
+/* =============================================================================
+   SORTABLE ITEM - Drag-and-drop styling for inventory items
+   ============================================================================= */
+
+/* Dragging state - visual feedback for the original item position */
+.sortable-item.is-dragging {
+  opacity: 0.4;
+  background: #1a1a1a;
+  border-style: dashed;
+  cursor: grabbing;
+}
+
+/* Override hover/focus styles when dragging */
+.sortable-item.is-dragging:hover,
+.sortable-item.is-dragging:focus {
+  transform: none;
+  box-shadow: 3px 3px 0 #000;
+  background: #1a1a1a;
+}
+
+/* Cursor styles for draggable items */
+.sortable-item {
+  cursor: grab;
+  touch-action: none; /* Prevent scroll during drag on touch devices (Requirement 7.2) */
+  -webkit-touch-callout: none; /* Prevent iOS callout */
+  -webkit-user-select: none; /* Prevent text selection on touch */
+  user-select: none;
+}
+
+.sortable-item:active {
+  cursor: grabbing;
+}
+
+/* Focus visible state for keyboard navigation */
+.sortable-item:focus-visible {
+  outline: 2px dashed var(--retro-accent, #ff6b6b);
+  outline-offset: 2px;
+}
+
+/* Feed item fade-out animation (Requirement 5.3) */
+@keyframes feed-fade-out {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(1.1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.8) translateY(-20px);
+  }
+}
+
+.sortable-item.is-feeding-out {
+  animation: feed-fade-out 0.3s ease-out forwards;
+  pointer-events: none;
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .sortable-item {
+    transition: none !important;
+  }
+  
+  .sortable-item.is-feeding-out {
+    animation: none;
+    opacity: 0;
+  }
+}

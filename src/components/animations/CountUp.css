@@ -1,0 +1,138 @@
+/**
+ * CountUp animation styles
+ * Uses CSS custom properties for theme integration
+ * 
+ * Requirements: 9.4
+ */
+
+.count-up {
+  /* Typography - uses theme variables */
+  font-family: var(--font-body);
+  color: var(--text-primary);
+  
+  /* Smooth color transitions when theme changes */
+  transition: color 0.3s ease;
+  
+  /* Ensure numbers don't cause layout shifts */
+  display: inline-block;
+  min-width: 2.5em;
+  text-align: right;
+  
+  /* Tabular numbers for consistent width */
+  font-variant-numeric: tabular-nums;
+}
+
+/* Emphasis animation class - applied when change > 10 points */
+.count-up--emphasis {
+  animation: count-up-pulse 0.3s ease-out;
+}
+
+@keyframes count-up-pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.15);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Stage-specific styling - uses CSS custom properties for theme reactivity (Requirement 9.1) */
+[data-stage="EGG"] .count-up {
+  color: var(--text-primary);
+  /* Soft pastel appearance */
+  text-shadow: none;
+}
+
+[data-stage="BABY"] .count-up {
+  color: var(--text-primary);
+  /* Slightly more pronounced with subtle shadow */
+  text-shadow: 0 0 2px var(--accent-primary);
+}
+
+[data-stage="TEEN"] .count-up {
+  color: var(--text-primary);
+  /* Subtle glow effect for teen stage */
+  text-shadow: 0 0 4px var(--accent-primary);
+}
+
+[data-stage="ABOMINATION"] .count-up {
+  color: var(--text-primary);
+  /* Intense glow for abomination */
+  text-shadow: 0 0 8px var(--accent-danger);
+}
+
+/* Sanity critical state - add glitch effect */
+[data-sanity="critical"] .count-up {
+  animation: count-up-glitch 2s ease-in-out infinite;
+}
+
+@keyframes count-up-glitch {
+  0%, 100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  10% {
+    transform: translateX(-1px);
+    opacity: 0.9;
+  }
+  20% {
+    transform: translateX(1px);
+    opacity: 1;
+  }
+  30% {
+    transform: translateX(0);
+  }
+}
+
+/* Mobile responsive styles (Requirements 7.4, 8.2) */
+@media (max-width: 768px) {
+  .count-up {
+    /* Disable transitions on mobile for performance */
+    transition: none;
+    min-width: 2em;
+    /* Disable will-change to save memory on mobile */
+    will-change: auto;
+  }
+  
+  /* Disable glitch animation on mobile for 30fps target */
+  [data-sanity="critical"] .count-up {
+    animation: none;
+  }
+  
+  /* Simplify text shadows on mobile - removes expensive repaints */
+  [data-stage="TEEN"] .count-up,
+  [data-stage="ABOMINATION"] .count-up {
+    text-shadow: none;
+  }
+  
+  /* Disable emphasis pulse animation on mobile */
+  .count-up--emphasis {
+    animation: none;
+    /* Use simple color change instead */
+    color: var(--accent-primary, var(--text-primary));
+  }
+  
+  /* Simplify stage-specific styling on mobile */
+  [data-stage="EGG"] .count-up,
+  [data-stage="BABY"] .count-up {
+    text-shadow: none;
+  }
+}
+
+/* Reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .count-up {
+    transition: none !important;
+  }
+  
+  .count-up--emphasis {
+    animation: none !important;
+  }
+  
+  [data-sanity="critical"] .count-up {
+    animation: none !important;
+  }
+}

@@ -1,28 +1,34 @@
 @import "./themes.css";
-@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&family=Fredoka+One&family=Quicksand:wght@400;500;600&display=swap');
+
+/* =============================================================================
+   MODERN UI DEFAULTS (Requirement 8.1)
+   Modern theme is default, retro mode is opt-in via settings
+   ============================================================================= */
 
 :root {
-  font-family: 'VT323', monospace;
+  /* Modern font stack - uses theme fonts by default */
+  font-family: var(--font-body, 'Quicksand', sans-serif);
   line-height: 1.5;
   font-weight: 400;
 
-  color-scheme: dark;
-  color: #e0e0e0;
-  background-color: #111;
+  color-scheme: dark light;
+  color: var(--text-primary, #4a4a68);
+  background-color: transparent; /* Allow background layer to show */
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: none;
+  -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 a {
   font-weight: 500;
-  color: var(--retro-accent);
+  color: var(--accent-primary, #ffb3d9);
   text-decoration: inherit;
 }
 a:hover {
-  color: #ff6666;
+  color: var(--accent-danger, #ff6b6b);
 }
 
 body {
@@ -33,8 +39,7 @@ body {
   grid-template-rows: 10vh 1fr;
   height: 100vh;
   overflow: hidden;
-  background-color: var(--retro-bg);
-  image-rendering: pixelated;
+  background-color: transparent; /* Allow background layer to show */
 }
 
 /* Mobile: enable scrolling */
@@ -46,38 +51,84 @@ body {
 }
 
 h1 {
-  font-family: 'Press Start 2P', cursive;
+  font-family: var(--font-primary, 'Fredoka One', cursive);
   font-size: 2em;
   line-height: 1.5;
+  text-shadow: var(--shadow, 0 2px 8px rgba(0, 0, 0, 0.2));
+}
+
+/* Modern button styles - glassmorphism inspired */
+button {
+  border-radius: var(--border-radius, 12px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 0.6em 1.2em;
+  font-size: 1rem;
+  font-weight: 500;
+  font-family: var(--font-body, 'Quicksand', sans-serif);
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: var(--text-primary, #4a4a68);
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+button:hover {
+  background: rgba(255, 255, 255, 0.15);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+}
+button:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+button:focus,
+button:focus-visible {
+  outline: 2px solid var(--accent-primary, #ffb3d9);
+  outline-offset: 2px;
+}
+
+/* =============================================================================
+   RETRO MODE OVERRIDES
+   Applied when .retro-mode class is present on .app
+   ============================================================================= */
+
+.retro-mode {
+  font-family: 'VT323', monospace;
+  -webkit-font-smoothing: none;
+  -moz-osx-font-smoothing: grayscale;
+  image-rendering: pixelated;
+}
+
+.retro-mode h1 {
+  font-family: 'Press Start 2P', cursive;
   text-transform: uppercase;
   text-shadow: 2px 2px 0 #000;
 }
 
-button {
+.retro-mode button {
   border-radius: 0;
-  border: var(--retro-border);
-  padding: 0.6em 1.2em;
-  font-size: 1.2em;
-  font-weight: 500;
+  border: var(--retro-border, 2px solid #00ff00);
   font-family: 'VT323', monospace;
   background-color: #222;
-  color: var(--retro-text);
-  cursor: pointer;
+  color: var(--retro-text, #00ff00);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
   transition: none;
-  box-shadow: var(--retro-shadow);
+  box-shadow: var(--retro-shadow, 4px 4px 0 #000);
   text-transform: uppercase;
 }
-button:hover {
+.retro-mode button:hover {
   background-color: #333;
   transform: translate(2px, 2px);
   box-shadow: 2px 2px 0 #000;
 }
-button:active {
+.retro-mode button:active {
   transform: translate(4px, 4px);
   box-shadow: none;
 }
-button:focus,
-button:focus-visible {
-  outline: 2px dashed var(--retro-accent);
+.retro-mode button:focus,
+.retro-mode button:focus-visible {
+  outline: 2px dashed var(--retro-accent, #00ff00);
   outline-offset: 4px;
 }

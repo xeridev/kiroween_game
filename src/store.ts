@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import type { GameState, Archetype, LogSource, AudioState, SoundContext } from "./utils/types";
+import type { GameState, Archetype, LogSource, AudioState, SoundContext, Offering } from "./utils/types";
 import { logError, logWarning, logCritical, logInfo } from "./utils/errorLogger";
 import { soundManager } from "./utils/soundManager";
 
@@ -33,6 +33,14 @@ const initialAudioState: AudioState = {
   ambientVolume: 0.5,   // 50% - background, not overwhelming
   isMuted: false,
   hasUserInteracted: false,
+};
+
+// Default settings state
+const initialSettingsState = {
+  gameSpeed: 1,         // 1x normal speed (0.5, 1, 2, 4)
+  crtEnabled: false,    // CRT scanline effect off by default (modern UI - Requirement 8.1)
+  reduceMotion: false,  // Respect system preference by default
+  retroMode: false,     // Modern UI by default (Requirement 8.1)
 };
 
 // Helper function to calculate offline decay
@@ -100,6 +108,7 @@ export const useGameStore = create<GameState>()(
     (set, get) => ({
       ...initialState,
       ...initialAudioState,
+      ...initialSettingsState,
 
       // ============================================
       // Audio Actions (Requirements 4.1, 4.2, 4.3, 4.4)
@@ -154,6 +163,41 @@ export const useGameStore = create<GameState>()(
           set({ hasUserInteracted: true });
           soundManager.handleUserInteraction();
         }
+      },
+
+      // ============================================
+      // Settings Actions
+      // ============================================
+
+      /**
+       * Set game speed multiplier (0.5, 1, 2, 4)
+       */
+      setGameSpeed: (speed: number) => {
+        const validSpeeds = [0.5, 1, 2, 4];
+        const clampedSpeed = validSpeeds.includes(speed) ? speed : 1;
+        set({ gameSpeed: clampedSpeed });
+      },
+
+      /**
+       * Toggle CRT scanline effect
+       */
+      setCrtEnabled: (enabled: boolean) => {
+        set({ crtEnabled: enabled });
+      },
+
+      /**
+       * Toggle reduce motion preference
+       */
+      setReduceMotion: (enabled: boolean) => {
+        set({ reduceMotion: enabled });
+      },
+
+      /**
+       * Toggle retro mode (CRT overlay + disable React Bits animations)
+       * Requirements 8.1, 8.2, 8.3, 8.4
+       */
+      setRetroMode: (enabled: boolean) => {
+        set({ retroMode: enabled });
       },
 
       /**
@@ -477,6 +521,11 @@ export const useGameStore = create<GameState>()(
         });
       },
 
+      reorderInventory: (newInventory: Offering[]) => {
+        // Update inventory order and persist to localStorage
+        set({ inventory: newInventory });
+      },
+
       addLog: (text: string, source: LogSource) => {
         const state = get();
         const newLog = {
@@ -516,6 +565,11 @@ export const useGameStore = create<GameState>()(
         sfxVolume: state.sfxVolume,
         ambientVolume: state.ambientVolume,
         isMuted: state.isMuted,
+        // Settings state
+        gameSpeed: state.gameSpeed,
+        crtEnabled: state.crtEnabled,
+        reduceMotion: state.reduceMotion,
+        retroMode: state.retroMode,
         // Note: hasUserInteracted is NOT persisted - must be re-established each session
       }),
       // Custom storage with error handling

@@ -1,0 +1,112 @@
+/**
+ * FadeIn animation styles
+ * Uses transform/opacity for GPU acceleration
+ * 
+ * Requirements: 8.4
+ */
+
+.fade-in {
+  /* GPU-accelerated properties only */
+  will-change: opacity, transform, filter;
+  
+  /* Initial state - hidden (GSAP will animate from this) */
+  opacity: 0;
+}
+
+/* Ensure content is visible after animation */
+.fade-in--visible {
+  opacity: 1;
+  filter: none;
+  transform: none;
+}
+
+/* Stage-specific styling for fade-in content */
+[data-stage="EGG"] .fade-in {
+  /* Soft, gentle appearance - uses theme colors */
+  color: var(--text-primary);
+}
+
+[data-stage="BABY"] .fade-in {
+  /* Slightly more pronounced - uses theme colors */
+  color: var(--text-primary);
+}
+
+[data-stage="TEEN"] .fade-in {
+  /* Add subtle glitch on appearance */
+  color: var(--text-primary);
+  text-shadow: 0 0 2px var(--accent-primary);
+}
+
+[data-stage="ABOMINATION"] .fade-in {
+  /* Intense, unsettling appearance */
+  color: var(--text-primary);
+  text-shadow: 0 0 4px var(--accent-danger);
+}
+
+/* Sanity critical state - add glitch effect to new entries */
+[data-sanity="critical"] .fade-in {
+  animation: fade-in-glitch 0.5s ease-out;
+}
+
+@keyframes fade-in-glitch {
+  0% {
+    opacity: 0;
+    transform: translateX(-5px) skewX(2deg);
+  }
+  20% {
+    opacity: 0.5;
+    transform: translateX(3px) skewX(-1deg);
+  }
+  40% {
+    opacity: 0.3;
+    transform: translateX(-2px) skewX(1deg);
+  }
+  60% {
+    opacity: 0.7;
+    transform: translateX(1px) skewX(0deg);
+  }
+  80% {
+    opacity: 0.9;
+    transform: translateX(-1px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0) skewX(0deg);
+  }
+}
+
+/* Mobile responsive styles (Requirements 7.4, 8.2) */
+@media (max-width: 768px) {
+  .fade-in {
+    /* Reduce will-change on mobile to save memory */
+    will-change: opacity;
+    /* Disable filter animations on mobile - blur is expensive */
+    filter: none !important;
+  }
+  
+  /* Disable glitch animation on mobile for 30fps target */
+  [data-sanity="critical"] .fade-in {
+    animation: none;
+  }
+  
+  /* Simplify stage-specific styling on mobile */
+  [data-stage="TEEN"] .fade-in,
+  [data-stage="ABOMINATION"] .fade-in {
+    text-shadow: none;
+  }
+}
+
+/* Reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .fade-in {
+    /* Show content immediately without animation */
+    opacity: 1 !important;
+    filter: none !important;
+    transform: none !important;
+    will-change: auto !important;
+  }
+  
+  [data-sanity="critical"] .fade-in {
+    animation: none !important;
+  }
+}
