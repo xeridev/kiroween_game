@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render } from "@testing-library/react";
-import { GameCanvas } from "./GameCanvas";
-import type { PetTraits } from "./types";
+import { GameCanvas } from "./components/GameCanvas";
+import type { PetTraits } from "./utils/types";
 
 // Mock PixiJS to avoid canvas rendering issues in test environment
 vi.mock("pixi.js", () => {
@@ -64,7 +64,7 @@ describe("GameCanvas", () => {
 
   it("should render without crashing", () => {
     const { container } = render(
-      <GameCanvas traits={mockTraits} stage="EGG" sanity={100} corruption={0} />
+      <GameCanvas traits={mockTraits} stage="EGG" sanity={100} corruption={0} petName="Test Pet" />
     );
     expect(container).toBeTruthy();
   });
@@ -76,6 +76,7 @@ describe("GameCanvas", () => {
         stage="BABY"
         sanity={80}
         corruption={10}
+        petName="Gloom Pet"
       />
     );
     expect(container).toBeTruthy();
@@ -88,6 +89,7 @@ describe("GameCanvas", () => {
         stage="TEEN"
         sanity={50}
         corruption={30}
+        petName="Spark Pet"
       />
     );
     expect(container).toBeTruthy();
@@ -100,6 +102,7 @@ describe("GameCanvas", () => {
         stage="ABOMINATION"
         sanity={20}
         corruption={90}
+        petName="Echo Pet"
       />
     );
     expect(container).toBeTruthy();
@@ -112,6 +115,7 @@ describe("GameCanvas", () => {
         stage="TEEN"
         sanity={15}
         corruption={50}
+        petName="Horror Pet"
       />
     );
     expect(container).toBeTruthy();
@@ -132,6 +136,7 @@ describe("GameCanvas", () => {
           stage={stage}
           sanity={100}
           corruption={0}
+          petName="Stage Test Pet"
         />
       );
       expect(container).toBeTruthy();

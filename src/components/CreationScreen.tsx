@@ -1,5 +1,5 @@
 import { useState } from "react";
-import type { Archetype } from "./types";
+import type { Archetype } from "../utils/types";
 import "./CreationScreen.css";
 
 interface CreationScreenProps {
@@ -91,29 +91,49 @@ export default function CreationScreen({ onComplete }: CreationScreenProps) {
           className="creation-form"
           aria-label="Pet creation form"
         >
-          {/* Name Input */}
-          <div className="form-group">
-            <label htmlFor="pet-name" className="form-label">
-              Name
-            </label>
-            <input
-              id="pet-name"
-              type="text"
-              value={name}
-              onChange={(e) => {
-                setName(e.target.value);
-                if (errors.name) validateName(e.target.value);
-              }}
-              onBlur={() => validateName(name)}
-              placeholder="Enter a name..."
-              className={`form-input ${errors.name ? "input-error" : ""}`}
-              maxLength={51}
-            />
-            {errors.name && (
-              <span className="error-message" role="alert" aria-live="polite">
-                {errors.name}
-              </span>
-            )}
+          {/* Name and Color Row */}
+          <div className="form-row">
+            {/* Name Input */}
+            <div className="form-group">
+              <label htmlFor="pet-name" className="form-label">
+                Name
+              </label>
+              <input
+                id="pet-name"
+                type="text"
+                value={name}
+                onChange={(e) => {
+                  setName(e.target.value);
+                  if (errors.name) validateName(e.target.value);
+                }}
+                onBlur={() => validateName(name)}
+                placeholder="Enter a name..."
+                className={`form-input ${errors.name ? "input-error" : ""}`}
+                maxLength={51}
+              />
+              {errors.name && (
+                <span className="error-message" role="alert" aria-live="polite">
+                  {errors.name}
+                </span>
+              )}
+            </div>
+
+            {/* Color Picker */}
+            <div className="form-group">
+              <label htmlFor="pet-color" className="form-label">
+                Color
+              </label>
+              <div className="color-picker-container">
+                <input
+                  id="pet-color"
+                  type="color"
+                  value={color}
+                  onChange={(e) => setColor(e.target.value)}
+                  className="color-input"
+                />
+                <span className="color-value">{color.toUpperCase()}</span>
+              </div>
+            </div>
           </div>
 
           {/* Archetype Selection */}
@@ -154,23 +174,6 @@ export default function CreationScreen({ onComplete }: CreationScreenProps) {
                 {errors.archetype}
               </span>
             )}
-          </div>
-
-          {/* Color Picker */}
-          <div className="form-group">
-            <label htmlFor="pet-color" className="form-label">
-              Color
-            </label>
-            <div className="color-picker-container">
-              <input
-                id="pet-color"
-                type="color"
-                value={color}
-                onChange={(e) => setColor(e.target.value)}
-                className="color-input"
-              />
-              <span className="color-value">{color.toUpperCase()}</span>
-            </div>
           </div>
 
           {/* Submit Button */}

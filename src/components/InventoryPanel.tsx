@@ -1,4 +1,4 @@
-import type { Offering } from "./types";
+import type { Offering } from "../utils/types";
 import "./InventoryPanel.css";
 
 interface InventoryPanelProps {

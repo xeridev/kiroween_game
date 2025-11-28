@@ -1,4 +1,4 @@
-import type { NarrativeLog as NarrativeLogType } from "./types";
+import type { NarrativeLog as NarrativeLogType } from "../utils/types";
 import "./NarrativeLog.css";
 
 interface NarrativeLogProps {

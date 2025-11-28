@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
-import { InventoryPanel } from "./InventoryPanel";
-import type { Offering } from "./types";
+import { InventoryPanel } from "./components/InventoryPanel";
+import type { Offering } from "./utils/types";
 
 describe("InventoryPanel", () => {
   const mockOfferings: Offering[] = [

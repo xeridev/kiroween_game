@@ -1,17 +1,20 @@
-import { useEffect, useRef } from "react";
-import { useGameStore } from "./store";
+import { useEffect, useRef, useState } from "react";
+import { useGameStore } from "../store";
 import CreationScreen from "./CreationScreen";
 import { GameCanvas } from "./GameCanvas";
 import { InventoryPanel } from "./InventoryPanel";
 import { StatsPanel } from "./StatsPanel";
 import { NarrativeLog } from "./NarrativeLog";
-import { GameLoop } from "./gameLoop";
+import { DebugPanel } from "./DebugPanel";
+import { GameLoop } from "../utils/gameLoop";
 import { ErrorBoundary } from "./ErrorBoundary";
-import type { Archetype } from "./types";
+import type { Archetype } from "../utils/types";
 import "./App.css";
 
 function AppContent() {
   const gameLoopRef = useRef<GameLoop | null>(null);
+  const [debugPanelOpen, setDebugPanelOpen] = useState(false);
+  const [zenMode, setZenMode] = useState(false);
 
   const isInitialized = useGameStore((state) => state.isInitialized);
   const initializePet = useGameStore((state) => state.initializePet);
@@ -46,6 +49,51 @@ function AppContent() {
       }
     };
   }, [isInitialized]);
+
+  // Keyboard shortcuts (D key for debug, Z key for zen mode, Escape)
+  useEffect(() => {
+    const handleKeyPress = (event: KeyboardEvent) => {
+      const target = event.target as HTMLElement;
+      const isTyping =
+        target.tagName === "INPUT" ||
+        target.tagName === "TEXTAREA" ||
+        target.isContentEditable;
+
+      // Toggle debug panel with 'D' key (not in input fields)
+      if (
+        event.key === "d" &&
+        !event.ctrlKey &&
+        !event.metaKey &&
+        !event.altKey &&
+        !isTyping
+      ) {
+        setDebugPanelOpen((prev) => !prev);
+      }
+
+      // Toggle zen mode with 'Z' key (not in input fields)
+      if (
+        event.key === "z" &&
+        !event.ctrlKey &&
+        !event.metaKey &&
+        !event.altKey &&
+        !isTyping
+      ) {
+        setZenMode((prev) => !prev);
+      }
+
+      // Support Escape to close panels
+      if (event.key === "Escape") {
+        if (debugPanelOpen) {
+          setDebugPanelOpen(false);
+        } else if (zenMode) {
+          setZenMode(false);
+        }
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyPress);
+    return () => window.removeEventListener("keydown", handleKeyPress);
+  }, [debugPanelOpen, zenMode]);
 
   // Debug functions exposed to window object (development only)
   useEffect(() => {
@@ -87,6 +135,9 @@ function AppContent() {
           console.log(`
 🎮 Kiroween Game Debug Functions:
 
+• Press 'D' key to toggle Debug Panel UI
+• Press 'Escape' to close Debug Panel
+
 • debugGame.clearAllData()
   Clear all localStorage data and reload
 
@@ -105,17 +156,32 @@ function AppContent() {
 • debugGame.addAge(1440)
   Add game minutes (1440 = 24 game hours)
 
+• debugGame.openDebugPanel()
+  Open the debug panel UI
+
+• debugGame.closeDebugPanel()
+  Close the debug panel UI
+
 • debugGame.help()
   Show this help message
           `);
+        },
+        openDebugPanel: () => {
+          setDebugPanelOpen(true);
+          console.log("✅ Debug panel opened");
+        },
+        closeDebugPanel: () => {
+          setDebugPanelOpen(false);
+          console.log("✅ Debug panel closed");
         },
       };
 
       console.log(
         "%c🎮 Kiroween Game Debug Mode",
-        "background: #ff00ff; color: #00ffff; font-size: 16px; padding: 8px; border-radius: 4px;"
+        "background: #00ff00; color: #000; font-size: 16px; padding: 8px; font-family: 'Press Start 2P', monospace;"
       );
-      console.log("Type 'debugGame.help()' for available commands");
+      console.log("%cPress 'D' key to open Debug Panel", "color: #00ff00; font-size: 14px;");
+      console.log("Type 'debugGame.help()' for all available commands");
     }
 
     return () => {
@@ -146,27 +212,36 @@ function AppContent() {
 
   return (
     <div
-      className="app"
+      className={`app ${zenMode ? "zen-mode" : ""}`}
       role="main"
       aria-label="Creepy Companion Game"
       data-stage={stage}
       data-sanity={sanityState}
     >
-      <header className="app-header">
-        <h1 className="pet-name">{traits.name}</h1>
-        <div className="stage-indicator">{stage}</div>
-      </header>
+      {/* Zen Mode Toggle Button */}
+      {!zenMode && (
+        <button
+          className="zen-toggle"
+          onClick={() => setZenMode(true)}
+          aria-label="Enter zen mode (hide panels)"
+          title="Press Z or click to hide all panels"
+        >
+          🧘
+        </button>
+      )}
 
-      <main className="app-main">
-        <aside className="stats-panel">
-          <StatsPanel
-            stats={stats}
-            stage={stage}
-            age={age}
-            gameDay={gameDay}
-            dailyFeeds={dailyFeeds}
-          />
-        </aside>
+      <main className={`app-main ${zenMode ? "zen-mode-active" : ""}`}>
+        {!zenMode && (
+          <aside className="stats-panel">
+            <StatsPanel
+              stats={stats}
+              stage={stage}
+              age={age}
+              gameDay={gameDay}
+              dailyFeeds={dailyFeeds}
+            />
+          </aside>
+        )}
 
         <section className="canvas-container">
           <GameCanvas
@@ -174,22 +249,39 @@ function AppContent() {
             stage={stage}
             sanity={stats.sanity}
             corruption={stats.corruption}
+            petName={traits.name}
           />
+          {zenMode && (
+            <button
+              className="zen-exit"
+              onClick={() => setZenMode(false)}
+              aria-label="Exit zen mode"
+              title="Press Z or Escape to show panels"
+            >
+              ✕
+            </button>
+          )}
         </section>
 
-        <aside className="log-panel">
-          <NarrativeLog logs={logs} sanityLevel={stats.sanity} />
-        </aside>
+        {!zenMode && (
+          <aside className="right-panel">
+            <div className="log-section">
+              <NarrativeLog logs={logs} sanityLevel={stats.sanity} />
+            </div>
+            <div className="inventory-section">
+              <InventoryPanel
+                inventory={inventory}
+                onFeed={feed}
+                canScavenge={canScavenge}
+                onScavenge={scavenge}
+              />
+            </div>
+          </aside>
+        )}
       </main>
 
-      <aside className="inventory-section">
-        <InventoryPanel
-          inventory={inventory}
-          onFeed={feed}
-          canScavenge={canScavenge}
-          onScavenge={scavenge}
-        />
-      </aside>
+      {/* Debug Panel */}
+      <DebugPanel isOpen={debugPanelOpen} onClose={() => setDebugPanelOpen(false)} />
     </div>
   );
 }

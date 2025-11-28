@@ -6,7 +6,7 @@ import {
   logWarning,
   logError,
   logCritical,
-} from "./errorLogger";
+} from "./utils/errorLogger";
 
 describe("errorLogger", () => {
   beforeEach(() => {

@@ -1,0 +1,250 @@
+/* =============================================================================
+   UIOverlay.css - Retro Theme Styles
+   ============================================================================= */
+
+.ui-overlay {
+  padding: 1.25rem;
+  font-family: 'VT323', monospace;
+  color: var(--retro-text);
+  background: var(--retro-bg);
+  border: var(--retro-border);
+  border-radius: 0;
+  max-width: 800px;
+  margin: 1.25rem auto;
+  box-shadow: var(--retro-shadow);
+  transition: none;
+}
+
+/* Sanity-based styling */
+.ui-overlay.normal {
+  border: var(--retro-border);
+}
+
+.ui-overlay.warning {
+  border: 2px solid #ff9800;
+  box-shadow: 4px 4px 0 #ff9800;
+}
+
+.ui-overlay.critical {
+  border: 2px solid #f44336;
+  box-shadow: 4px 4px 0 #f44336;
+  animation: pulse-critical 0.5s steps(2) infinite;
+}
+
+@keyframes pulse-critical {
+
+  0%,
+  100% {
+    border-color: #f44336;
+  }
+
+  50% {
+    border-color: #fff;
+  }
+}
+
+/* Stats Section */
+.stats-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.stat-group {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+}
+
+.stat-label {
+  min-width: 5rem;
+  font-family: 'Press Start 2P', cursive;
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  color: var(--retro-text);
+}
+
+.stat-bar-container {
+  flex: 1;
+  height: 1.5rem;
+  background: #222;
+  border: 2px solid #444;
+  border-radius: 0;
+  overflow: hidden;
+  position: relative;
+  box-shadow: inset 2px 2px 0 #000;
+}
+
+.stat-bar {
+  height: 100%;
+  transition: width 0.1s steps(5);
+  position: relative;
+}
+
+.hunger-bar {
+  background: #ff3333;
+}
+
+.sanity-bar {
+  background: #3333ff;
+}
+
+.stat-value {
+  min-width: 3.125rem;
+  text-align: right;
+  font-family: 'VT323', monospace;
+  font-weight: bold;
+  font-size: 1.2rem;
+  color: var(--retro-text);
+}
+
+/* Pet Info Section */
+.pet-info-section {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.625rem;
+  margin-bottom: 1.25rem;
+  padding: 1rem;
+  background: var(--retro-bg);
+  border: var(--retro-border);
+  border-radius: 0;
+  box-shadow: inset 2px 2px 0 #000;
+}
+
+.info-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.info-label {
+  font-family: 'VT323', monospace;
+  font-size: 1rem;
+  color: #888;
+  text-transform: uppercase;
+}
+
+.info-value {
+  font-family: 'Press Start 2P', cursive;
+  font-size: 0.7rem;
+  color: var(--retro-accent);
+}
+
+/* Narrative Log Section */
+.narrative-log-section {
+  margin-top: 1.25rem;
+}
+
+.log-header {
+  font-family: 'Press Start 2P', cursive;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  margin-bottom: 0.625rem;
+  color: var(--retro-accent);
+  border-bottom: 2px dashed #444;
+  padding-bottom: 0.3125rem;
+}
+
+.log-container {
+  max-height: 12.5rem;
+  overflow-y: auto;
+  padding: 0.625rem;
+  background: #000;
+  border: var(--retro-border);
+  border-radius: 0;
+  box-shadow: inset 2px 2px 0 #000;
+}
+
+.log-container:focus {
+  outline: 2px dashed var(--retro-accent);
+  outline-offset: 2px;
+}
+
+.log-container::-webkit-scrollbar {
+  width: 12px;
+  background: #000;
+}
+
+.log-container::-webkit-scrollbar-track {
+  background: #111;
+  border-left: 2px solid #444;
+}
+
+.log-container::-webkit-scrollbar-thumb {
+  background: #444;
+  border: 2px solid #111;
+}
+
+.log-container::-webkit-scrollbar-thumb:hover {
+  background: #666;
+}
+
+.log-empty {
+  text-align: center;
+  color: #666;
+  font-family: 'VT323', monospace;
+  font-style: italic;
+  padding: 1.25rem;
+}
+
+.log-entry {
+  margin-bottom: 0.5rem;
+  padding: 0.5rem;
+  border-radius: 0;
+  font-family: 'VT323', monospace;
+  font-size: 1.1rem;
+  line-height: 1.2;
+  display: flex;
+  gap: 0.5rem;
+  border-left: 2px solid transparent;
+}
+
+.log-system {
+  background: #001100;
+  border-left-color: #00ff00;
+  color: #00ff00;
+}
+
+.log-pet {
+  background: #110000;
+  border-left-color: #ff0000;
+  color: #ff0000;
+}
+
+.log-timestamp {
+  color: #666;
+  font-size: 0.9rem;
+  white-space: nowrap;
+}
+
+.log-text {
+  flex: 1;
+}
+
+/* Critical sanity effects on log */
+.ui-overlay.critical .log-container {
+  animation: glitch 0.2s steps(2) infinite;
+}
+
+@keyframes glitch {
+  0% {
+    transform: translate(0);
+  }
+
+  25% {
+    transform: translate(-2px, 2px);
+  }
+
+  50% {
+    transform: translate(2px, -2px);
+  }
+
+  75% {
+    transform: translate(-2px, -2px);
+  }
+
+  100% {
+    transform: translate(2px, 2px);
+  }
+}

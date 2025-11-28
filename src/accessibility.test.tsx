@@ -1,9 +1,9 @@
 import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
-import CreationScreen from "./CreationScreen";
-import { InventoryPanel } from "./InventoryPanel";
-import { UIOverlay } from "./UIOverlay";
-import type { Offering, PetStats, NarrativeLog } from "./types";
+import CreationScreen from "./components/CreationScreen";
+import { InventoryPanel } from "./components/InventoryPanel";
+import { UIOverlay } from "./components/UIOverlay";
+import type { Offering, PetStats, NarrativeLog } from "./utils/types";
 
 describe("Accessibility Features", () => {
   describe("CreationScreen", () => {

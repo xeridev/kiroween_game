@@ -1,23 +1,21 @@
-import type { PetStats, PetStage, NarrativeLog } from "./types";
-import "./UIOverlay.css";
+import type { PetStats, PetStage } from "../utils/types";
+import "./StatsPanel.css";
 
-interface UIOverlayProps {
+interface StatsPanelProps {
   stats: PetStats;
   stage: PetStage;
   age: number;
-  logs: NarrativeLog[];
   gameDay: number;
   dailyFeeds: number;
 }
 
-export function UIOverlay({
+export function StatsPanel({
   stats,
   stage,
   age,
-  logs,
   gameDay,
   dailyFeeds,
-}: UIOverlayProps) {
+}: StatsPanelProps) {
   // Format age for display
   const formatAge = (ageInMinutes: number): string => {
     const hours = Math.floor(ageInMinutes / 60);
@@ -43,9 +41,9 @@ export function UIOverlay({
 
   return (
     <div
-      className={`ui-overlay ${sanityClass}`}
+      className={`stats-panel-content ${sanityClass}`}
       role="complementary"
-      aria-label="Game status"
+      aria-label="Pet statistics"
     >
       {/* Stats Section */}
       <div className="stats-section" role="region" aria-label="Pet statistics">
@@ -54,7 +52,7 @@ export function UIOverlay({
             Hunger
           </div>
           <div
-            className="stat-bar-container"
+            className="stat-bar-container hunger-bar-container"
             role="progressbar"
             aria-labelledby="hunger-label"
             aria-valuenow={Math.round(stats.hunger)}
@@ -77,7 +75,7 @@ export function UIOverlay({
             Sanity
           </div>
           <div
-            className="stat-bar-container"
+            className="stat-bar-container sanity-bar-container"
             role="progressbar"
             aria-labelledby="sanity-label"
             aria-valuenow={Math.round(stats.sanity)}
@@ -121,42 +119,6 @@ export function UIOverlay({
           <span className="info-value" aria-live="polite">
             {dailyFeeds}/3
           </span>
-        </div>
-      </div>
-
-      {/* Narrative Log Section */}
-      <div
-        className="narrative-log-section"
-        role="region"
-        aria-label="Narrative log"
-      >
-        <div className="log-header">Narrative Log</div>
-        <div
-          className="log-container"
-          role="log"
-          aria-live="polite"
-          aria-atomic="false"
-          tabIndex={0}
-          aria-label="Scrollable narrative log of game events"
-        >
-          {logs.length === 0 ? (
-            <div className="log-empty" role="status">
-              No events yet...
-            </div>
-          ) : (
-            logs.map((log) => (
-              <div
-                key={log.id}
-                className={`log-entry log-${log.source.toLowerCase()}`}
-                role="article"
-              >
-                <span className="log-timestamp">
-                  [{formatAge(log.timestamp)}]
-                </span>
-                <span className="log-text">{log.text}</span>
-              </div>
-            ))
-          )}
         </div>
       </div>
     </div>

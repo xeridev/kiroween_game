@@ -1,0 +1,386 @@
+/* =============================================================================
+   DEBUG PANEL - Retro Terminal Aesthetic
+   ============================================================================= */
+
+/* Backdrop */
+.debug-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  z-index: 9998;
+  animation: fadeIn 0.15s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Debug Panel Container */
+.debug-panel {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90%;
+  max-width: 800px;
+  max-height: 90vh;
+  background: #000;
+  border: 4px solid #00ff00;
+  box-shadow: 0 0 40px rgba(0, 255, 0, 0.5), inset 0 0 20px rgba(0, 0, 0, 0.8);
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  font-family: 'VT323', monospace;
+  animation: slideIn 0.2s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translate(-50%, -60%);
+    opacity: 0;
+  }
+  to {
+    transform: translate(-50%, -50%);
+    opacity: 1;
+  }
+}
+
+/* Header */
+.debug-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  background: #001a00;
+  border-bottom: 2px solid #00ff00;
+}
+
+.debug-title {
+  margin: 0;
+  font-family: 'Press Start 2P', cursive;
+  font-size: 1rem;
+  color: #00ff00;
+  text-shadow: 0 0 10px rgba(0, 255, 0, 0.8);
+}
+
+.debug-close {
+  background: transparent;
+  border: 2px solid #00ff00;
+  color: #00ff00;
+  font-family: 'Press Start 2P', cursive;
+  font-size: 0.8rem;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  transition: none;
+  box-shadow: 2px 2px 0 #00ff00;
+}
+
+.debug-close:hover,
+.debug-close:focus {
+  background: #00ff00;
+  color: #000;
+  transform: translate(2px, 2px);
+  box-shadow: none;
+  outline: none;
+}
+
+/* Content */
+.debug-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1.5rem;
+  background: #000;
+  color: #00ff00;
+}
+
+.debug-content::-webkit-scrollbar {
+  width: 12px;
+  background: #000;
+}
+
+.debug-content::-webkit-scrollbar-track {
+  background: #001a00;
+  border-left: 2px solid #00ff00;
+}
+
+.debug-content::-webkit-scrollbar-thumb {
+  background: #00ff00;
+  border: 2px solid #000;
+}
+
+.debug-content::-webkit-scrollbar-thumb:hover {
+  background: #00cc00;
+}
+
+/* Sections */
+.debug-section {
+  margin-bottom: 2rem;
+  padding: 1rem;
+  border: 2px solid #004400;
+  background: rgba(0, 26, 0, 0.3);
+}
+
+.debug-section-title {
+  margin: 0 0 1rem 0;
+  font-family: 'VT323', monospace;
+  font-size: 1.5rem;
+  color: #00ff00;
+  text-transform: uppercase;
+  text-shadow: 0 0 5px rgba(0, 255, 0, 0.5);
+}
+
+/* Current State Grid */
+.debug-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.75rem;
+}
+
+.debug-stat {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem;
+  background: #001a00;
+  border: 1px solid #004400;
+}
+
+.debug-stat-label {
+  font-family: 'VT323', monospace;
+  font-size: 1.2rem;
+  color: #00aa00;
+}
+
+.debug-stat-value {
+  font-family: 'Press Start 2P', cursive;
+  font-size: 0.7rem;
+  color: #00ff00;
+  text-shadow: 0 0 3px rgba(0, 255, 0, 0.5);
+}
+
+/* Input Grids */
+.debug-input-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.debug-input-row {
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.debug-input {
+  flex: 1;
+  padding: 0.75rem;
+  background: #000;
+  border: 2px solid #00ff00;
+  color: #00ff00;
+  font-family: 'VT323', monospace;
+  font-size: 1.2rem;
+  transition: none;
+  box-shadow: inset 2px 2px 0 #001a00;
+}
+
+.debug-input::placeholder {
+  color: #004400;
+  opacity: 1;
+}
+
+.debug-input:focus {
+  outline: none;
+  box-shadow: inset 2px 2px 0 #001a00, 0 0 10px rgba(0, 255, 0, 0.5);
+}
+
+/* Remove number input arrows */
+.debug-input::-webkit-inner-spin-button,
+.debug-input::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.debug-input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+/* Button Grids */
+.debug-button-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.75rem;
+}
+
+.debug-button {
+  padding: 0.75rem 1.5rem;
+  background: #000;
+  border: 2px solid #00ff00;
+  color: #00ff00;
+  font-family: 'Press Start 2P', cursive;
+  font-size: 0.7rem;
+  cursor: pointer;
+  transition: none;
+  box-shadow: 4px 4px 0 #004400;
+  text-transform: uppercase;
+}
+
+.debug-button:hover,
+.debug-button:focus {
+  background: #001a00;
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0 #004400;
+  outline: none;
+}
+
+.debug-button:active {
+  transform: translate(4px, 4px);
+  box-shadow: none;
+}
+
+.debug-button-active {
+  background: #00ff00;
+  color: #000;
+  box-shadow: 0 0 10px rgba(0, 255, 0, 0.8);
+}
+
+.debug-button-active:hover {
+  background: #00cc00;
+}
+
+/* Danger Zone */
+.debug-danger-zone {
+  border-color: #ff0000;
+  background: rgba(26, 0, 0, 0.3);
+}
+
+.debug-danger-zone .debug-section-title {
+  color: #ff0000;
+  text-shadow: 0 0 5px rgba(255, 0, 0, 0.5);
+}
+
+.debug-button-danger {
+  padding: 0.75rem 1.5rem;
+  background: #000;
+  border: 2px solid #ff0000;
+  color: #ff0000;
+  font-family: 'Press Start 2P', cursive;
+  font-size: 0.7rem;
+  cursor: pointer;
+  transition: none;
+  box-shadow: 4px 4px 0 #440000;
+  text-transform: uppercase;
+}
+
+.debug-button-danger:hover,
+.debug-button-danger:focus {
+  background: #1a0000;
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0 #440000;
+  outline: none;
+}
+
+.debug-button-danger:active {
+  transform: translate(4px, 4px);
+  box-shadow: none;
+}
+
+/* Help Text */
+.debug-help {
+  padding: 0.5rem;
+  background: rgba(0, 26, 0, 0.5);
+  border: 1px dashed #004400;
+}
+
+.debug-help-text {
+  margin: 0.5rem 0;
+  font-family: 'VT323', monospace;
+  font-size: 1.1rem;
+  color: #00aa00;
+}
+
+.debug-help-text kbd,
+.debug-help-text code {
+  padding: 0.2rem 0.4rem;
+  background: #000;
+  border: 1px solid #00ff00;
+  color: #00ff00;
+  font-family: 'Press Start 2P', cursive;
+  font-size: 0.6rem;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .debug-panel {
+    width: 95%;
+    max-height: 95vh;
+  }
+
+  .debug-header {
+    padding: 0.75rem 1rem;
+  }
+
+  .debug-title {
+    font-size: 0.7rem;
+  }
+
+  .debug-close {
+    font-size: 0.6rem;
+    padding: 0.4rem 0.8rem;
+  }
+
+  .debug-content {
+    padding: 1rem;
+  }
+
+  .debug-section-title {
+    font-size: 1.2rem;
+  }
+
+  .debug-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .debug-input-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .debug-button-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .debug-button {
+    font-size: 0.6rem;
+    padding: 0.5rem 1rem;
+  }
+
+  .debug-button-danger {
+    font-size: 0.6rem;
+    padding: 0.5rem 1rem;
+  }
+
+  .debug-stat-label,
+  .debug-input {
+    font-size: 1rem;
+  }
+
+  .debug-stat-value {
+    font-size: 0.6rem;
+  }
+}
+
+/* Reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .debug-backdrop,
+  .debug-panel {
+    animation: none;
+  }
+}

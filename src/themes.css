@@ -40,6 +40,13 @@
   /* Log Background */
   --log-bg-color: #fff5f7;
   --log-line-color: rgba(212, 165, 212, 0.3);
+
+  /* Retro Theme Variables (for terminal/CRT aesthetic) */
+  --retro-bg: #111;
+  --retro-text: #00ff00;
+  --retro-border: 2px solid #00ff00;
+  --retro-accent: #00ff00;
+  --retro-shadow: 4px 4px 0 #000;
 }
 
 /* -----------------------------------------------------------------------------
@@ -76,6 +83,13 @@
   /* Log Background */
   --log-bg-color: #fff5f7;
   --log-line-color: rgba(212, 165, 212, 0.3);
+
+  /* Retro Theme - Pastel CRT (soft greens/pinks) */
+  --retro-bg: #1a1a1a;
+  --retro-text: #ffb3d9;
+  --retro-border: 2px solid #ffb3d9;
+  --retro-accent: #b8e0d2;
+  --retro-shadow: 4px 4px 0 #000;
 }
 
 /* -----------------------------------------------------------------------------
@@ -117,6 +131,13 @@
   /* Log Background */
   --log-bg-color: #f0e6f5;
   --log-line-color: rgba(184, 160, 200, 0.4);
+
+  /* Retro Theme - Vibrant CRT (bright primary colors like arcade) */
+  --retro-bg: #0f0f1a;
+  --retro-text: #ff9ec7;
+  --retro-border: 2px solid #a0d8c0;
+  --retro-accent: #ffb380;
+  --retro-shadow: 4px 4px 0 #000;
 }
 
 /* -----------------------------------------------------------------------------
@@ -163,6 +184,13 @@
   /* Log Background */
   --log-bg-color: #1a0f2a;
   --log-line-color: rgba(139, 74, 122, 0.5);
+
+  /* Retro Theme - Glitchy CRT (magenta/cyan chromatic aberration) */
+  --retro-bg: #0a0015;
+  --retro-text: #ff6b9d;
+  --retro-border: 2px solid #00ffff;
+  --retro-accent: #ff00ff;
+  --retro-shadow: 4px 4px 0 #8b0000;
 }
 
 /* -----------------------------------------------------------------------------
@@ -199,6 +227,13 @@
   /* Log Background */
   --log-bg-color: #0a0010;
   --log-line-color: rgba(139, 0, 0, 0.6);
+
+  /* Retro Theme - Horror CRT (red/black, intense distortion) */
+  --retro-bg: #000000;
+  --retro-text: #ff0000;
+  --retro-border: 2px solid #8b0000;
+  --retro-accent: #39ff14;
+  --retro-shadow: 6px 6px 0 #8b0000;
 }
 
 /* -----------------------------------------------------------------------------

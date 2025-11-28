@@ -1,0 +1,87 @@
+/* Canvas Wrapper - Contains overlay and canvas */
+.game-canvas-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+/* Canvas Overlay - Name and Stage */
+.canvas-overlay {
+  position: absolute;
+  top: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  pointer-events: none;
+}
+
+.overlay-pet-name {
+  margin: 0;
+  font-family: 'Press Start 2P', cursive;
+  font-size: clamp(1rem, 3vw, 1.5rem);
+  color: var(--accent-primary);
+  text-shadow: 3px 3px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.overlay-stage-indicator {
+  padding: 0.5rem 1rem;
+  background: var(--accent-primary);
+  color: var(--bg-primary);
+  border-radius: 0;
+  font-family: 'Press Start 2P', cursive;
+  font-size: 0.7rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  box-shadow: 3px 3px 0 #000;
+}
+
+/* Game Canvas Container - Responsive sizing with theme variables */
+.game-canvas-container {
+  /* Container fills its parent */
+  width: 100% !important;
+  height: 100% !important;
+
+  /* Visual styling using theme CSS variables */
+  background: #1a1a1a;
+  border: var(--border-style, 4px solid #d4a5d4);
+  border-radius: var(--border-radius, 25px);
+  box-shadow: var(--shadow, 0 8px 24px rgba(255, 183, 217, 0.4));
+
+  /* Layout */
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  /* Smooth theme transitions */
+  transition: border 0.5s ease, border-radius 0.5s ease, box-shadow 0.5s ease;
+}
+
+.game-canvas-container canvas {
+  display: block;
+  /* Canvas dimensions are managed by PixiJS renderer.resize() */
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 768px) {
+  .game-canvas-container {
+    /* On mobile, canvas takes full width of viewport */
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+  }
+}
+
+/* Reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .game-canvas-container {
+    transition: none;
+  }
+}

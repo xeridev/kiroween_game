@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import type { GameState, Archetype, LogSource } from "./types";
-import { logError, logWarning, logCritical } from "./errorLogger";
+import type { GameState, Archetype, LogSource } from "./utils/types";
+import { logError, logWarning, logCritical } from "./utils/errorLogger";
 
 const initialState = {
   isInitialized: false,
@@ -209,7 +209,7 @@ export const useGameStore = create<GameState>()(
           Math.random() < 0.5 ? "PURITY" : "ROT";
 
         // Generate AI description
-        const { generateText } = await import("./aiClient");
+        const { generateText } = await import("./utils/aiClient");
         const prompt = `Generate a one-sentence abstract description for a mysterious ${
           itemType === "PURITY" ? "pure" : "rotting"
         } offering. Be cryptic and unsettling.`;

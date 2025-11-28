@@ -1,0 +1,339 @@
+/* App Container - Full viewport layout with stage theming */
+.app {
+  display: grid;
+  grid-template-rows: 1fr;
+  min-height: 100vh;
+  width: 100%;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  transition: none;
+  position: relative;
+  overflow: hidden;
+}
+
+/* CRT Overlay Effect */
+.app::before {
+  content: " ";
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: linear-gradient(rgba(18, 16, 16, 0) 50%,
+      rgba(0, 0, 0, 0.25) 50%),
+    linear-gradient(90deg,
+      rgba(255, 0, 0, 0.06),
+      rgba(0, 255, 0, 0.02),
+      rgba(0, 0, 255, 0.06));
+  z-index: 999;
+  background-size: 100% 2px, 3px 100%;
+  pointer-events: none;
+}
+
+.app::after {
+  content: " ";
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: rgba(18, 16, 16, 0.1);
+  opacity: 0;
+  z-index: 999;
+  pointer-events: none;
+  animation: flicker 0.15s infinite;
+}
+
+@keyframes flicker {
+  0% {
+    opacity: 0.02795173935295247;
+  }
+
+  5% {
+    opacity: 0.04410931553880479;
+  }
+
+  10% {
+    opacity: 0.0336218636350068;
+  }
+
+  15% {
+    opacity: 0.05736294713745677;
+  }
+
+  20% {
+    opacity: 0.02678663784196161;
+  }
+
+  25% {
+    opacity: 0.05436691288297342;
+  }
+
+  30% {
+    opacity: 0.02422704018868961;
+  }
+
+  35% {
+    opacity: 0.05732295327694556;
+  }
+
+  40% {
+    opacity: 0.03058840286280457;
+  }
+
+  45% {
+    opacity: 0.05206252994966624;
+  }
+
+  50% {
+    opacity: 0.02604082064619373;
+  }
+
+  55% {
+    opacity: 0.05374780516436666;
+  }
+
+  60% {
+    opacity: 0.03368340330097446;
+  }
+
+  65% {
+    opacity: 0.05608830722336067;
+  }
+
+  70% {
+    opacity: 0.02700080614838845;
+  }
+
+  75% {
+    opacity: 0.0537042095426127;
+  }
+
+  80% {
+    opacity: 0.03192422204646793;
+  }
+
+  85% {
+    opacity: 0.05198424940555328;
+  }
+
+  90% {
+    opacity: 0.02722237571052204;
+  }
+
+  95% {
+    opacity: 0.05343427952499768;
+  }
+
+  100% {
+    opacity: 0.02979873245713498;
+  }
+}
+
+/* Main Content Grid - 3 column layout on desktop */
+.app-main {
+  display: grid;
+  grid-template-columns: 25vw 50vw 25vw;
+  grid-template-rows: 1fr;
+  height: 100%;
+  overflow: hidden;
+  transition: none;
+}
+
+/* Stats Panel - Left sidebar */
+.stats-panel {
+  grid-column: 1;
+  padding: 1rem;
+  overflow-y: auto;
+  background: var(--bg-secondary);
+  border-right: 4px solid #000;
+  transition: none;
+}
+
+/* Canvas Container - Center area */
+.canvas-container {
+  grid-column: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  overflow: hidden;
+  background-color: #000;
+  border: 4px solid #222;
+  margin: 1rem;
+  box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.8);
+}
+
+/* Right Panel - Split into log and inventory */
+.right-panel {
+  grid-column: 3;
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+  gap: 0;
+  background: var(--bg-secondary);
+  border-left: 4px solid #000;
+  overflow: hidden;
+  transition: none;
+}
+
+/* Log Section - Top half of right panel */
+.log-section {
+  padding: 1rem;
+  overflow-y: auto;
+  background: var(--bg-secondary);
+  border-bottom: 4px solid #000;
+  transition: none;
+}
+
+/* Inventory Section - Bottom half of right panel */
+.inventory-section {
+  padding: 1rem;
+  overflow-y: auto;
+  background: var(--bg-secondary);
+  transition: none;
+}
+
+/* Mobile Responsive Layout */
+@media (max-width: 768px) {
+  .app {
+    grid-template-rows: 1fr;
+    min-height: auto;
+    overflow-y: auto;
+  }
+
+  .app-main {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto;
+    height: auto;
+    overflow: visible;
+  }
+
+  .stats-panel {
+    grid-column: 1;
+    grid-row: 1;
+    width: 100%;
+    border-right: none;
+    border-bottom: 4px solid #000;
+  }
+
+  .canvas-container {
+    grid-column: 1;
+    grid-row: 2;
+    width: 100vw;
+    height: 50vh;
+    margin: 0;
+    border: none;
+    border-top: 4px solid #000;
+    border-bottom: 4px solid #000;
+  }
+
+  .right-panel {
+    grid-column: 1;
+    grid-row: 3;
+    grid-template-rows: auto auto;
+    border-left: none;
+    width: 100%;
+    height: auto;
+  }
+
+  .log-section {
+    max-height: 30vh;
+    border-bottom: 4px solid #000;
+  }
+
+  .inventory-section {
+    width: 100%;
+    border-top: none;
+  }
+}
+
+/* Reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .app::after {
+    animation: none;
+  }
+}
+
+/* Zen Mode Toggle Button */
+.zen-toggle {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 100;
+  padding: 0.75rem 1rem;
+  background: var(--accent-primary);
+  color: var(--bg-primary);
+  border: 3px solid #000;
+  font-size: 1.5rem;
+  cursor: pointer;
+  box-shadow: 4px 4px 0 #000;
+  transition: none;
+  font-family: 'Press Start 2P', cursive;
+}
+
+.zen-toggle:hover,
+.zen-toggle:focus {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0 #000;
+  outline: none;
+}
+
+.zen-toggle:focus-visible {
+  outline: 2px dashed var(--retro-accent);
+  outline-offset: 4px;
+}
+
+/* Zen Mode Exit Button */
+.zen-exit {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  z-index: 20;
+  padding: 0.5rem 1rem;
+  background: rgba(0, 0, 0, 0.8);
+  color: #fff;
+  border: 2px solid #fff;
+  font-size: 1.5rem;
+  cursor: pointer;
+  font-family: 'Press Start 2P', cursive;
+  box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
+  transition: none;
+}
+
+.zen-exit:hover,
+.zen-exit:focus {
+  background: rgba(0, 0, 0, 0.95);
+  outline: none;
+}
+
+.zen-exit:focus-visible {
+  outline: 2px dashed #fff;
+  outline-offset: 2px;
+}
+
+/* Zen Mode Active - Canvas takes full width */
+.app-main.zen-mode-active {
+  grid-template-columns: 1fr;
+}
+
+.app-main.zen-mode-active .canvas-container {
+  margin: 0;
+  padding: 0;
+  border: none;
+  box-shadow: none;
+  background-color: #000;
+}
+
+/* Hide canvas wrapper border in zen mode */
+.zen-mode-active .game-canvas-wrapper {
+  border: none;
+}
+
+.zen-mode-active .game-canvas-container {
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}

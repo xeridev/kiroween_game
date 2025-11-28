@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
-import { GameLoop } from "./gameLoop";
+import { GameLoop } from "./utils/gameLoop";
 import { useGameStore } from "./store";
 
 describe("GameLoop", () => {

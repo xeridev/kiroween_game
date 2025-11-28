@@ -1,0 +1,83 @@
+# AI Image Generation Prompts - Kiroween Game
+
+Copy these prompts into your AI art generator (Leonardo.ai, Stable Diffusion, Midjourney, DALL-E)
+Generate as 512x512 PNG, save with exact filename shown.
+
+---
+
+FILENAME: GLOOM_EGG.png
+PROMPT: Dark purple obsidian egg floating in void, glowing cracks revealing inner sadness, melancholic aura, swirling shadows, mystical runes, centered on pure black background, digital art masterpiece, dark fantasy horror style, eerie atmosphere, high detail
+
+---
+
+FILENAME: GLOOM_BABY.png
+PROMPT: Small melancholic blob creature with oversized sad eyes, dark purple translucent body, drooping features, shadowy wisps emanating, cute but unsettling, childlike innocent yet eerie, centered on pure black background, digital art masterpiece, dark fantasy style, creepy cute aesthetic
+
+---
+
+FILENAME: GLOOM_TEEN.png
+PROMPT: Medium-sized shadowy blob creature, deep purple ethereal form, large melancholic eyes with tears, defined sad features, ghostly tendrils flowing, slightly menacing presence, centered on pure black background, digital art masterpiece, dark fantasy horror style, liminal space atmosphere
+
+---
+
+FILENAME: GLOOM_ABOMINATION.png
+PROMPT: Massive grotesque blob horror, multiple weeping eyes covering surface, dark purple corrupted flesh, twisted melancholic features, dripping shadows, nightmarish form, body horror, disturbing eldritch creature, centered on pure black background, digital art masterpiece, extreme detail, terrifying
+
+---
+
+FILENAME: SPARK_EGG.png
+PROMPT: Crystalline triangular egg crackling with electric energy, sharp geometric facets, bright cyan lightning veins, glowing from within, energy discharge, angular mysterious form, centered on pure black background, digital art masterpiece, dark fantasy style, electric atmosphere
+
+---
+
+FILENAME: SPARK_BABY.png
+PROMPT: Small angular triangular creature with bright glowing eyes, cyan electric body, sharp cute features, sparks flying off edges, energetic childlike appearance, unsettling geometry, centered on pure black background, digital art masterpiece, dark fantasy style, creepy cute aesthetic
+
+---
+
+FILENAME: SPARK_TEEN.png
+PROMPT: Medium-sized electric triangular creature, sharp angular features, bright cyan energy outline, crackling lightning bolts, defined geometric form, menacing electric presence, glowing sharp eyes, centered on pure black background, digital art masterpiece, dark fantasy horror style
+
+---
+
+FILENAME: SPARK_ABOMINATION.png
+PROMPT: Enormous terrifying geometric horror, multiple electric eyes on fractured triangular body, cyan lightning storm, twisted angular nightmare, sharp jagged edges, crackling energy chaos, body horror, disturbing eldritch geometry, centered on pure black background, digital art masterpiece, extreme detail, horrifying
+
+---
+
+FILENAME: ECHO_EGG.png
+PROMPT: Translucent diamond-shaped egg phasing between dimensions, pale blue ghostly glow, ethereal mist trails, reality distortion, spectral aura, mysterious spirit form, centered on pure black background, digital art masterpiece, dark fantasy style, liminal space atmosphere
+
+---
+
+FILENAME: ECHO_BABY.png
+PROMPT: Small translucent diamond spirit creature, hollow glowing eyes, pale blue ghostly body, cute but otherworldly, echo trails following movement, childlike spectral appearance, unsettling phase-shifting, centered on pure black background, digital art masterpiece, dark fantasy style, creepy cute aesthetic
+
+---
+
+FILENAME: ECHO_TEEN.png
+PROMPT: Medium-sized ghostly diamond creature, defined spectral features, pale blue translucent form, hollow glowing eyes, echo particles orbiting, menacing spirit presence, dimensional distortion, centered on pure black background, digital art masterpiece, dark fantasy horror style, ethereal atmosphere
+
+---
+
+FILENAME: ECHO_ABOMINATION.png
+PROMPT: Massive horrifying spectral horror, multiple hollow eyes on fractured diamond body, pale blue corrupted spirit energy, twisted ghostly nightmare, reality-breaking form, dimensional tears, body horror, disturbing eldritch spirit, centered on pure black background, digital art masterpiece, extreme detail, terrifying
+
+---
+
+NEGATIVE PROMPT (use for all):
+blurry, low quality, text, watermark, signature, frame, border, multiple creatures, background elements, photorealistic
+
+---
+
+RECOMMENDED SETTINGS (Stable Diffusion):
+- Size: 512x512
+- Steps: 25-30
+- CFG Scale: 7-8
+- Sampler: DPM++ 2M Karras or Euler a
+- Model: Stable Diffusion 1.5, DreamShaper, or Dark Sushi Mix
+
+---
+
+Total: 12 images needed
+Estimated time: ~5-10 minutes with batch generation
