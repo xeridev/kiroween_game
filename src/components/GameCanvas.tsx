@@ -288,15 +288,10 @@ export function GameCanvas({
       // Create or update sprite
       try {
         if (!petSpriteRef.current) {
-          // Remove old sprite if exists
-          if (petSpriteRef.current) {
-            app.stage.removeChild(petSpriteRef.current);
-          }
-
           // Load texture and create sprite
           const texture = await PIXI.Assets.load(petArtUrl);
 
-          if (!texture) {
+          if (!texture || !texture.source) {
             throw new Error(`Failed to load texture from: ${petArtUrl}`);
           }
 
