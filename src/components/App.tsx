@@ -531,19 +531,6 @@ function AppContent() {
         {/* Animated background layer - positioned behind all content */}
         <BackgroundLayer />
         
-        {/* Action Dock - Replaces top-right buttons (Requirements 5.1, 5.3) */}
-        {!zenMode && (
-          <ActionDock
-            onScavenge={handleScavenge}
-            onSettings={() => setSettingsPanelOpen(true)}
-            onZenMode={() => setZenMode(true)}
-            isScavenging={isScavenging}
-            canScavenge={canScavenge}
-            reduceMotion={reduceMotion}
-            retroMode={retroMode}
-          />
-        )}
-
         <main className={`app-main ${zenMode ? "zen-mode-active" : ""}`}>
           {!zenMode && (
             <aside className="stats-panel">
@@ -556,6 +543,16 @@ function AppContent() {
               />
               {/* Audio Controls - accessible during gameplay (Requirements 6.1, 6.2) */}
               <AudioControls />
+              {/* Action Dock - below audio controls */}
+              <ActionDock
+                onScavenge={handleScavenge}
+                onSettings={() => setSettingsPanelOpen(true)}
+                onZenMode={() => setZenMode(true)}
+                isScavenging={isScavenging}
+                canScavenge={canScavenge}
+                reduceMotion={reduceMotion}
+                retroMode={retroMode}
+              />
             </aside>
           )}
 
