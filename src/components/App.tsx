@@ -15,6 +15,7 @@ function AppContent() {
   const gameLoopRef = useRef<GameLoop | null>(null);
   const [debugPanelOpen, setDebugPanelOpen] = useState(false);
   const [zenMode, setZenMode] = useState(false);
+  const [isScavenging, setIsScavenging] = useState(false);
 
   const isInitialized = useGameStore((state) => state.isInitialized);
   const initializePet = useGameStore((state) => state.initializePet);
@@ -28,6 +29,16 @@ function AppContent() {
   const inventory = useGameStore((state) => state.inventory);
   const scavenge = useGameStore((state) => state.scavenge);
   const feed = useGameStore((state) => state.feed);
+
+  // Scavenge wrapper with loading state
+  const handleScavenge = async () => {
+    setIsScavenging(true);
+    try {
+      await scavenge();
+    } finally {
+      setIsScavenging(false);
+    }
+  };
 
   // Initialize and cleanup game loop
   useEffect(() => {
@@ -205,7 +216,7 @@ function AppContent() {
     return <CreationScreen onComplete={handlePetCreation} />;
   }
 
-  const canScavenge = inventory.length < 3;
+  const canScavenge = inventory.length < 3 && !isScavenging;
 
   // Determine sanity state for data attribute (critical when below 30)
   const sanityState = stats.sanity < 30 ? "critical" : "normal";
@@ -273,7 +284,8 @@ function AppContent() {
                 inventory={inventory}
                 onFeed={feed}
                 canScavenge={canScavenge}
-                onScavenge={scavenge}
+                onScavenge={handleScavenge}
+                isScavenging={isScavenging}
               />
             </div>
           </aside>

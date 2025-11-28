@@ -269,7 +269,16 @@ export function GameCanvas({
           }
 
           // Load texture and create sprite
-          const texture = await PIXI.Assets.load(petArtUrl);
+          // Explicitly tell PixiJS to load as image since URL lacks file extension
+          const texture = await PIXI.Assets.load({
+            src: petArtUrl,
+            loadParser: 'loadTextures',
+          });
+
+          if (!texture || !texture.valid) {
+            throw new Error("Failed to load texture");
+          }
+
           const sprite = new PIXI.Sprite(texture);
 
           // Scale sprite to cover entire canvas

@@ -183,10 +183,12 @@
 /* Log Section - Top half of right panel */
 .log-section {
   padding: 1rem;
-  overflow-y: auto;
+  overflow: hidden;
   background: var(--bg-secondary);
   border-bottom: 4px solid #000;
   transition: none;
+  display: flex;
+  flex-direction: column;
 }
 
 /* Inventory Section - Bottom half of right panel */

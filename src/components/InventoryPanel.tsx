@@ -6,6 +6,7 @@ interface InventoryPanelProps {
   onFeed: (itemId: string) => void;
   canScavenge: boolean;
   onScavenge: () => void;
+  isScavenging?: boolean;
 }
 
 export function InventoryPanel({
@@ -13,6 +14,7 @@ export function InventoryPanel({
   onFeed,
   canScavenge,
   onScavenge,
+  isScavenging = false,
 }: InventoryPanelProps) {
   const maxInventory = 3;
   const currentCount = inventory.length;
@@ -63,14 +65,16 @@ export function InventoryPanel({
       <button
         className="scavenge-button"
         onClick={onScavenge}
-        disabled={!canScavenge}
+        disabled={!canScavenge || isScavenging}
         aria-label={
-          canScavenge
+          isScavenging
+            ? "Scavenging for offerings..."
+            : canScavenge
             ? "Scavenge for new offerings"
             : "Cannot scavenge, inventory is full"
         }
       >
-        {canScavenge ? "Scavenge for Offerings" : "Inventory Full"}
+        {isScavenging ? "Scavenging..." : canScavenge ? "Scavenge for Offerings" : "Inventory Full"}
       </button>
     </div>
   );
