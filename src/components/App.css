@@ -156,6 +156,7 @@
 /* Canvas Container - Center area */
 .canvas-container {
   grid-column: 2;
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
