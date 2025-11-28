@@ -334,3 +334,42 @@ Pending log entry - shimmer effect while AI generates text */
     display: none;
   }
 }
+
+
+/* Hover effect for better readability */
+.log-entry:hover {
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transform: translateX(2px);
+  transition: all 0.2s ease;
+}
+
+.log-entry:hover .log-text {
+  color: inherit;
+}
+
+/* System logs show green on hover */
+.log-system:hover {
+  color: #00ff00;
+  border-left-color: #00ff00;
+}
+
+/* Pet logs show red on hover */
+.log-pet:hover {
+  color: #ff4444;
+  border-left-color: #ff4444;
+}
+
+/* Cute theme hover - still use dark background for contrast */
+.narrative-log-panel--cute .log-entry:hover {
+  background: rgba(0, 0, 0, 0.9);
+}
+
+.narrative-log-panel--cute .log-system:hover {
+  color: #00ff00;
+}
+
+.narrative-log-panel--cute .log-pet:hover {
+  color: #ff4444;
+}
