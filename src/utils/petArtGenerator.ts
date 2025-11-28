@@ -144,15 +144,17 @@ async function generatePetArtRunPod(
       throw new Error("No image URL in RunPod response");
     }
 
+    // Proxy RunPod images to avoid CORS issues
+    const proxyUrl = `/api/proxyImage?url=${encodeURIComponent(result.imageUrl)}`;
+
     // Pre-load the image to ensure it's ready
     return new Promise((resolve, reject) => {
       const img = new Image();
-      img.crossOrigin = "anonymous";
-      img.onload = () => resolve(result.imageUrl);
+      img.onload = () => resolve(proxyUrl);
       img.onerror = () => {
         reject(new Error("Failed to load RunPod-generated image"));
       };
-      img.src = result.imageUrl;
+      img.src = proxyUrl;
     });
   } catch (error) {
     logError(
