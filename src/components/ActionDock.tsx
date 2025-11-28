@@ -78,7 +78,7 @@ export function ActionDock({
       {/* Requirement 5.2: Magnification on hover via Dock component */}
       {/* Requirement 5.4, 5.5: Responsive positioning handled via CSS */}
       {/* Requirement 8.3: Disable animations in retro mode */}
-      <Dock
+      {/* <Dock
         items={dockItems}
         className="action-dock"
         baseItemSize={50}
@@ -87,7 +87,7 @@ export function ActionDock({
         distance={150}
         orientation="vertical"
         disableAnimation={reduceMotion || retroMode}
-      />
+      /> */}
     </div>
   );
 }
