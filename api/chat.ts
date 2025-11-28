@@ -19,7 +19,7 @@ async function generateWithRunPod(
       messages: [
         {
           role: "system",
-          content: "",
+          content: "You are a creative horror writer for a dark pet simulator game. You will receive prompts about game events (feeding, scavenging, evolution). Respond with exactly 1-2 sentences of atmospheric horror narrative - cryptic, ominous, and unsettling. Use visceral imagery and psychological dread. Output ONLY the narrative text itself, no meta-commentary, no thinking process, no explanations. Example input: 'Generate description for creature consuming pure offering.' Example output: 'The creature's hollow eyes wept luminescent tears as it devoured the offering whole, its form briefly flickering with stolen light before collapsing back into shadow.'",
         },
         {
           role: "user",
@@ -89,7 +89,12 @@ async function generateWithRunPod(
         if (firstOutput.choices && Array.isArray(firstOutput.choices) && firstOutput.choices.length > 0) {
           const firstChoice = firstOutput.choices[0];
           if (firstChoice.tokens && Array.isArray(firstChoice.tokens) && firstChoice.tokens.length > 0) {
-            return firstChoice.tokens[0]; // Return first token as the generated text
+            let text = firstChoice.tokens[0];
+
+            // Remove <think> tags and content (Qwen3's internal reasoning)
+            text = text.replace(/<think>[\s\S]*?<\/think>/g, '').trim();
+
+            return text;
           }
         }
 
