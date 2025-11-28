@@ -16,7 +16,16 @@ async function generateWithRunPod(
 
   const payload = {
     input: {
-      prompt: prompt,
+      messages: [
+        {
+          role: "system",
+          content: "",
+        },
+        {
+          role: "user",
+          content: prompt,
+        },
+      ],
       sampling_params: {
         max_tokens: maxTokens,
         temperature: temperature,
@@ -72,12 +81,22 @@ async function generateWithRunPod(
     if (statusResult.status === "COMPLETED") {
       const output = statusResult.output;
 
-      if (output && output.text) {
-        return output.text;
-      } else if (typeof output === "string") {
+      // Handle different output formats from Qwen3-32B-AWQ
+      if (typeof output === "string") {
+        // Direct string output
         return output;
+      } else if (output && output.text) {
+        // {text: "..."} format
+        return output.text;
+      } else if (output && output.output) {
+        // {output: "..."} format
+        return typeof output.output === "string" ? output.output : JSON.stringify(output.output);
+      } else if (output && Array.isArray(output) && output.length > 0) {
+        // Array format - take first element
+        return typeof output[0] === "string" ? output[0] : JSON.stringify(output[0]);
       } else {
-        throw new Error("Unexpected output format from RunPod");
+        console.error("Unexpected Qwen3 output format:", JSON.stringify(output));
+        throw new Error(`Unexpected output format from RunPod: ${JSON.stringify(output)}`);
       }
     } else if (statusResult.status === "FAILED") {
       throw new Error(`RunPod job failed: ${statusResult.error}`);

@@ -95,10 +95,26 @@ export function GameCanvas({
           // Update PixiJS renderer dimensions
           appRef.current.renderer.resize(newSize.width, newSize.height);
 
-          // Recenter pet graphics after resize
+          // Recenter and rescale pet graphics/sprite after resize
           if (petGraphicsRef.current) {
             petGraphicsRef.current.x = newSize.width / 2;
             petGraphicsRef.current.y = newSize.height / 2;
+          }
+
+          // Rescale sprite to cover new canvas size
+          if (petSpriteRef.current) {
+            const sprite = petSpriteRef.current;
+            const texture = sprite.texture;
+
+            if (texture && texture.width > 0 && texture.height > 0) {
+              const scaleX = newSize.width / texture.width;
+              const scaleY = newSize.height / texture.height;
+              const scale = Math.max(scaleX, scaleY);
+
+              sprite.scale.set(scale, scale);
+              sprite.x = newSize.width / 2;
+              sprite.y = newSize.height / 2;
+            }
           }
         } catch (error) {
           logError(
@@ -256,10 +272,13 @@ export function GameCanvas({
           const texture = await PIXI.Assets.load(petArtUrl);
           const sprite = new PIXI.Sprite(texture);
 
-          // Scale sprite to fit
-          const baseSize = getStageSize(stage);
-          sprite.width = baseSize * 2;
-          sprite.height = baseSize * 2;
+          // Scale sprite to cover entire canvas
+          // Calculate scale to cover (not contain) the canvas
+          const scaleX = app.screen.width / texture.width;
+          const scaleY = app.screen.height / texture.height;
+          const scale = Math.max(scaleX, scaleY); // Use max to cover, not contain
+
+          sprite.scale.set(scale, scale);
           sprite.anchor.set(0.5, 0.5);
           sprite.x = app.screen.width / 2;
           sprite.y = app.screen.height / 2;
