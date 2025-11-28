@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import { useGameStore } from "../store";
 import CreationScreen from "./CreationScreen";
 import { GameCanvas } from "./GameCanvas";
@@ -6,16 +6,37 @@ import { InventoryPanel } from "./InventoryPanel";
 import { StatsPanel } from "./StatsPanel";
 import { NarrativeLog } from "./NarrativeLog";
 import { DebugPanel } from "./DebugPanel";
+import { AudioControls } from "./AudioControls";
 import { GameLoop } from "../utils/gameLoop";
 import { ErrorBoundary } from "./ErrorBoundary";
-import type { Archetype } from "../utils/types";
+import { soundManager } from "../utils/soundManager";
+import { logInfo, logError } from "../utils/errorLogger";
+import type { Archetype, SoundCatalog, PetStage } from "../utils/types";
 import "./App.css";
+
+// Helper function to get initial ambient based on stage and sanity
+function getInitialAmbient(stage: PetStage, sanity: number): string {
+  // If sanity is below 30, use horror ambient (Requirement 5.4)
+  if (sanity < 30) {
+    return "ambient_creepy_ambience_3";
+  }
+  
+  // Otherwise, use stage-appropriate ambient
+  const stageAmbientMap: Record<PetStage, string> = {
+    EGG: "ambient_suburban_neighborhood_morning",
+    BABY: "ambient_rain_medium_2",
+    TEEN: "ambient_creepy_ambience_3",
+    ABOMINATION: "ambient_drone_doom",
+  };
+  return stageAmbientMap[stage];
+}
 
 function AppContent() {
   const gameLoopRef = useRef<GameLoop | null>(null);
   const [debugPanelOpen, setDebugPanelOpen] = useState(false);
   const [zenMode, setZenMode] = useState(false);
   const [isScavenging, setIsScavenging] = useState(false);
+  const [audioInitialized, setAudioInitialized] = useState(false);
 
   const isInitialized = useGameStore((state) => state.isInitialized);
   const initializePet = useGameStore((state) => state.initializePet);
@@ -29,6 +50,8 @@ function AppContent() {
   const inventory = useGameStore((state) => state.inventory);
   const scavenge = useGameStore((state) => state.scavenge);
   const feed = useGameStore((state) => state.feed);
+  const hasUserInteracted = useGameStore((state) => state.hasUserInteracted);
+  const setUserInteracted = useGameStore((state) => state.setUserInteracted);
 
   // Scavenge wrapper with loading state
   const handleScavenge = async () => {
@@ -39,6 +62,79 @@ function AppContent() {
       setIsScavenging(false);
     }
   };
+
+  // Handle first user interaction to unlock audio (Requirements 2.3, 2.4)
+  const handleUserInteraction = useCallback(() => {
+    if (!hasUserInteracted) {
+      setUserInteracted();
+      logInfo("User interaction detected, audio unlocked");
+      
+      // Set initial ambient after audio is unlocked
+      if (isInitialized && audioInitialized) {
+        const initialAmbient = getInitialAmbient(stage, stats.sanity);
+        soundManager.setAmbient(initialAmbient);
+        logInfo("Initial ambient set", { ambient: initialAmbient, stage, sanity: stats.sanity });
+      }
+    }
+  }, [hasUserInteracted, setUserInteracted, isInitialized, audioInitialized, stage, stats.sanity]);
+
+  // Initialize sound manager with catalog on mount
+  useEffect(() => {
+    const initAudio = async () => {
+      try {
+        const response = await fetch("/sounds-catalog.json");
+        if (!response.ok) {
+          throw new Error(`Failed to load sound catalog: ${response.status}`);
+        }
+        const catalog: SoundCatalog = await response.json();
+        await soundManager.initialize(catalog);
+        setAudioInitialized(true);
+        logInfo("Sound manager initialized with catalog");
+        
+        // If user has already interacted (from previous session), set initial ambient
+        if (hasUserInteracted && isInitialized) {
+          const initialAmbient = getInitialAmbient(stage, stats.sanity);
+          soundManager.setAmbient(initialAmbient);
+          logInfo("Initial ambient set on load", { ambient: initialAmbient });
+        }
+      } catch (error) {
+        logError(
+          "Failed to initialize sound manager",
+          error instanceof Error ? error : new Error(String(error))
+        );
+        // Game continues without audio (Requirement 7.3)
+      }
+    };
+
+    initAudio();
+  }, []); // Only run once on mount
+
+  // Set up user interaction listeners for audio unlock
+  useEffect(() => {
+    if (hasUserInteracted) {
+      return; // Already unlocked
+    }
+
+    const events = ["click", "touchstart", "keydown"];
+    
+    const handler = () => {
+      handleUserInteraction();
+      // Remove listeners after first interaction
+      events.forEach((event) => {
+        document.removeEventListener(event, handler);
+      });
+    };
+
+    events.forEach((event) => {
+      document.addEventListener(event, handler, { once: true });
+    });
+
+    return () => {
+      events.forEach((event) => {
+        document.removeEventListener(event, handler);
+      });
+    };
+  }, [hasUserInteracted, handleUserInteraction]);
 
   // Initialize and cleanup game loop
   useEffect(() => {
@@ -251,6 +347,8 @@ function AppContent() {
               gameDay={gameDay}
               dailyFeeds={dailyFeeds}
             />
+            {/* Audio Controls - accessible during gameplay (Requirements 6.1, 6.2) */}
+            <AudioControls />
           </aside>
         )}
 

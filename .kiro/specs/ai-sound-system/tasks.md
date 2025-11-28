@@ -1,0 +1,198 @@
+# Implementation Plan
+
+- [x] 1. Generate Sound Catalog
+  - [x] 1.1 Create sound catalog types in src/utils/types.ts
+    - Add SoundEntry, SoundCatalog, and SoundCategory type definitions
+    - Use string literal union for SoundCategory (ambient, monster, cute, stinger, character, household, liquid, ui)
+    - _Requirements: 1.1, 1.3_
+  - [x] 1.2 Create catalog generator script at scripts/generate-sound-catalog.ts
+    - Scan public/sounds/ directories recursively
+    - Map directory names to categories (Abyssal Horror → monster, Cute → cute, etc.)
+    - Generate tags from filename (split on underscores, lowercase)
+    - Set loop=true for ambient category, false for others
+    - Output to public/sounds-catalog.json
+    - _Requirements: 1.1, 1.2, 1.3_
+  - [ ]* 1.3 Write property test for catalog entry completeness
+    - **Property 1: Catalog Entry Completeness**
+    - **Validates: Requirements 1.1**
+  - [ ]* 1.4 Write property test for catalog round-trip serialization
+    - **Property 2: Catalog Round-Trip Serialization**
+    - **Validates: Requirements 1.4**
+  - [x] 1.5 Run catalog generator and verify output
+    - Execute: `npx tsx scripts/generate-sound-catalog.ts`
+    - Verify public/sounds-catalog.json contains all sound files
+    - _Requirements: 1.1, 1.2, 1.3_
+
+- [x] 2. Implement Sound Manager Core
+  - [x] 2.1 Create src/utils/soundManager.ts with Howler.js wrapper
+    - Implement SoundManager class with initialize(), play(), stop(), stopAll()
+    - Add sound pooling for critical sounds (CRITICAL_SOUNDS array)
+    - Handle Howler.js load errors gracefully with errorLogger
+    - _Requirements: 2.1, 2.2, 7.1, 7.4_
+  - [ ]* 2.2 Write property test for error logging without crash
+    - **Property 18: Error Logging Without Crash**
+    - **Validates: Requirements 7.1**
+  - [x] 2.3 Add volume control methods to Sound Manager
+    - Implement setMasterVolume(), setSfxVolume(), setAmbientVolume()
+    - Apply volume multipliers: effective = master * channel * sound
+    - Store volume state internally
+    - _Requirements: 2.5_
+  - [ ]* 2.4 Write property test for volume channel independence
+    - **Property 4: Volume Channel Independence**
+    - **Validates: Requirements 2.5**
+  - [x] 2.5 Add ambient sound management with crossfade
+    - Implement setAmbient() with 2-second crossfade
+    - Track current ambient Howl instance
+    - Implement stopAmbient()
+    - _Requirements: 2.6_
+  - [x] 2.6 Add browser autoplay policy handling
+    - Initialize with audio context suspended
+    - Implement handleUserInteraction() to resume context
+    - Implement isUnlocked() to check state
+    - Queue sounds until unlocked, then play
+    - _Requirements: 2.3, 2.4_
+  - [ ]* 2.7 Write property test for autoplay policy compliance
+    - **Property 5: Autoplay Policy Compliance**
+    - **Validates: Requirements 2.3**
+  - [ ]* 2.8 Write property test for user interaction unlocks audio
+    - **Property 6: User Interaction Unlocks Audio**
+    - **Validates: Requirements 2.4**
+
+- [x] 3. Checkpoint - Ensure all tests pass
+  - Ensure all tests pass, ask the user if questions arise.
+
+- [x] 4. Create Sound Selection API
+  - [x] 4.1 Create api/selectSound.ts serverless function
+    - Follow existing api/chat.ts pattern for RunPod integration
+    - Accept SoundSelectionRequest body
+    - Return SoundSelectionResponse
+    - _Requirements: 3.1, 3.2_
+  - [ ]* 4.2 Write property test for API response structure validity
+    - **Property 7: API Response Structure Validity**
+    - **Validates: Requirements 3.2**
+  - [x] 4.3 Add AI system prompt for sound selection
+    - Reference sounds-catalog.json structure in prompt
+    - Guide AI to select based on eventType, stage, archetype, sanity
+    - Request JSON output format matching SoundSelectionResponse
+    - _Requirements: 3.1, 3.2_
+  - [x] 4.4 Implement 500ms timeout with fallback
+    - Use AbortController with 500ms timeout
+    - On timeout, call selectWithFallback()
+    - Log timeout warning
+    - _Requirements: 3.3_
+  - [x] 4.5 Implement rule-based fallback selection
+    - Map PURITY → cute sounds, ROT → liquid/monster sounds
+    - Map low sanity (<30) → horror ambient
+    - Map evolution stages to appropriate stingers
+    - _Requirements: 3.4, 3.5_
+  - [ ]* 4.6 Write property test for fallback sound mapping correctness
+    - **Property 8: Fallback Sound Mapping Correctness**
+    - **Validates: Requirements 3.4**
+  - [ ]* 4.7 Write property test for low sanity horror sound selection
+    - **Property 9: Low Sanity Horror Sound Selection**
+    - **Validates: Requirements 3.5**
+  - [x] 4.8 Implement deterministic caching
+    - Create in-memory cache with getCacheKey() function
+    - Bucket sanity by 10s, corruption by 20s for cache key
+    - Return cached response if exists
+    - Limit cache to 100 entries
+    - _Requirements: 8.1, 8.2, 8.3_
+  - [ ]* 4.9 Write property test for deterministic caching
+    - **Property 19: Deterministic Caching**
+    - **Validates: Requirements 8.1, 8.2, 8.3**
+
+- [x] 5. Checkpoint - Ensure all tests pass
+  - Ensure all tests pass, ask the user if questions arise.
+
+- [x] 6. Integrate Audio State with Zustand
+  - [x] 6.1 Add AudioState and AudioActions to src/utils/types.ts
+    - Define AudioState interface (masterVolume, sfxVolume, ambientVolume, isMuted, hasUserInteracted)
+    - Define AudioActions interface (setMasterVolume, setSfxVolume, setAmbientVolume, toggleMute, setUserInteracted, playSound)
+    - _Requirements: 4.1_
+  - [x] 6.2 Extend src/store.ts with audio state slice
+    - Add initial audio state with defaults (master: 0.7, sfx: 0.8, ambient: 0.5)
+    - Implement volume setter actions
+    - Implement toggleMute action
+    - Persist audio state to localStorage
+    - _Requirements: 4.1, 4.2, 4.3, 4.4_
+  - [ ]* 6.3 Write property test for audio state persistence round-trip
+    - **Property 10: Audio State Persistence Round-Trip**
+    - **Validates: Requirements 4.1, 4.2**
+  - [ ]* 6.4 Write property test for volume change propagation
+    - **Property 11: Volume Change Propagation**
+    - **Validates: Requirements 4.3**
+  - [ ]* 6.5 Write property test for mute affects all channels
+    - **Property 12: Mute Affects All Channels**
+    - **Validates: Requirements 4.4**
+  - [x] 6.6 Implement playSound action with API integration
+    - Create async action that calls selectSound API
+    - Pass game context (petName, stage, archetype, sanity, corruption)
+    - Call soundManager.play() with selected sounds
+    - Handle errors gracefully (log and continue)
+    - _Requirements: 5.1, 7.2, 7.3_
+
+- [x] 7. Integrate with Game Events
+  - [x] 7.1 Add sound triggers to feed action
+    - Call playSound with eventType "feed" and itemType context
+    - Play primary sound and optional secondary sounds
+    - _Requirements: 5.1_
+  - [ ]* 7.2 Write property test for feed triggers sound selection
+    - **Property 13: Feed Triggers Sound Selection**
+    - **Validates: Requirements 5.1**
+  - [x] 7.3 Add sound triggers to scavenge action
+    - Play discovery sound effect on successful scavenge
+    - Use character_woosh or similar UI sound
+    - _Requirements: 5.2_
+  - [x] 7.4 Add sound triggers to evolution in tick action
+    - Detect stage changes in tick()
+    - Call playSound with eventType "evolution" and new stage
+    - Trigger ambient crossfade to stage-appropriate ambient
+    - _Requirements: 5.3_
+  - [ ]* 7.5 Write property test for evolution triggers appropriate sounds
+    - **Property 14: Evolution Triggers Appropriate Sounds**
+    - **Validates: Requirements 5.3**
+  - [x] 7.6 Add sanity-based ambient management
+    - Track previous sanity in tick()
+    - Detect threshold crossing (above/below 30)
+    - Trigger ambient crossfade on threshold change
+    - _Requirements: 5.4, 5.5_
+  - [ ]* 7.7 Write property test for sanity threshold ambient change
+    - **Property 15: Sanity Threshold Ambient Change**
+    - **Validates: Requirements 5.4, 5.5**
+  - [x] 7.8 Initialize ambient on game start
+    - In App.tsx or game initialization, set initial ambient based on stage/sanity
+    - Handle first user interaction to unlock audio
+    - _Requirements: 2.3, 2.4, 5.4_
+
+- [x] 8. Checkpoint - Ensure all tests pass
+  - Ensure all tests pass, ask the user if questions arise.
+
+- [x] 9. Create AudioControls UI Component
+  - [x] 9.1 Create src/components/AudioControls.tsx
+    - Add three range sliders for master, sfx, ambient volume
+    - Add mute/unmute toggle button
+    - Connect to Zustand audio state
+    - _Requirements: 6.1, 6.2, 6.4_
+  - [x] 9.2 Create src/components/AudioControls.css
+    - Style sliders with consistent game aesthetic
+    - Style mute button with visual state indicator
+    - Ensure responsive layout
+    - _Requirements: 6.5_
+  - [x] 9.3 Add ARIA labels and accessibility attributes
+    - Add aria-label to all sliders ("Master volume", "Sound effects volume", "Ambient volume")
+    - Add aria-label to mute button ("Mute audio" / "Unmute audio")
+    - Add aria-valuenow, aria-valuemin, aria-valuemax to sliders
+    - _Requirements: 6.3_
+  - [ ]* 9.4 Write property test for ARIA labels on all controls
+    - **Property 16: ARIA Labels on All Controls**
+    - **Validates: Requirements 6.3**
+  - [ ]* 9.5 Write property test for slider updates state
+    - **Property 17: Slider Updates State**
+    - **Validates: Requirements 6.4**
+  - [x] 9.6 Integrate AudioControls into UIOverlay or settings panel
+    - Add AudioControls to appropriate location in UI
+    - Ensure controls are accessible during gameplay
+    - _Requirements: 6.1, 6.2_
+
+- [x] 10. Final Checkpoint - Ensure all tests pass
+  - Ensure all tests pass, ask the user if questions arise.

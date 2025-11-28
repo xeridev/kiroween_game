@@ -1,0 +1,5118 @@
+{
+  "version": "1.0.0",
+  "generatedAt": "2025-11-28T13:16:37.175Z",
+  "categories": {
+    "monster": [
+      {
+        "id": "monster_abyssal_descent",
+        "path": "sounds/Abyssal Horror/Abyssal_Descent.mp3",
+        "category": "monster",
+        "tags": [
+          "horror",
+          "creature",
+          "abyssal",
+          "descent"
+        ],
+        "loop": false,
+        "description": "Abyssal Descent (Abyssal Horror)"
+      },
+      {
+        "id": "monster_abyssal_descent1",
+        "path": "sounds/Abyssal Horror/Abyssal_Descent1.mp3",
+        "category": "monster",
+        "tags": [
+          "horror",
+          "creature",
+          "abyssal",
+          "descent1"
+        ],
+        "loop": false,
+        "description": "Abyssal Descent1 (Abyssal Horror)"
+      },
+      {
+        "id": "monster_bite",
+        "path": "sounds/Monsters & Ghosts/Bite.wav",
+        "category": "monster",
+        "tags": [
+          "horror",
+          "creature",
+          "bite"
+        ],
+        "loop": false,
+        "description": "Bite (Monsters & Ghosts)"
+      },
+      {
+        "id": "monster_child_laugh",
+        "path": "sounds/Monsters & Ghosts/Child laugh.wav",
+        "category": "monster",
+        "tags": [
+          "horror",
+          "creature",
+          "child",
+          "laugh"
+        ],
+        "loop": false,
+        "description": "Child laugh (Monsters & Ghosts)"
+      },
+      {
+        "id": "monster_child_laugh_6",
+        "path": "sounds/Monsters & Ghosts/Child laugh_6.wav",
+        "category": "monster",
+        "tags": [
+          "horror",
+          "creature",
+          "child",
+          "laugh"
+        ],
+        "loop": false,
+        "description": "Child laugh 6 (Monsters & Ghosts)"
+      },
+      {
+        "id": "monster_child_laugh_7",
+        "path": "sounds/Monsters & Ghosts/Child laugh_7.wav",
+        "category": "monster",
+        "tags": [
+          "horror",
+          "creature",
+          "child",
+          "laugh"
+        ],
+        "loop": false,
+        "description": "Child laugh 7 (Monsters & Ghosts)"
+      },
+      {
+        "id": "monster_deepone_chatter",
+        "path": "sounds/Abyssal Horror/DeepOne_Chatter.mp3",
+        "category": "monster",
+        "tags": [
+          "horror",
+          "creature",
+          "deepone",
+          "chatter"
+        ],
+        "loop": false,
+        "description": "DeepOne Chatter (Abyssal Horror)"
+      },
+      {
+        "id": "monster_deepone_frothygrowl",
+        "path": "sounds/Abyssal Horror/DeepOne_FrothyGrowl.mp3",
+        "category": "monster",
+        "tags": [
+          "horror",
+          "creature",
+          "deepone",
+          "frothygrowl"
+        ],
+        "loop": false,
+        "description": "DeepOne FrothyGrowl (Abyssal Horror)"
+      },
+      {
+        "id": "monster_deepone_frothygrowl2",
+        "path": "sounds/Abyssal Horror/DeepOne_FrothyGrowl2.mp3",
+        "category": "monster",
+        "tags": [
+          "horror",
+          "creature",
+          "deepone",
+          "frothygrowl2"
+        ],
+        "loop": false,
+        "description": "DeepOne FrothyGrowl2 (Abyssal Horror)"
+      },
+      {
+        "id": "monster_deepone_groan1",
+        "path": "sounds/Abyssal Horror/DeepOne_Groan1.mp3",
+        "category": "monster",
+        "tags": [
+          "horror",
+          "creature",
+          "deepone",
+          "groan1"
+        ],
+        "loop": false,
+        "description": "DeepOne Groan1 (Abyssal Horror)"
+      },
+      {
+        "id": "monster_deepone_groan2",
+        "path": "sounds/Abyssal Horror/DeepOne_Groan2.mp3",
+        "category": "monster",
+        "tags": [
+          "horror",
+          "creature",
+          "deepone",
+          "groan2"
+        ],
+        "loop": false,
+        "description": "DeepOne Groan2 (Abyssal Horror)"
+      },
+      {
+        "id": "monster_deepone_growl",
+        "path": "sounds/Abyssal Horror/DeepOne_Growl.mp3",
+        "category": "monster",
+        "tags": [
+          "horror",
+          "creature",
+          "deepone",
+          "growl"
+        ],
+        "loop": false,
+        "description": "DeepOne Growl (Abyssal Horror)"
+      },
+      {
+        "id": "monster_deepone_growl2",
+        "path": "sounds/Abyssal Horror/DeepOne_Growl2.mp3",
+        "category": "monster",
+        "tags": [
+          "horror",
+          "creature",
+          "deepone",
+          "growl2"
+        ],
+        "loop": false,
+        "description": "DeepOne Growl2 (Abyssal Horror)"
+      },
+      {
+        "id": "monster_deepone_growl3",
+        "path": "sounds/Abyssal Horror/DeepOne_Growl3.mp3",
+        "category": "monster",
+        "tags": [
+          "horror",
+          "creature",
+          "deepone",
+          "growl3"
+        ],
+        "loop": false,
+        "description": "DeepOne Growl3 (Abyssal Horror)"
+      },
+      {
+        "id": "monster_deepone_growl4",
+        "path": "sounds/Abyssal Horror/DeepOne_Growl4.mp3",
+        "category": "monster",
+        "tags": [
+          "horror",
+          "creature",
+          "deepone",
+          "growl4"
+        ],
+        "loop": false,
+        "description": "DeepOne Growl4 (Abyssal Horror)"
+      },
+      {
+        "id": "monster_deepone_growl5",
+        "path": "sounds/Abyssal Horror/DeepOne_Growl5.mp3",
+        "category": "monster",
+        "tags": [
+          "horror",
+          "creature",
+          "deepone",
+          "growl5"
+        ],
+        "loop": false,
+        "description": "DeepOne Growl5 (Abyssal Horror)"
+      },
+      {
+        "id": "monster_deepone_growl6",
+        "path": "sounds/Abyssal Horror/DeepOne_Growl6.mp3",
+        "category": "monster",
+        "tags": [
+          "horror",
+          "creature",
+          "deepone",
+          "growl6"
+        ],
+        "loop": false,
+        "description": "DeepOne Growl6 (Abyssal Horror)"
+      },
+      {
+        "id": "monster_deepone_grunt1",
+        "path": "sounds/Abyssal Horror/DeepOne_Grunt1.mp3",
+        "category": "monster",
+        "tags": [
+          "horror",
+          "creature",
+          "deepone",
+          "grunt1"
+        ],
+        "loop": false,
+        "description": "DeepOne Grunt1 (Abyssal Horror)"
+      },
+      {
+        "id": "monster_deepone_grunt2",
+        "path": "sounds/Abyssal Horror/DeepOne_Grunt2.mp3",
+        "category": "monster",
+        "tags": [
+          "horror",
+          "creature",
+          "deepone",
+          "grunt2"
+        ],
+        "loop": false,
+        "description": "DeepOne Grunt2 (Abyssal Horror)"
+      },
+      {
+        "id": "monster_deepone_rumble",
+        "path": "sounds/Abyssal Horror/DeepOne_Rumble.mp3",
+        "category": "monster",
+        "tags": [
+          "horror",
+          "creature",
+          "deepone",
+          "rumble"
+        ],
+        "loop": false,
+        "description": "DeepOne Rumble (Abyssal Horror)"
+      },
+      {
+        "id": "monster_deepone_rumble1",
+        "path": "sounds/Abyssal Horror/DeepOne_Rumble1.mp3",
+        "category": "monster",
+        "tags": [
+          "horror",
+          "creature",
+          "deepone",
+          "rumble1"
+        ],
+        "loop": false,
+        "description": "DeepOne Rumble1 (Abyssal Horror)"
+      },
+      {
+        "id": "monster_deepone_rumble2",
+        "path": "sounds/Abyssal Horror/DeepOne_Rumble2.mp3",
+        "category": "monster",
+        "tags": [
+          "horror",
+          "creature",
+          "deepone",
+          "rumble2"
+        ],
+        "loop": false,
+        "description": "DeepOne Rumble2 (Abyssal Horror)"
+      },
+      {
+        "id": "monster_deepone_rumble3",
+        "path": "sounds/Abyssal Horror/DeepOne_Rumble3.mp3",
+        "category": "monster",
+        "tags": [
+          "horror",
+          "creature",
+          "deepone",
+          "rumble3"
+        ],
+        "loop": false,
+        "description": "DeepOne Rumble3 (Abyssal Horror)"
+      },
+      {
+        "id": "monster_ghost_chior",
+        "path": "sounds/Monsters & Ghosts/Ghost chior.wav",
+        "category": "monster",
+        "tags": [
+          "horror",
+          "creature",
+          "ghost",
+          "chior"
+        ],
+        "loop": false,
+        "description": "Ghost chior (Monsters & Ghosts)"
+      },
+      {
+        "id": "monster_ghost_moan_2",
+        "path": "sounds/Monsters & Ghosts/Ghost_moan_2.wav",
+        "category": "monster",
+        "tags": [
+          "horror",
+          "creature",
+          "ghost",
+          "moan"
+        ],
+        "loop": false,
+        "description": "Ghost moan 2 (Monsters & Ghosts)"
+      },
+      {
+        "id": "monster_ghost_scream_3",
+        "path": "sounds/Monsters & Ghosts/Ghost_scream_3.wav",
+        "category": "monster",
+        "tags": [
+          "horror",
+          "creature",
+          "ghost",
+          "scream"
+        ],
+        "loop": false,
+        "description": "Ghost scream 3 (Monsters & Ghosts)"
+      },
+      {
+        "id": "monster_gore_mushy",
+        "path": "sounds/Monsters & Ghosts/Gore_mushy.wav",
+        "category": "monster",
+        "tags": [
+          "horror",
+          "creature",
+          "gore",
+          "mushy"
+        ],
+        "loop": false,
+        "description": "Gore mushy (Monsters & Ghosts)"
+      },
+      {
+        "id": "monster_gore_ripping_4",
+        "path": "sounds/Monsters & Ghosts/Gore_Ripping_4.wav",
+        "category": "monster",
+        "tags": [
+          "horror",
+          "creature",
+          "gore",
+          "ripping"
+        ],
+        "loop": false,
+        "description": "Gore Ripping 4 (Monsters & Ghosts)"
+      },
+      {
+        "id": "monster_gore_ripping_5",
+        "path": "sounds/Monsters & Ghosts/Gore_Ripping_5.wav",
+        "category": "monster",
+        "tags": [
+          "horror",
+          "creature",
+          "gore",
+          "ripping"
+        ],
+        "loop": false,
+        "description": "Gore Ripping 5 (Monsters & Ghosts)"
+      },
+      {
+        "id": "monster_gore_wet_4",
+        "path": "sounds/Monsters & Ghosts/Gore_Wet_4.wav",
+        "category": "monster",
+        "tags": [
+          "horror",
+          "creature",
+          "gore",
+          "wet"
+        ],
+        "loop": false,
+        "description": "Gore Wet 4 (Monsters & Ghosts)"
+      },
+      {
+        "id": "monster_gore_wet_7",
+        "path": "sounds/Monsters & Ghosts/Gore_Wet_7.wav",
+        "category": "monster",
+        "tags": [
+          "horror",
+          "creature",
+          "gore",
+          "wet"
+        ],
+        "loop": false,
+        "description": "Gore Wet 7 (Monsters & Ghosts)"
+      },
+      {
+        "id": "monster_hiss",
+        "path": "sounds/Monsters & Ghosts/Hiss.wav",
+        "category": "monster",
+        "tags": [
+          "horror",
+          "creature",
+          "hiss"
+        ],
+        "loop": false,
+        "description": "Hiss (Monsters & Ghosts)"
+      },
+      {
+        "id": "monster_injured",
+        "path": "sounds/Monsters & Ghosts/Injured.wav",
+        "category": "monster",
+        "tags": [
+          "horror",
+          "creature",
+          "injured"
+        ],
+        "loop": false,
+        "description": "Injured (Monsters & Ghosts)"
+      },
+      {
+        "id": "monster_laugh_spooky_4",
+        "path": "sounds/Monsters & Ghosts/Laugh_spooky_4.wav",
+        "category": "monster",
+        "tags": [
+          "horror",
+          "creature",
+          "laugh",
+          "spooky"
+        ],
+        "loop": false,
+        "description": "Laugh spooky 4 (Monsters & Ghosts)"
+      },
+      {
+        "id": "monster_monster_breath",
+        "path": "sounds/Monsters & Ghosts/Monster_breath.wav",
+        "category": "monster",
+        "tags": [
+          "horror",
+          "creature",
+          "monster",
+          "breath"
+        ],
+        "loop": false,
+        "description": "Monster breath (Monsters & Ghosts)"
+      },
+      {
+        "id": "monster_monster_growl_1",
+        "path": "sounds/Monsters & Ghosts/Monster_growl_1.wav",
+        "category": "monster",
+        "tags": [
+          "horror",
+          "creature",
+          "monster",
+          "growl"
+        ],
+        "loop": false,
+        "description": "Monster growl 1 (Monsters & Ghosts)"
+      },
+      {
+        "id": "monster_monster_growl_5",
+        "path": "sounds/Monsters & Ghosts/Monster_growl_5.wav",
+        "category": "monster",
+        "tags": [
+          "horror",
+          "creature",
+          "monster",
+          "growl"
+        ],
+        "loop": false,
+        "description": "Monster growl 5 (Monsters & Ghosts)"
+      },
+      {
+        "id": "monster_monster_grunt_long",
+        "path": "sounds/Monsters & Ghosts/Monster_grunt_long.wav",
+        "category": "monster",
+        "tags": [
+          "horror",
+          "creature",
+          "monster",
+          "grunt",
+          "long"
+        ],
+        "loop": false,
+        "description": "Monster grunt long (Monsters & Ghosts)"
+      },
+      {
+        "id": "monster_monster_grunt_x2_ghmmm",
+        "path": "sounds/Monsters & Ghosts/Monster_grunt x2 (ghmmm).wav",
+        "category": "monster",
+        "tags": [
+          "horror",
+          "creature",
+          "monster",
+          "grunt",
+          "x2",
+          "(ghmmm)"
+        ],
+        "loop": false,
+        "description": "Monster grunt x2 (ghmmm) (Monsters & Ghosts)"
+      },
+      {
+        "id": "monster_monster_mech",
+        "path": "sounds/Monsters & Ghosts/Monster_Mech.wav",
+        "category": "monster",
+        "tags": [
+          "horror",
+          "creature",
+          "monster",
+          "mech"
+        ],
+        "loop": false,
+        "description": "Monster Mech (Monsters & Ghosts)"
+      },
+      {
+        "id": "monster_monster_roar_2",
+        "path": "sounds/Monsters & Ghosts/Monster_Roar_2.wav",
+        "category": "monster",
+        "tags": [
+          "horror",
+          "creature",
+          "monster",
+          "roar"
+        ],
+        "loop": false,
+        "description": "Monster Roar 2 (Monsters & Ghosts)"
+      },
+      {
+        "id": "monster_monster_roar_4",
+        "path": "sounds/Monsters & Ghosts/Monster_Roar_4.wav",
+        "category": "monster",
+        "tags": [
+          "horror",
+          "creature",
+          "monster",
+          "roar"
+        ],
+        "loop": false,
+        "description": "Monster Roar 4 (Monsters & Ghosts)"
+      },
+      {
+        "id": "monster_robotic_bass",
+        "path": "sounds/Monsters & Ghosts/Robotic_bass.wav",
+        "category": "monster",
+        "tags": [
+          "horror",
+          "creature",
+          "robotic",
+          "bass"
+        ],
+        "loop": false,
+        "description": "Robotic bass (Monsters & Ghosts)"
+      },
+      {
+        "id": "monster_robotic_groan_3",
+        "path": "sounds/Monsters & Ghosts/robotic_groan_3.wav",
+        "category": "monster",
+        "tags": [
+          "horror",
+          "creature",
+          "robotic",
+          "groan"
+        ],
+        "loop": false,
+        "description": "robotic groan 3 (Monsters & Ghosts)"
+      },
+      {
+        "id": "monster_robotic_hiss",
+        "path": "sounds/Monsters & Ghosts/robotic_hiss.wav",
+        "category": "monster",
+        "tags": [
+          "horror",
+          "creature",
+          "robotic",
+          "hiss"
+        ],
+        "loop": false,
+        "description": "robotic hiss (Monsters & Ghosts)"
+      },
+      {
+        "id": "monster_scream_robotic",
+        "path": "sounds/Monsters & Ghosts/Scream_Robotic.wav",
+        "category": "monster",
+        "tags": [
+          "horror",
+          "creature",
+          "scream",
+          "robotic"
+        ],
+        "loop": false,
+        "description": "Scream Robotic (Monsters & Ghosts)"
+      },
+      {
+        "id": "monster_tone_moaning",
+        "path": "sounds/Monsters & Ghosts/Tone_Moaning.wav",
+        "category": "monster",
+        "tags": [
+          "horror",
+          "creature",
+          "tone",
+          "moaning"
+        ],
+        "loop": false,
+        "description": "Tone Moaning (Monsters & Ghosts)"
+      },
+      {
+        "id": "monster_tone_moaning_deep_3",
+        "path": "sounds/Monsters & Ghosts/Tone_Moaning_Deep_3.wav",
+        "category": "monster",
+        "tags": [
+          "horror",
+          "creature",
+          "tone",
+          "moaning",
+          "deep"
+        ],
+        "loop": false,
+        "description": "Tone Moaning Deep 3 (Monsters & Ghosts)"
+      },
+      {
+        "id": "monster_zombie",
+        "path": "sounds/Monsters & Ghosts/Zombie.wav",
+        "category": "monster",
+        "tags": [
+          "horror",
+          "creature",
+          "zombie"
+        ],
+        "loop": false,
+        "description": "Zombie (Monsters & Ghosts)"
+      },
+      {
+        "id": "monster_zombie_6",
+        "path": "sounds/Monsters & Ghosts/Zombie_6.wav",
+        "category": "monster",
+        "tags": [
+          "horror",
+          "creature",
+          "zombie"
+        ],
+        "loop": false,
+        "description": "Zombie 6 (Monsters & Ghosts)"
+      },
+      {
+        "id": "monster_zombie_8",
+        "path": "sounds/Monsters & Ghosts/Zombie_8.wav",
+        "category": "monster",
+        "tags": [
+          "horror",
+          "creature",
+          "zombie"
+        ],
+        "loop": false,
+        "description": "Zombie 8 (Monsters & Ghosts)"
+      }
+    ],
+    "ambient": [
+      {
+        "id": "ambient_air_conditioner_ambient",
+        "path": "sounds/Ambient/Air conditioner_Ambient.wav",
+        "category": "ambient",
+        "tags": [
+          "atmosphere",
+          "background",
+          "air",
+          "conditioner",
+          "ambient"
+        ],
+        "loop": true,
+        "description": "Air conditioner Ambient (Ambient)"
+      },
+      {
+        "id": "ambient_bell_low",
+        "path": "sounds/Ambient/Bell_low.wav",
+        "category": "ambient",
+        "tags": [
+          "atmosphere",
+          "background",
+          "bell",
+          "low"
+        ],
+        "loop": true,
+        "description": "Bell low (Ambient)"
+      },
+      {
+        "id": "ambient_creepy_ambience_3",
+        "path": "sounds/Ambient/Creepy_ambience_3.wav",
+        "category": "ambient",
+        "tags": [
+          "atmosphere",
+          "background",
+          "creepy",
+          "ambience"
+        ],
+        "loop": true,
+        "description": "Creepy ambience 3 (Ambient)"
+      },
+      {
+        "id": "ambient_creepy_ambience_5",
+        "path": "sounds/Ambient/Creepy_ambience_5.wav",
+        "category": "ambient",
+        "tags": [
+          "atmosphere",
+          "background",
+          "creepy",
+          "ambience"
+        ],
+        "loop": true,
+        "description": "Creepy ambience 5 (Ambient)"
+      },
+      {
+        "id": "ambient_crying_moaning_ambience_2",
+        "path": "sounds/Ambient/Crying_moaning_ambience_2.wav",
+        "category": "ambient",
+        "tags": [
+          "atmosphere",
+          "background",
+          "crying",
+          "moaning",
+          "ambience"
+        ],
+        "loop": true,
+        "description": "Crying moaning ambience 2 (Ambient)"
+      },
+      {
+        "id": "ambient_crying_moaning_ambience_3",
+        "path": "sounds/Ambient/Crying_moaning_ambience_3.wav",
+        "category": "ambient",
+        "tags": [
+          "atmosphere",
+          "background",
+          "crying",
+          "moaning",
+          "ambience"
+        ],
+        "loop": true,
+        "description": "Crying moaning ambience 3 (Ambient)"
+      },
+      {
+        "id": "ambient_distant_yell_echo_and_reverb_2",
+        "path": "sounds/Ambient/Distant Yell_Echo and Reverb_2.wav",
+        "category": "ambient",
+        "tags": [
+          "atmosphere",
+          "background",
+          "distant",
+          "yell",
+          "echo",
+          "and",
+          "reverb"
+        ],
+        "loop": true,
+        "description": "Distant Yell Echo and Reverb 2 (Ambient)"
+      },
+      {
+        "id": "ambient_drone_doom",
+        "path": "sounds/Ambient/Drone_doom.wav",
+        "category": "ambient",
+        "tags": [
+          "atmosphere",
+          "background",
+          "drone",
+          "doom"
+        ],
+        "loop": true,
+        "description": "Drone doom (Ambient)"
+      },
+      {
+        "id": "ambient_frogs",
+        "path": "sounds/Ambient/Frogs.wav",
+        "category": "ambient",
+        "tags": [
+          "atmosphere",
+          "background",
+          "frogs"
+        ],
+        "loop": true,
+        "description": "Frogs (Ambient)"
+      },
+      {
+        "id": "ambient_frogs_pitchshift",
+        "path": "sounds/Ambient/Frogs_pitchshift.wav",
+        "category": "ambient",
+        "tags": [
+          "atmosphere",
+          "background",
+          "frogs",
+          "pitchshift"
+        ],
+        "loop": true,
+        "description": "Frogs pitchshift (Ambient)"
+      },
+      {
+        "id": "ambient_glass_random_tapping",
+        "path": "sounds/Ambient/Glass_random tapping.wav",
+        "category": "ambient",
+        "tags": [
+          "atmosphere",
+          "background",
+          "glass",
+          "random",
+          "tapping"
+        ],
+        "loop": true,
+        "description": "Glass random tapping (Ambient)"
+      },
+      {
+        "id": "ambient_mechanical_moan_and_creaking",
+        "path": "sounds/Ambient/Mechanical Moan and Creaking.wav",
+        "category": "ambient",
+        "tags": [
+          "atmosphere",
+          "background",
+          "mechanical",
+          "moan",
+          "and",
+          "creaking"
+        ],
+        "loop": true,
+        "description": "Mechanical Moan and Creaking (Ambient)"
+      },
+      {
+        "id": "ambient_mechanical_randomness_spooky_4",
+        "path": "sounds/Ambient/Mechanical Randomness_Spooky_4.wav",
+        "category": "ambient",
+        "tags": [
+          "atmosphere",
+          "background",
+          "mechanical",
+          "randomness",
+          "spooky"
+        ],
+        "loop": true,
+        "description": "Mechanical Randomness Spooky 4 (Ambient)"
+      },
+      {
+        "id": "ambient_metal_random_tapping",
+        "path": "sounds/Ambient/Metal_random tapping.wav",
+        "category": "ambient",
+        "tags": [
+          "atmosphere",
+          "background",
+          "metal",
+          "random",
+          "tapping"
+        ],
+        "loop": true,
+        "description": "Metal random tapping (Ambient)"
+      },
+      {
+        "id": "ambient_metal_tapping",
+        "path": "sounds/Ambient/Metal_tapping.wav",
+        "category": "ambient",
+        "tags": [
+          "atmosphere",
+          "background",
+          "metal",
+          "tapping"
+        ],
+        "loop": true,
+        "description": "Metal tapping (Ambient)"
+      },
+      {
+        "id": "ambient_old_house_creeky_metal_and_wood_ambiance_7",
+        "path": "sounds/Ambient/Old House_creeky metal and wood_ambiance_7.wav",
+        "category": "ambient",
+        "tags": [
+          "atmosphere",
+          "background",
+          "old",
+          "house",
+          "creeky",
+          "metal",
+          "and",
+          "wood",
+          "ambiance"
+        ],
+        "loop": true,
+        "description": "Old House creeky metal and wood ambiance 7 (Ambient)"
+      },
+      {
+        "id": "ambient_radio_static",
+        "path": "sounds/Ambient/Radio_static.wav",
+        "category": "ambient",
+        "tags": [
+          "atmosphere",
+          "background",
+          "radio",
+          "static"
+        ],
+        "loop": true,
+        "description": "Radio static (Ambient)"
+      },
+      {
+        "id": "ambient_rain_heavy",
+        "path": "sounds/Ambient/Rain_Heavy.wav",
+        "category": "ambient",
+        "tags": [
+          "atmosphere",
+          "background",
+          "rain",
+          "heavy"
+        ],
+        "loop": true,
+        "description": "Rain Heavy (Ambient)"
+      },
+      {
+        "id": "ambient_rain_medium_2",
+        "path": "sounds/Ambient/Rain_Medium_2.wav",
+        "category": "ambient",
+        "tags": [
+          "atmosphere",
+          "background",
+          "rain",
+          "medium"
+        ],
+        "loop": true,
+        "description": "Rain Medium 2 (Ambient)"
+      },
+      {
+        "id": "ambient_scream",
+        "path": "sounds/Ambient/Scream.wav",
+        "category": "ambient",
+        "tags": [
+          "atmosphere",
+          "background",
+          "scream"
+        ],
+        "loop": true,
+        "description": "Scream (Ambient)"
+      },
+      {
+        "id": "ambient_screech_metalic_dragging_3",
+        "path": "sounds/Ambient/Screech_metalic_dragging_3.wav",
+        "category": "ambient",
+        "tags": [
+          "atmosphere",
+          "background",
+          "screech",
+          "metalic",
+          "dragging"
+        ],
+        "loop": true,
+        "description": "Screech metalic dragging 3 (Ambient)"
+      },
+      {
+        "id": "ambient_suburban_neighborhood_morning",
+        "path": "sounds/Ambient/Suburban Neighborhood_morning.wav",
+        "category": "ambient",
+        "tags": [
+          "atmosphere",
+          "background",
+          "suburban",
+          "neighborhood",
+          "morning"
+        ],
+        "loop": true,
+        "description": "Suburban Neighborhood morning (Ambient)"
+      },
+      {
+        "id": "ambient_tap_reverb",
+        "path": "sounds/Ambient/Tap_reverb.wav",
+        "category": "ambient",
+        "tags": [
+          "atmosphere",
+          "background",
+          "tap",
+          "reverb"
+        ],
+        "loop": true,
+        "description": "Tap reverb (Ambient)"
+      },
+      {
+        "id": "ambient_vent_airflow",
+        "path": "sounds/Ambient/Vent_airflow.wav",
+        "category": "ambient",
+        "tags": [
+          "atmosphere",
+          "background",
+          "vent",
+          "airflow"
+        ],
+        "loop": true,
+        "description": "Vent airflow (Ambient)"
+      }
+    ],
+    "character": [
+      {
+        "id": "character_air_compressor_running",
+        "path": "sounds/Character/Air Compressor Running.wav",
+        "category": "character",
+        "tags": [
+          "action",
+          "player",
+          "air",
+          "compressor",
+          "running"
+        ],
+        "loop": false,
+        "description": "Air Compressor Running (Character)"
+      },
+      {
+        "id": "character_air_compressor_starting",
+        "path": "sounds/Character/Air Compressor Starting.wav",
+        "category": "character",
+        "tags": [
+          "action",
+          "player",
+          "air",
+          "compressor",
+          "starting"
+        ],
+        "loop": false,
+        "description": "Air Compressor Starting (Character)"
+      },
+      {
+        "id": "character_air_compressor_stopping",
+        "path": "sounds/Character/Air Compressor Stopping.wav",
+        "category": "character",
+        "tags": [
+          "action",
+          "player",
+          "air",
+          "compressor",
+          "stopping"
+        ],
+        "loop": false,
+        "description": "Air Compressor Stopping (Character)"
+      },
+      {
+        "id": "character_air_pump_2",
+        "path": "sounds/Character/Air pump_2.wav",
+        "category": "character",
+        "tags": [
+          "action",
+          "player",
+          "air",
+          "pump"
+        ],
+        "loop": false,
+        "description": "Air pump 2 (Character)"
+      },
+      {
+        "id": "character_air_pump_x3",
+        "path": "sounds/Character/Air pump x3.wav",
+        "category": "character",
+        "tags": [
+          "action",
+          "player",
+          "air",
+          "pump",
+          "x3"
+        ],
+        "loop": false,
+        "description": "Air pump x3 (Character)"
+      },
+      {
+        "id": "character_bag_searching",
+        "path": "sounds/Character/Bag_searching.wav",
+        "category": "character",
+        "tags": [
+          "action",
+          "player",
+          "bag",
+          "searching"
+        ],
+        "loop": false,
+        "description": "Bag searching (Character)"
+      },
+      {
+        "id": "character_bend_and_snap_2",
+        "path": "sounds/Character/Bend and snap_2.wav",
+        "category": "character",
+        "tags": [
+          "action",
+          "player",
+          "bend",
+          "and",
+          "snap"
+        ],
+        "loop": false,
+        "description": "Bend and snap 2 (Character)"
+      },
+      {
+        "id": "character_box_searching",
+        "path": "sounds/Character/Box_searching.wav",
+        "category": "character",
+        "tags": [
+          "action",
+          "player",
+          "box",
+          "searching"
+        ],
+        "loop": false,
+        "description": "Box searching (Character)"
+      },
+      {
+        "id": "character_breathing_fast",
+        "path": "sounds/Character/Breathing_fast.wav",
+        "category": "character",
+        "tags": [
+          "action",
+          "player",
+          "breathing",
+          "fast"
+        ],
+        "loop": false,
+        "description": "Breathing fast (Character)"
+      },
+      {
+        "id": "character_breathing_slow",
+        "path": "sounds/Character/Breathing_slow.wav",
+        "category": "character",
+        "tags": [
+          "action",
+          "player",
+          "breathing",
+          "slow"
+        ],
+        "loop": false,
+        "description": "Breathing slow (Character)"
+      },
+      {
+        "id": "character_camera_taking_picture",
+        "path": "sounds/Character/Camera_taking picture.wav",
+        "category": "character",
+        "tags": [
+          "action",
+          "player",
+          "camera",
+          "taking",
+          "picture"
+        ],
+        "loop": false,
+        "description": "Camera taking picture (Character)"
+      },
+      {
+        "id": "character_camera_taking_picture_2",
+        "path": "sounds/Character/Camera_taking picture_2.wav",
+        "category": "character",
+        "tags": [
+          "action",
+          "player",
+          "camera",
+          "taking",
+          "picture"
+        ],
+        "loop": false,
+        "description": "Camera taking picture 2 (Character)"
+      },
+      {
+        "id": "character_can_opening",
+        "path": "sounds/Character/Can_opening.wav",
+        "category": "character",
+        "tags": [
+          "action",
+          "player",
+          "can",
+          "opening"
+        ],
+        "loop": false,
+        "description": "Can opening (Character)"
+      },
+      {
+        "id": "character_car_door_opening",
+        "path": "sounds/Character/Car_door_opening.wav",
+        "category": "character",
+        "tags": [
+          "action",
+          "player",
+          "car",
+          "door",
+          "opening"
+        ],
+        "loop": false,
+        "description": "Car door opening (Character)"
+      },
+      {
+        "id": "character_car_door_shutting",
+        "path": "sounds/Character/Car_door_shutting.wav",
+        "category": "character",
+        "tags": [
+          "action",
+          "player",
+          "car",
+          "door",
+          "shutting"
+        ],
+        "loop": false,
+        "description": "Car door shutting (Character)"
+      },
+      {
+        "id": "character_coin_drop_on_table_3",
+        "path": "sounds/Character/Coin_Drop on Table_3.wav",
+        "category": "character",
+        "tags": [
+          "action",
+          "player",
+          "coin",
+          "drop",
+          "on",
+          "table"
+        ],
+        "loop": false,
+        "description": "Coin Drop on Table 3 (Character)"
+      },
+      {
+        "id": "character_coin_flip_3",
+        "path": "sounds/Character/Coin Flip_3.wav",
+        "category": "character",
+        "tags": [
+          "action",
+          "player",
+          "coin",
+          "flip"
+        ],
+        "loop": false,
+        "description": "Coin Flip 3 (Character)"
+      },
+      {
+        "id": "character_coin_flip_4",
+        "path": "sounds/Character/Coin Flip_4.wav",
+        "category": "character",
+        "tags": [
+          "action",
+          "player",
+          "coin",
+          "flip"
+        ],
+        "loop": false,
+        "description": "Coin Flip 4 (Character)"
+      },
+      {
+        "id": "character_flashlight_off",
+        "path": "sounds/Character/Flashlight off.wav",
+        "category": "character",
+        "tags": [
+          "action",
+          "player",
+          "flashlight",
+          "off"
+        ],
+        "loop": false,
+        "description": "Flashlight off (Character)"
+      },
+      {
+        "id": "character_flashlight_on",
+        "path": "sounds/Character/Flashlight on.wav",
+        "category": "character",
+        "tags": [
+          "action",
+          "player",
+          "flashlight",
+          "on"
+        ],
+        "loop": false,
+        "description": "Flashlight on (Character)"
+      },
+      {
+        "id": "character_footsteps_running",
+        "path": "sounds/Character/Footsteps_ running.wav",
+        "category": "character",
+        "tags": [
+          "action",
+          "player",
+          "footsteps",
+          "running"
+        ],
+        "loop": false,
+        "description": "Footsteps running (Character)"
+      },
+      {
+        "id": "character_footsteps_walking",
+        "path": "sounds/Character/Footsteps_walking.wav",
+        "category": "character",
+        "tags": [
+          "action",
+          "player",
+          "footsteps",
+          "walking"
+        ],
+        "loop": false,
+        "description": "Footsteps walking (Character)"
+      },
+      {
+        "id": "character_gasp",
+        "path": "sounds/Character/Gasp.wav",
+        "category": "character",
+        "tags": [
+          "action",
+          "player",
+          "gasp"
+        ],
+        "loop": false,
+        "description": "Gasp (Character)"
+      },
+      {
+        "id": "character_gasp_3",
+        "path": "sounds/Character/Gasp_3.wav",
+        "category": "character",
+        "tags": [
+          "action",
+          "player",
+          "gasp"
+        ],
+        "loop": false,
+        "description": "Gasp 3 (Character)"
+      },
+      {
+        "id": "character_keys_pick_up",
+        "path": "sounds/Character/Keys_pick up.wav",
+        "category": "character",
+        "tags": [
+          "action",
+          "player",
+          "keys",
+          "pick",
+          "up"
+        ],
+        "loop": false,
+        "description": "Keys pick up (Character)"
+      },
+      {
+        "id": "character_match_striking",
+        "path": "sounds/Character/Match_striking.wav",
+        "category": "character",
+        "tags": [
+          "action",
+          "player",
+          "match",
+          "striking"
+        ],
+        "loop": false,
+        "description": "Match striking (Character)"
+      },
+      {
+        "id": "character_swoosh_3",
+        "path": "sounds/Character/Swoosh_3.wav",
+        "category": "character",
+        "tags": [
+          "action",
+          "player",
+          "swoosh"
+        ],
+        "loop": false,
+        "description": "Swoosh 3 (Character)"
+      },
+      {
+        "id": "character_velcro",
+        "path": "sounds/Character/Velcro.wav",
+        "category": "character",
+        "tags": [
+          "action",
+          "player",
+          "velcro"
+        ],
+        "loop": false,
+        "description": "Velcro (Character)"
+      },
+      {
+        "id": "character_woosh",
+        "path": "sounds/Character/woosh.wav",
+        "category": "character",
+        "tags": [
+          "action",
+          "player",
+          "woosh"
+        ],
+        "loop": false,
+        "description": "woosh (Character)"
+      },
+      {
+        "id": "character_woosh_5",
+        "path": "sounds/Character/woosh_5.wav",
+        "category": "character",
+        "tags": [
+          "action",
+          "player",
+          "woosh"
+        ],
+        "loop": false,
+        "description": "woosh 5 (Character)"
+      },
+      {
+        "id": "character_zipper_bag",
+        "path": "sounds/Character/Zipper bag.wav",
+        "category": "character",
+        "tags": [
+          "action",
+          "player",
+          "zipper",
+          "bag"
+        ],
+        "loop": false,
+        "description": "Zipper bag (Character)"
+      },
+      {
+        "id": "character_zipper_up",
+        "path": "sounds/Character/Zipper up.wav",
+        "category": "character",
+        "tags": [
+          "action",
+          "player",
+          "zipper",
+          "up"
+        ],
+        "loop": false,
+        "description": "Zipper up (Character)"
+      }
+    ],
+    "cute": [
+      {
+        "id": "cute_a",
+        "path": "sounds/Cute/a.mp3",
+        "category": "cute",
+        "tags": [
+          "gentle",
+          "positive",
+          "happy"
+        ],
+        "loop": false,
+        "description": "a (Cute)"
+      },
+      {
+        "id": "cute_b",
+        "path": "sounds/Cute/b.mp3",
+        "category": "cute",
+        "tags": [
+          "gentle",
+          "positive",
+          "happy"
+        ],
+        "loop": false,
+        "description": "b (Cute)"
+      },
+      {
+        "id": "cute_c",
+        "path": "sounds/Cute/c.mp3",
+        "category": "cute",
+        "tags": [
+          "gentle",
+          "positive",
+          "happy"
+        ],
+        "loop": false,
+        "description": "c (Cute)"
+      },
+      {
+        "id": "cute_d",
+        "path": "sounds/Cute/d.mp3",
+        "category": "cute",
+        "tags": [
+          "gentle",
+          "positive",
+          "happy"
+        ],
+        "loop": false,
+        "description": "d (Cute)"
+      },
+      {
+        "id": "cute_e",
+        "path": "sounds/Cute/e.mp3",
+        "category": "cute",
+        "tags": [
+          "gentle",
+          "positive",
+          "happy"
+        ],
+        "loop": false,
+        "description": "e (Cute)"
+      },
+      {
+        "id": "cute_f",
+        "path": "sounds/Cute/f.mp3",
+        "category": "cute",
+        "tags": [
+          "gentle",
+          "positive",
+          "happy"
+        ],
+        "loop": false,
+        "description": "f (Cute)"
+      },
+      {
+        "id": "cute_g",
+        "path": "sounds/Cute/g.mp3",
+        "category": "cute",
+        "tags": [
+          "gentle",
+          "positive",
+          "happy"
+        ],
+        "loop": false,
+        "description": "g (Cute)"
+      },
+      {
+        "id": "cute_h",
+        "path": "sounds/Cute/h.mp3",
+        "category": "cute",
+        "tags": [
+          "gentle",
+          "positive",
+          "happy"
+        ],
+        "loop": false,
+        "description": "h (Cute)"
+      },
+      {
+        "id": "cute_h2",
+        "path": "sounds/Cute/h2.mp3",
+        "category": "cute",
+        "tags": [
+          "gentle",
+          "positive",
+          "happy",
+          "h2"
+        ],
+        "loop": false,
+        "description": "h2 (Cute)"
+      },
+      {
+        "id": "cute_i",
+        "path": "sounds/Cute/i.mp3",
+        "category": "cute",
+        "tags": [
+          "gentle",
+          "positive",
+          "happy"
+        ],
+        "loop": false,
+        "description": "i (Cute)"
+      },
+      {
+        "id": "cute_i2",
+        "path": "sounds/Cute/i2.mp3",
+        "category": "cute",
+        "tags": [
+          "gentle",
+          "positive",
+          "happy",
+          "i2"
+        ],
+        "loop": false,
+        "description": "i2 (Cute)"
+      },
+      {
+        "id": "cute_j",
+        "path": "sounds/Cute/j.mp3",
+        "category": "cute",
+        "tags": [
+          "gentle",
+          "positive",
+          "happy"
+        ],
+        "loop": false,
+        "description": "j (Cute)"
+      },
+      {
+        "id": "cute_k",
+        "path": "sounds/Cute/k.mp3",
+        "category": "cute",
+        "tags": [
+          "gentle",
+          "positive",
+          "happy"
+        ],
+        "loop": false,
+        "description": "k (Cute)"
+      },
+      {
+        "id": "cute_l",
+        "path": "sounds/Cute/l.mp3",
+        "category": "cute",
+        "tags": [
+          "gentle",
+          "positive",
+          "happy"
+        ],
+        "loop": false,
+        "description": "l (Cute)"
+      },
+      {
+        "id": "cute_m",
+        "path": "sounds/Cute/m.mp3",
+        "category": "cute",
+        "tags": [
+          "gentle",
+          "positive",
+          "happy"
+        ],
+        "loop": false,
+        "description": "m (Cute)"
+      },
+      {
+        "id": "cute_p",
+        "path": "sounds/Cute/p.mp3",
+        "category": "cute",
+        "tags": [
+          "gentle",
+          "positive",
+          "happy"
+        ],
+        "loop": false,
+        "description": "p (Cute)"
+      },
+      {
+        "id": "cute_q",
+        "path": "sounds/Cute/q.mp3",
+        "category": "cute",
+        "tags": [
+          "gentle",
+          "positive",
+          "happy"
+        ],
+        "loop": false,
+        "description": "q (Cute)"
+      },
+      {
+        "id": "cute_r",
+        "path": "sounds/Cute/r.mp3",
+        "category": "cute",
+        "tags": [
+          "gentle",
+          "positive",
+          "happy"
+        ],
+        "loop": false,
+        "description": "r (Cute)"
+      },
+      {
+        "id": "cute_s",
+        "path": "sounds/Cute/s.mp3",
+        "category": "cute",
+        "tags": [
+          "gentle",
+          "positive",
+          "happy"
+        ],
+        "loop": false,
+        "description": "s (Cute)"
+      },
+      {
+        "id": "cute_t",
+        "path": "sounds/Cute/t.mp3",
+        "category": "cute",
+        "tags": [
+          "gentle",
+          "positive",
+          "happy"
+        ],
+        "loop": false,
+        "description": "t (Cute)"
+      },
+      {
+        "id": "cute_u",
+        "path": "sounds/Cute/u.mp3",
+        "category": "cute",
+        "tags": [
+          "gentle",
+          "positive",
+          "happy"
+        ],
+        "loop": false,
+        "description": "u (Cute)"
+      },
+      {
+        "id": "cute_u2",
+        "path": "sounds/Cute/u2.mp3",
+        "category": "cute",
+        "tags": [
+          "gentle",
+          "positive",
+          "happy",
+          "u2"
+        ],
+        "loop": false,
+        "description": "u2 (Cute)"
+      },
+      {
+        "id": "cute_v",
+        "path": "sounds/Cute/v.mp3",
+        "category": "cute",
+        "tags": [
+          "gentle",
+          "positive",
+          "happy"
+        ],
+        "loop": false,
+        "description": "v (Cute)"
+      },
+      {
+        "id": "cute_w",
+        "path": "sounds/Cute/w.mp3",
+        "category": "cute",
+        "tags": [
+          "gentle",
+          "positive",
+          "happy"
+        ],
+        "loop": false,
+        "description": "w (Cute)"
+      }
+    ],
+    "household": [
+      {
+        "id": "household_blender_running",
+        "path": "sounds/House & Office/Blender_running.wav",
+        "category": "household",
+        "tags": [
+          "environment",
+          "mundane",
+          "blender",
+          "running"
+        ],
+        "loop": false,
+        "description": "Blender running (House & Office)"
+      },
+      {
+        "id": "household_blender_start",
+        "path": "sounds/House & Office/Blender_start.wav",
+        "category": "household",
+        "tags": [
+          "environment",
+          "mundane",
+          "blender",
+          "start"
+        ],
+        "loop": false,
+        "description": "Blender start (House & Office)"
+      },
+      {
+        "id": "household_blender_stop",
+        "path": "sounds/House & Office/Blender_stop.wav",
+        "category": "household",
+        "tags": [
+          "environment",
+          "mundane",
+          "blender",
+          "stop"
+        ],
+        "loop": false,
+        "description": "Blender stop (House & Office)"
+      },
+      {
+        "id": "household_cabinet_shut",
+        "path": "sounds/House & Office/Cabinet_shut.wav",
+        "category": "household",
+        "tags": [
+          "environment",
+          "mundane",
+          "cabinet",
+          "shut"
+        ],
+        "loop": false,
+        "description": "Cabinet shut (House & Office)"
+      },
+      {
+        "id": "household_can_clink_4",
+        "path": "sounds/House & Office/Can_clink_4.wav",
+        "category": "household",
+        "tags": [
+          "environment",
+          "mundane",
+          "can",
+          "clink"
+        ],
+        "loop": false,
+        "description": "Can clink 4 (House & Office)"
+      },
+      {
+        "id": "household_can_crush_3",
+        "path": "sounds/House & Office/Can_crush_3.wav",
+        "category": "household",
+        "tags": [
+          "environment",
+          "mundane",
+          "can",
+          "crush"
+        ],
+        "loop": false,
+        "description": "Can crush 3 (House & Office)"
+      },
+      {
+        "id": "household_clock",
+        "path": "sounds/House & Office/Clock.wav",
+        "category": "household",
+        "tags": [
+          "environment",
+          "mundane",
+          "clock"
+        ],
+        "loop": false,
+        "description": "Clock (House & Office)"
+      },
+      {
+        "id": "household_cutting_board_chop_4",
+        "path": "sounds/House & Office/Cutting board_chop_4.wav",
+        "category": "household",
+        "tags": [
+          "environment",
+          "mundane",
+          "cutting",
+          "board",
+          "chop"
+        ],
+        "loop": false,
+        "description": "Cutting board chop 4 (House & Office)"
+      },
+      {
+        "id": "household_door_handle_jiggle_checking_if_locked",
+        "path": "sounds/House & Office/Door_handle_jiggle_checking if locked.wav",
+        "category": "household",
+        "tags": [
+          "environment",
+          "mundane",
+          "door",
+          "handle",
+          "jiggle",
+          "checking",
+          "if",
+          "locked"
+        ],
+        "loop": false,
+        "description": "Door handle jiggle checking if locked (House & Office)"
+      },
+      {
+        "id": "household_door_knocking_quiet",
+        "path": "sounds/House & Office/Door_knocking_quiet.wav",
+        "category": "household",
+        "tags": [
+          "environment",
+          "mundane",
+          "door",
+          "knocking",
+          "quiet"
+        ],
+        "loop": false,
+        "description": "Door knocking quiet (House & Office)"
+      },
+      {
+        "id": "household_door_squeeky_2",
+        "path": "sounds/House & Office/Door_squeeky_2.wav",
+        "category": "household",
+        "tags": [
+          "environment",
+          "mundane",
+          "door",
+          "squeeky"
+        ],
+        "loop": false,
+        "description": "Door squeeky 2 (House & Office)"
+      },
+      {
+        "id": "household_drawer_close_2",
+        "path": "sounds/House & Office/Drawer_close_2.wav",
+        "category": "household",
+        "tags": [
+          "environment",
+          "mundane",
+          "drawer",
+          "close"
+        ],
+        "loop": false,
+        "description": "Drawer close 2 (House & Office)"
+      },
+      {
+        "id": "household_drawer_open",
+        "path": "sounds/House & Office/Drawer_open.wav",
+        "category": "household",
+        "tags": [
+          "environment",
+          "mundane",
+          "drawer",
+          "open"
+        ],
+        "loop": false,
+        "description": "Drawer open (House & Office)"
+      },
+      {
+        "id": "household_drawer_open_2",
+        "path": "sounds/House & Office/Drawer_open_2.wav",
+        "category": "household",
+        "tags": [
+          "environment",
+          "mundane",
+          "drawer",
+          "open"
+        ],
+        "loop": false,
+        "description": "Drawer open 2 (House & Office)"
+      },
+      {
+        "id": "household_drawer_open_3",
+        "path": "sounds/House & Office/Drawer_open_3.wav",
+        "category": "household",
+        "tags": [
+          "environment",
+          "mundane",
+          "drawer",
+          "open"
+        ],
+        "loop": false,
+        "description": "Drawer open 3 (House & Office)"
+      },
+      {
+        "id": "household_drawer_squeeky_open_2",
+        "path": "sounds/House & Office/Drawer_squeeky_open_2.wav",
+        "category": "household",
+        "tags": [
+          "environment",
+          "mundane",
+          "drawer",
+          "squeeky",
+          "open"
+        ],
+        "loop": false,
+        "description": "Drawer squeeky open 2 (House & Office)"
+      },
+      {
+        "id": "household_drill_running",
+        "path": "sounds/House & Office/Drill running.wav",
+        "category": "household",
+        "tags": [
+          "environment",
+          "mundane",
+          "drill",
+          "running"
+        ],
+        "loop": false,
+        "description": "Drill running (House & Office)"
+      },
+      {
+        "id": "household_drill_starting",
+        "path": "sounds/House & Office/Drill starting.wav",
+        "category": "household",
+        "tags": [
+          "environment",
+          "mundane",
+          "drill",
+          "starting"
+        ],
+        "loop": false,
+        "description": "Drill starting (House & Office)"
+      },
+      {
+        "id": "household_drill_turning_off",
+        "path": "sounds/House & Office/Drill turning off.wav",
+        "category": "household",
+        "tags": [
+          "environment",
+          "mundane",
+          "drill",
+          "turning",
+          "off"
+        ],
+        "loop": false,
+        "description": "Drill turning off (House & Office)"
+      },
+      {
+        "id": "household_fast_crank_2",
+        "path": "sounds/House & Office/Fast crank_2.wav",
+        "category": "household",
+        "tags": [
+          "environment",
+          "mundane",
+          "fast",
+          "crank"
+        ],
+        "loop": false,
+        "description": "Fast crank 2 (House & Office)"
+      },
+      {
+        "id": "household_fluorescent_light_bulb_buzz_2",
+        "path": "sounds/House & Office/Fluorescent light bulb buzz_2.wav",
+        "category": "household",
+        "tags": [
+          "environment",
+          "mundane",
+          "fluorescent",
+          "light",
+          "bulb",
+          "buzz"
+        ],
+        "loop": false,
+        "description": "Fluorescent light bulb buzz 2 (House & Office)"
+      },
+      {
+        "id": "household_food_sizzling",
+        "path": "sounds/House & Office/Food_sizzling.wav",
+        "category": "household",
+        "tags": [
+          "environment",
+          "mundane",
+          "food",
+          "sizzling"
+        ],
+        "loop": false,
+        "description": "Food sizzling (House & Office)"
+      },
+      {
+        "id": "household_food_sizzling_5",
+        "path": "sounds/House & Office/Food_sizzling_5.wav",
+        "category": "household",
+        "tags": [
+          "environment",
+          "mundane",
+          "food",
+          "sizzling"
+        ],
+        "loop": false,
+        "description": "Food sizzling 5 (House & Office)"
+      },
+      {
+        "id": "household_food_sizzling_6",
+        "path": "sounds/House & Office/Food_sizzling_6.wav",
+        "category": "household",
+        "tags": [
+          "environment",
+          "mundane",
+          "food",
+          "sizzling"
+        ],
+        "loop": false,
+        "description": "Food sizzling 6 (House & Office)"
+      },
+      {
+        "id": "household_fridge_close",
+        "path": "sounds/House & Office/Fridge_close.wav",
+        "category": "household",
+        "tags": [
+          "environment",
+          "mundane",
+          "fridge",
+          "close"
+        ],
+        "loop": false,
+        "description": "Fridge close (House & Office)"
+      },
+      {
+        "id": "household_fridge_compressor_ambient_noise",
+        "path": "sounds/House & Office/Fridge compressor ambient noise.wav",
+        "category": "household",
+        "tags": [
+          "environment",
+          "mundane",
+          "fridge",
+          "compressor",
+          "ambient",
+          "noise"
+        ],
+        "loop": false,
+        "description": "Fridge compressor ambient noise (House & Office)"
+      },
+      {
+        "id": "household_fridge_door_opening",
+        "path": "sounds/House & Office/Fridge door_opening.wav",
+        "category": "household",
+        "tags": [
+          "environment",
+          "mundane",
+          "fridge",
+          "door",
+          "opening"
+        ],
+        "loop": false,
+        "description": "Fridge door opening (House & Office)"
+      },
+      {
+        "id": "household_garage_door",
+        "path": "sounds/House & Office/Garage door.wav",
+        "category": "household",
+        "tags": [
+          "environment",
+          "mundane",
+          "garage",
+          "door"
+        ],
+        "loop": false,
+        "description": "Garage door (House & Office)"
+      },
+      {
+        "id": "household_gas_funace_running",
+        "path": "sounds/House & Office/Gas funace_running.wav",
+        "category": "household",
+        "tags": [
+          "environment",
+          "mundane",
+          "gas",
+          "funace",
+          "running"
+        ],
+        "loop": false,
+        "description": "Gas funace running (House & Office)"
+      },
+      {
+        "id": "household_gas_stove_lighting",
+        "path": "sounds/House & Office/Gas Stove_lighting.wav",
+        "category": "household",
+        "tags": [
+          "environment",
+          "mundane",
+          "gas",
+          "stove",
+          "lighting"
+        ],
+        "loop": false,
+        "description": "Gas Stove lighting (House & Office)"
+      },
+      {
+        "id": "household_gas_stove_running",
+        "path": "sounds/House & Office/Gas Stove_running.wav",
+        "category": "household",
+        "tags": [
+          "environment",
+          "mundane",
+          "gas",
+          "stove",
+          "running"
+        ],
+        "loop": false,
+        "description": "Gas Stove running (House & Office)"
+      },
+      {
+        "id": "household_gas_stove_turning_off",
+        "path": "sounds/House & Office/Gas Stove_turning off.wav",
+        "category": "household",
+        "tags": [
+          "environment",
+          "mundane",
+          "gas",
+          "stove",
+          "turning",
+          "off"
+        ],
+        "loop": false,
+        "description": "Gas Stove turning off (House & Office)"
+      },
+      {
+        "id": "household_metal_scrape_scratch",
+        "path": "sounds/House & Office/Metal scrape_scratch.wav",
+        "category": "household",
+        "tags": [
+          "environment",
+          "mundane",
+          "metal",
+          "scrape",
+          "scratch"
+        ],
+        "loop": false,
+        "description": "Metal scrape scratch (House & Office)"
+      },
+      {
+        "id": "household_shaker_3",
+        "path": "sounds/House & Office/Shaker_3.wav",
+        "category": "household",
+        "tags": [
+          "environment",
+          "mundane",
+          "shaker"
+        ],
+        "loop": false,
+        "description": "Shaker 3 (House & Office)"
+      },
+      {
+        "id": "household_silverware_rustle_2",
+        "path": "sounds/House & Office/Silverware_rustle_2.wav",
+        "category": "household",
+        "tags": [
+          "environment",
+          "mundane",
+          "silverware",
+          "rustle"
+        ],
+        "loop": false,
+        "description": "Silverware rustle 2 (House & Office)"
+      },
+      {
+        "id": "household_silverware_rustle_3",
+        "path": "sounds/House & Office/Silverware_rustle_3.wav",
+        "category": "household",
+        "tags": [
+          "environment",
+          "mundane",
+          "silverware",
+          "rustle"
+        ],
+        "loop": false,
+        "description": "Silverware rustle 3 (House & Office)"
+      },
+      {
+        "id": "household_slow_crank",
+        "path": "sounds/House & Office/Slow crank.wav",
+        "category": "household",
+        "tags": [
+          "environment",
+          "mundane",
+          "slow",
+          "crank"
+        ],
+        "loop": false,
+        "description": "Slow crank (House & Office)"
+      },
+      {
+        "id": "household_switch",
+        "path": "sounds/House & Office/switch.wav",
+        "category": "household",
+        "tags": [
+          "environment",
+          "mundane",
+          "switch"
+        ],
+        "loop": false,
+        "description": "switch (House & Office)"
+      },
+      {
+        "id": "household_typing",
+        "path": "sounds/House & Office/Typing.wav",
+        "category": "household",
+        "tags": [
+          "environment",
+          "mundane",
+          "typing"
+        ],
+        "loop": false,
+        "description": "Typing (House & Office)"
+      },
+      {
+        "id": "household_water_boiling_4",
+        "path": "sounds/House & Office/Water_Boiling_4.wav",
+        "category": "household",
+        "tags": [
+          "environment",
+          "mundane",
+          "water",
+          "boiling"
+        ],
+        "loop": false,
+        "description": "Water Boiling 4 (House & Office)"
+      },
+      {
+        "id": "household_writing",
+        "path": "sounds/House & Office/Writing.wav",
+        "category": "household",
+        "tags": [
+          "environment",
+          "mundane",
+          "writing"
+        ],
+        "loop": false,
+        "description": "Writing (House & Office)"
+      }
+    ],
+    "liquid": [
+      {
+        "id": "liquid_bubble_artificial",
+        "path": "sounds/Liquids/Bubble_artificial.wav",
+        "category": "liquid",
+        "tags": [
+          "wet",
+          "fluid",
+          "bubble",
+          "artificial"
+        ],
+        "loop": false,
+        "description": "Bubble artificial (Liquids)"
+      },
+      {
+        "id": "liquid_bubbles",
+        "path": "sounds/Liquids/Bubbles.wav",
+        "category": "liquid",
+        "tags": [
+          "wet",
+          "fluid",
+          "bubbles"
+        ],
+        "loop": false,
+        "description": "Bubbles (Liquids)"
+      },
+      {
+        "id": "liquid_liquid_plash_poor",
+        "path": "sounds/Liquids/Liquid_plash poor.wav",
+        "category": "liquid",
+        "tags": [
+          "wet",
+          "fluid",
+          "liquid",
+          "plash",
+          "poor"
+        ],
+        "loop": false,
+        "description": "Liquid plash poor (Liquids)"
+      },
+      {
+        "id": "liquid_liquid_shake_2",
+        "path": "sounds/Liquids/Liquid_Shake_2.wav",
+        "category": "liquid",
+        "tags": [
+          "wet",
+          "fluid",
+          "liquid",
+          "shake"
+        ],
+        "loop": false,
+        "description": "Liquid Shake 2 (Liquids)"
+      },
+      {
+        "id": "liquid_liquid_slosh",
+        "path": "sounds/Liquids/Liquid_slosh.wav",
+        "category": "liquid",
+        "tags": [
+          "wet",
+          "fluid",
+          "liquid",
+          "slosh"
+        ],
+        "loop": false,
+        "description": "Liquid slosh (Liquids)"
+      },
+      {
+        "id": "liquid_liquid_stirring_glass_full",
+        "path": "sounds/Liquids/Liquid_stirring glass full.wav",
+        "category": "liquid",
+        "tags": [
+          "wet",
+          "fluid",
+          "liquid",
+          "stirring",
+          "glass",
+          "full"
+        ],
+        "loop": false,
+        "description": "Liquid stirring glass full (Liquids)"
+      },
+      {
+        "id": "liquid_spray",
+        "path": "sounds/Liquids/Spray.wav",
+        "category": "liquid",
+        "tags": [
+          "wet",
+          "fluid",
+          "spray"
+        ],
+        "loop": false,
+        "description": "Spray (Liquids)"
+      }
+    ],
+    "stinger": [
+      {
+        "id": "stinger_harmonized_tone_pleasant_but_spooky",
+        "path": "sounds/Stingers and Spooky Triggers/Harmonized Tone_Pleasant but Spooky.wav",
+        "category": "stinger",
+        "tags": [
+          "jumpscare",
+          "transition",
+          "tension",
+          "harmonized",
+          "tone",
+          "pleasant",
+          "but",
+          "spooky"
+        ],
+        "loop": false,
+        "description": "Harmonized Tone Pleasant but Spooky (Stingers and Spooky Triggers)"
+      },
+      {
+        "id": "stinger_metal_resonance",
+        "path": "sounds/Stingers and Spooky Triggers/Metal_resonance.wav",
+        "category": "stinger",
+        "tags": [
+          "jumpscare",
+          "transition",
+          "tension",
+          "metal",
+          "resonance"
+        ],
+        "loop": false,
+        "description": "Metal resonance (Stingers and Spooky Triggers)"
+      },
+      {
+        "id": "stinger_metal_twang",
+        "path": "sounds/Stingers and Spooky Triggers/Metal_twang.wav",
+        "category": "stinger",
+        "tags": [
+          "jumpscare",
+          "transition",
+          "tension",
+          "metal",
+          "twang"
+        ],
+        "loop": false,
+        "description": "Metal twang (Stingers and Spooky Triggers)"
+      },
+      {
+        "id": "stinger_piano_assending_dissonent",
+        "path": "sounds/Stingers and Spooky Triggers/Piano_assending_dissonent.wav",
+        "category": "stinger",
+        "tags": [
+          "jumpscare",
+          "transition",
+          "tension",
+          "piano",
+          "assending",
+          "dissonent"
+        ],
+        "loop": false,
+        "description": "Piano assending dissonent (Stingers and Spooky Triggers)"
+      },
+      {
+        "id": "stinger_piano_crescendo",
+        "path": "sounds/Stingers and Spooky Triggers/Piano_crescendo.wav",
+        "category": "stinger",
+        "tags": [
+          "jumpscare",
+          "transition",
+          "tension",
+          "piano",
+          "crescendo"
+        ],
+        "loop": false,
+        "description": "Piano crescendo (Stingers and Spooky Triggers)"
+      },
+      {
+        "id": "stinger_piano_drone_low_sustained_2",
+        "path": "sounds/Stingers and Spooky Triggers/Piano_drone_low_sustained_2.wav",
+        "category": "stinger",
+        "tags": [
+          "jumpscare",
+          "transition",
+          "tension",
+          "piano",
+          "drone",
+          "low",
+          "sustained"
+        ],
+        "loop": false,
+        "description": "Piano drone low sustained 2 (Stingers and Spooky Triggers)"
+      },
+      {
+        "id": "stinger_piano_stinger_dissonent",
+        "path": "sounds/Stingers and Spooky Triggers/Piano_stinger_dissonent.wav",
+        "category": "stinger",
+        "tags": [
+          "jumpscare",
+          "transition",
+          "tension",
+          "piano",
+          "stinger",
+          "dissonent"
+        ],
+        "loop": false,
+        "description": "Piano stinger dissonent (Stingers and Spooky Triggers)"
+      },
+      {
+        "id": "stinger_piano_stinger_dissonent_2",
+        "path": "sounds/Stingers and Spooky Triggers/Piano_stinger_dissonent_2.wav",
+        "category": "stinger",
+        "tags": [
+          "jumpscare",
+          "transition",
+          "tension",
+          "piano",
+          "stinger",
+          "dissonent"
+        ],
+        "loop": false,
+        "description": "Piano stinger dissonent 2 (Stingers and Spooky Triggers)"
+      },
+      {
+        "id": "stinger_scratch_high_pitch",
+        "path": "sounds/Stingers and Spooky Triggers/Scratch_high pitch.wav",
+        "category": "stinger",
+        "tags": [
+          "jumpscare",
+          "transition",
+          "tension",
+          "scratch",
+          "high",
+          "pitch"
+        ],
+        "loop": false,
+        "description": "Scratch high pitch (Stingers and Spooky Triggers)"
+      },
+      {
+        "id": "stinger_slide_guitar_decreasing_pitch",
+        "path": "sounds/Stingers and Spooky Triggers/Slide guitar_decreasing pitch.wav",
+        "category": "stinger",
+        "tags": [
+          "jumpscare",
+          "transition",
+          "tension",
+          "slide",
+          "guitar",
+          "decreasing",
+          "pitch"
+        ],
+        "loop": false,
+        "description": "Slide guitar decreasing pitch (Stingers and Spooky Triggers)"
+      },
+      {
+        "id": "stinger_slow_stinger",
+        "path": "sounds/Stingers and Spooky Triggers/Slow Stinger.wav",
+        "category": "stinger",
+        "tags": [
+          "jumpscare",
+          "transition",
+          "tension",
+          "slow",
+          "stinger"
+        ],
+        "loop": false,
+        "description": "Slow Stinger (Stingers and Spooky Triggers)"
+      },
+      {
+        "id": "stinger_spooky_ambience",
+        "path": "sounds/Stingers and Spooky Triggers/Spooky Ambience.wav",
+        "category": "stinger",
+        "tags": [
+          "jumpscare",
+          "transition",
+          "tension",
+          "spooky",
+          "ambience"
+        ],
+        "loop": false,
+        "description": "Spooky Ambience (Stingers and Spooky Triggers)"
+      },
+      {
+        "id": "stinger_stinger",
+        "path": "sounds/Stingers and Spooky Triggers/Stinger.wav",
+        "category": "stinger",
+        "tags": [
+          "jumpscare",
+          "transition",
+          "tension",
+          "stinger"
+        ],
+        "loop": false,
+        "description": "Stinger (Stingers and Spooky Triggers)"
+      },
+      {
+        "id": "stinger_suspenseful_pitch_increase",
+        "path": "sounds/Stingers and Spooky Triggers/Suspenseful pitch increase.wav",
+        "category": "stinger",
+        "tags": [
+          "jumpscare",
+          "transition",
+          "tension",
+          "suspenseful",
+          "pitch",
+          "increase"
+        ],
+        "loop": false,
+        "description": "Suspenseful pitch increase (Stingers and Spooky Triggers)"
+      }
+    ]
+  },
+  "sounds": [
+    {
+      "id": "ambient_air_conditioner_ambient",
+      "path": "sounds/Ambient/Air conditioner_Ambient.wav",
+      "category": "ambient",
+      "tags": [
+        "atmosphere",
+        "background",
+        "air",
+        "conditioner",
+        "ambient"
+      ],
+      "loop": true,
+      "description": "Air conditioner Ambient (Ambient)"
+    },
+    {
+      "id": "ambient_bell_low",
+      "path": "sounds/Ambient/Bell_low.wav",
+      "category": "ambient",
+      "tags": [
+        "atmosphere",
+        "background",
+        "bell",
+        "low"
+      ],
+      "loop": true,
+      "description": "Bell low (Ambient)"
+    },
+    {
+      "id": "ambient_creepy_ambience_3",
+      "path": "sounds/Ambient/Creepy_ambience_3.wav",
+      "category": "ambient",
+      "tags": [
+        "atmosphere",
+        "background",
+        "creepy",
+        "ambience"
+      ],
+      "loop": true,
+      "description": "Creepy ambience 3 (Ambient)"
+    },
+    {
+      "id": "ambient_creepy_ambience_5",
+      "path": "sounds/Ambient/Creepy_ambience_5.wav",
+      "category": "ambient",
+      "tags": [
+        "atmosphere",
+        "background",
+        "creepy",
+        "ambience"
+      ],
+      "loop": true,
+      "description": "Creepy ambience 5 (Ambient)"
+    },
+    {
+      "id": "ambient_crying_moaning_ambience_2",
+      "path": "sounds/Ambient/Crying_moaning_ambience_2.wav",
+      "category": "ambient",
+      "tags": [
+        "atmosphere",
+        "background",
+        "crying",
+        "moaning",
+        "ambience"
+      ],
+      "loop": true,
+      "description": "Crying moaning ambience 2 (Ambient)"
+    },
+    {
+      "id": "ambient_crying_moaning_ambience_3",
+      "path": "sounds/Ambient/Crying_moaning_ambience_3.wav",
+      "category": "ambient",
+      "tags": [
+        "atmosphere",
+        "background",
+        "crying",
+        "moaning",
+        "ambience"
+      ],
+      "loop": true,
+      "description": "Crying moaning ambience 3 (Ambient)"
+    },
+    {
+      "id": "ambient_distant_yell_echo_and_reverb_2",
+      "path": "sounds/Ambient/Distant Yell_Echo and Reverb_2.wav",
+      "category": "ambient",
+      "tags": [
+        "atmosphere",
+        "background",
+        "distant",
+        "yell",
+        "echo",
+        "and",
+        "reverb"
+      ],
+      "loop": true,
+      "description": "Distant Yell Echo and Reverb 2 (Ambient)"
+    },
+    {
+      "id": "ambient_drone_doom",
+      "path": "sounds/Ambient/Drone_doom.wav",
+      "category": "ambient",
+      "tags": [
+        "atmosphere",
+        "background",
+        "drone",
+        "doom"
+      ],
+      "loop": true,
+      "description": "Drone doom (Ambient)"
+    },
+    {
+      "id": "ambient_frogs",
+      "path": "sounds/Ambient/Frogs.wav",
+      "category": "ambient",
+      "tags": [
+        "atmosphere",
+        "background",
+        "frogs"
+      ],
+      "loop": true,
+      "description": "Frogs (Ambient)"
+    },
+    {
+      "id": "ambient_frogs_pitchshift",
+      "path": "sounds/Ambient/Frogs_pitchshift.wav",
+      "category": "ambient",
+      "tags": [
+        "atmosphere",
+        "background",
+        "frogs",
+        "pitchshift"
+      ],
+      "loop": true,
+      "description": "Frogs pitchshift (Ambient)"
+    },
+    {
+      "id": "ambient_glass_random_tapping",
+      "path": "sounds/Ambient/Glass_random tapping.wav",
+      "category": "ambient",
+      "tags": [
+        "atmosphere",
+        "background",
+        "glass",
+        "random",
+        "tapping"
+      ],
+      "loop": true,
+      "description": "Glass random tapping (Ambient)"
+    },
+    {
+      "id": "ambient_mechanical_moan_and_creaking",
+      "path": "sounds/Ambient/Mechanical Moan and Creaking.wav",
+      "category": "ambient",
+      "tags": [
+        "atmosphere",
+        "background",
+        "mechanical",
+        "moan",
+        "and",
+        "creaking"
+      ],
+      "loop": true,
+      "description": "Mechanical Moan and Creaking (Ambient)"
+    },
+    {
+      "id": "ambient_mechanical_randomness_spooky_4",
+      "path": "sounds/Ambient/Mechanical Randomness_Spooky_4.wav",
+      "category": "ambient",
+      "tags": [
+        "atmosphere",
+        "background",
+        "mechanical",
+        "randomness",
+        "spooky"
+      ],
+      "loop": true,
+      "description": "Mechanical Randomness Spooky 4 (Ambient)"
+    },
+    {
+      "id": "ambient_metal_random_tapping",
+      "path": "sounds/Ambient/Metal_random tapping.wav",
+      "category": "ambient",
+      "tags": [
+        "atmosphere",
+        "background",
+        "metal",
+        "random",
+        "tapping"
+      ],
+      "loop": true,
+      "description": "Metal random tapping (Ambient)"
+    },
+    {
+      "id": "ambient_metal_tapping",
+      "path": "sounds/Ambient/Metal_tapping.wav",
+      "category": "ambient",
+      "tags": [
+        "atmosphere",
+        "background",
+        "metal",
+        "tapping"
+      ],
+      "loop": true,
+      "description": "Metal tapping (Ambient)"
+    },
+    {
+      "id": "ambient_old_house_creeky_metal_and_wood_ambiance_7",
+      "path": "sounds/Ambient/Old House_creeky metal and wood_ambiance_7.wav",
+      "category": "ambient",
+      "tags": [
+        "atmosphere",
+        "background",
+        "old",
+        "house",
+        "creeky",
+        "metal",
+        "and",
+        "wood",
+        "ambiance"
+      ],
+      "loop": true,
+      "description": "Old House creeky metal and wood ambiance 7 (Ambient)"
+    },
+    {
+      "id": "ambient_radio_static",
+      "path": "sounds/Ambient/Radio_static.wav",
+      "category": "ambient",
+      "tags": [
+        "atmosphere",
+        "background",
+        "radio",
+        "static"
+      ],
+      "loop": true,
+      "description": "Radio static (Ambient)"
+    },
+    {
+      "id": "ambient_rain_heavy",
+      "path": "sounds/Ambient/Rain_Heavy.wav",
+      "category": "ambient",
+      "tags": [
+        "atmosphere",
+        "background",
+        "rain",
+        "heavy"
+      ],
+      "loop": true,
+      "description": "Rain Heavy (Ambient)"
+    },
+    {
+      "id": "ambient_rain_medium_2",
+      "path": "sounds/Ambient/Rain_Medium_2.wav",
+      "category": "ambient",
+      "tags": [
+        "atmosphere",
+        "background",
+        "rain",
+        "medium"
+      ],
+      "loop": true,
+      "description": "Rain Medium 2 (Ambient)"
+    },
+    {
+      "id": "ambient_scream",
+      "path": "sounds/Ambient/Scream.wav",
+      "category": "ambient",
+      "tags": [
+        "atmosphere",
+        "background",
+        "scream"
+      ],
+      "loop": true,
+      "description": "Scream (Ambient)"
+    },
+    {
+      "id": "ambient_screech_metalic_dragging_3",
+      "path": "sounds/Ambient/Screech_metalic_dragging_3.wav",
+      "category": "ambient",
+      "tags": [
+        "atmosphere",
+        "background",
+        "screech",
+        "metalic",
+        "dragging"
+      ],
+      "loop": true,
+      "description": "Screech metalic dragging 3 (Ambient)"
+    },
+    {
+      "id": "ambient_suburban_neighborhood_morning",
+      "path": "sounds/Ambient/Suburban Neighborhood_morning.wav",
+      "category": "ambient",
+      "tags": [
+        "atmosphere",
+        "background",
+        "suburban",
+        "neighborhood",
+        "morning"
+      ],
+      "loop": true,
+      "description": "Suburban Neighborhood morning (Ambient)"
+    },
+    {
+      "id": "ambient_tap_reverb",
+      "path": "sounds/Ambient/Tap_reverb.wav",
+      "category": "ambient",
+      "tags": [
+        "atmosphere",
+        "background",
+        "tap",
+        "reverb"
+      ],
+      "loop": true,
+      "description": "Tap reverb (Ambient)"
+    },
+    {
+      "id": "ambient_vent_airflow",
+      "path": "sounds/Ambient/Vent_airflow.wav",
+      "category": "ambient",
+      "tags": [
+        "atmosphere",
+        "background",
+        "vent",
+        "airflow"
+      ],
+      "loop": true,
+      "description": "Vent airflow (Ambient)"
+    },
+    {
+      "id": "character_air_compressor_running",
+      "path": "sounds/Character/Air Compressor Running.wav",
+      "category": "character",
+      "tags": [
+        "action",
+        "player",
+        "air",
+        "compressor",
+        "running"
+      ],
+      "loop": false,
+      "description": "Air Compressor Running (Character)"
+    },
+    {
+      "id": "character_air_compressor_starting",
+      "path": "sounds/Character/Air Compressor Starting.wav",
+      "category": "character",
+      "tags": [
+        "action",
+        "player",
+        "air",
+        "compressor",
+        "starting"
+      ],
+      "loop": false,
+      "description": "Air Compressor Starting (Character)"
+    },
+    {
+      "id": "character_air_compressor_stopping",
+      "path": "sounds/Character/Air Compressor Stopping.wav",
+      "category": "character",
+      "tags": [
+        "action",
+        "player",
+        "air",
+        "compressor",
+        "stopping"
+      ],
+      "loop": false,
+      "description": "Air Compressor Stopping (Character)"
+    },
+    {
+      "id": "character_air_pump_2",
+      "path": "sounds/Character/Air pump_2.wav",
+      "category": "character",
+      "tags": [
+        "action",
+        "player",
+        "air",
+        "pump"
+      ],
+      "loop": false,
+      "description": "Air pump 2 (Character)"
+    },
+    {
+      "id": "character_air_pump_x3",
+      "path": "sounds/Character/Air pump x3.wav",
+      "category": "character",
+      "tags": [
+        "action",
+        "player",
+        "air",
+        "pump",
+        "x3"
+      ],
+      "loop": false,
+      "description": "Air pump x3 (Character)"
+    },
+    {
+      "id": "character_bag_searching",
+      "path": "sounds/Character/Bag_searching.wav",
+      "category": "character",
+      "tags": [
+        "action",
+        "player",
+        "bag",
+        "searching"
+      ],
+      "loop": false,
+      "description": "Bag searching (Character)"
+    },
+    {
+      "id": "character_bend_and_snap_2",
+      "path": "sounds/Character/Bend and snap_2.wav",
+      "category": "character",
+      "tags": [
+        "action",
+        "player",
+        "bend",
+        "and",
+        "snap"
+      ],
+      "loop": false,
+      "description": "Bend and snap 2 (Character)"
+    },
+    {
+      "id": "character_box_searching",
+      "path": "sounds/Character/Box_searching.wav",
+      "category": "character",
+      "tags": [
+        "action",
+        "player",
+        "box",
+        "searching"
+      ],
+      "loop": false,
+      "description": "Box searching (Character)"
+    },
+    {
+      "id": "character_breathing_fast",
+      "path": "sounds/Character/Breathing_fast.wav",
+      "category": "character",
+      "tags": [
+        "action",
+        "player",
+        "breathing",
+        "fast"
+      ],
+      "loop": false,
+      "description": "Breathing fast (Character)"
+    },
+    {
+      "id": "character_breathing_slow",
+      "path": "sounds/Character/Breathing_slow.wav",
+      "category": "character",
+      "tags": [
+        "action",
+        "player",
+        "breathing",
+        "slow"
+      ],
+      "loop": false,
+      "description": "Breathing slow (Character)"
+    },
+    {
+      "id": "character_camera_taking_picture",
+      "path": "sounds/Character/Camera_taking picture.wav",
+      "category": "character",
+      "tags": [
+        "action",
+        "player",
+        "camera",
+        "taking",
+        "picture"
+      ],
+      "loop": false,
+      "description": "Camera taking picture (Character)"
+    },
+    {
+      "id": "character_camera_taking_picture_2",
+      "path": "sounds/Character/Camera_taking picture_2.wav",
+      "category": "character",
+      "tags": [
+        "action",
+        "player",
+        "camera",
+        "taking",
+        "picture"
+      ],
+      "loop": false,
+      "description": "Camera taking picture 2 (Character)"
+    },
+    {
+      "id": "character_can_opening",
+      "path": "sounds/Character/Can_opening.wav",
+      "category": "character",
+      "tags": [
+        "action",
+        "player",
+        "can",
+        "opening"
+      ],
+      "loop": false,
+      "description": "Can opening (Character)"
+    },
+    {
+      "id": "character_car_door_opening",
+      "path": "sounds/Character/Car_door_opening.wav",
+      "category": "character",
+      "tags": [
+        "action",
+        "player",
+        "car",
+        "door",
+        "opening"
+      ],
+      "loop": false,
+      "description": "Car door opening (Character)"
+    },
+    {
+      "id": "character_car_door_shutting",
+      "path": "sounds/Character/Car_door_shutting.wav",
+      "category": "character",
+      "tags": [
+        "action",
+        "player",
+        "car",
+        "door",
+        "shutting"
+      ],
+      "loop": false,
+      "description": "Car door shutting (Character)"
+    },
+    {
+      "id": "character_coin_drop_on_table_3",
+      "path": "sounds/Character/Coin_Drop on Table_3.wav",
+      "category": "character",
+      "tags": [
+        "action",
+        "player",
+        "coin",
+        "drop",
+        "on",
+        "table"
+      ],
+      "loop": false,
+      "description": "Coin Drop on Table 3 (Character)"
+    },
+    {
+      "id": "character_coin_flip_3",
+      "path": "sounds/Character/Coin Flip_3.wav",
+      "category": "character",
+      "tags": [
+        "action",
+        "player",
+        "coin",
+        "flip"
+      ],
+      "loop": false,
+      "description": "Coin Flip 3 (Character)"
+    },
+    {
+      "id": "character_coin_flip_4",
+      "path": "sounds/Character/Coin Flip_4.wav",
+      "category": "character",
+      "tags": [
+        "action",
+        "player",
+        "coin",
+        "flip"
+      ],
+      "loop": false,
+      "description": "Coin Flip 4 (Character)"
+    },
+    {
+      "id": "character_flashlight_off",
+      "path": "sounds/Character/Flashlight off.wav",
+      "category": "character",
+      "tags": [
+        "action",
+        "player",
+        "flashlight",
+        "off"
+      ],
+      "loop": false,
+      "description": "Flashlight off (Character)"
+    },
+    {
+      "id": "character_flashlight_on",
+      "path": "sounds/Character/Flashlight on.wav",
+      "category": "character",
+      "tags": [
+        "action",
+        "player",
+        "flashlight",
+        "on"
+      ],
+      "loop": false,
+      "description": "Flashlight on (Character)"
+    },
+    {
+      "id": "character_footsteps_running",
+      "path": "sounds/Character/Footsteps_ running.wav",
+      "category": "character",
+      "tags": [
+        "action",
+        "player",
+        "footsteps",
+        "running"
+      ],
+      "loop": false,
+      "description": "Footsteps running (Character)"
+    },
+    {
+      "id": "character_footsteps_walking",
+      "path": "sounds/Character/Footsteps_walking.wav",
+      "category": "character",
+      "tags": [
+        "action",
+        "player",
+        "footsteps",
+        "walking"
+      ],
+      "loop": false,
+      "description": "Footsteps walking (Character)"
+    },
+    {
+      "id": "character_gasp",
+      "path": "sounds/Character/Gasp.wav",
+      "category": "character",
+      "tags": [
+        "action",
+        "player",
+        "gasp"
+      ],
+      "loop": false,
+      "description": "Gasp (Character)"
+    },
+    {
+      "id": "character_gasp_3",
+      "path": "sounds/Character/Gasp_3.wav",
+      "category": "character",
+      "tags": [
+        "action",
+        "player",
+        "gasp"
+      ],
+      "loop": false,
+      "description": "Gasp 3 (Character)"
+    },
+    {
+      "id": "character_keys_pick_up",
+      "path": "sounds/Character/Keys_pick up.wav",
+      "category": "character",
+      "tags": [
+        "action",
+        "player",
+        "keys",
+        "pick",
+        "up"
+      ],
+      "loop": false,
+      "description": "Keys pick up (Character)"
+    },
+    {
+      "id": "character_match_striking",
+      "path": "sounds/Character/Match_striking.wav",
+      "category": "character",
+      "tags": [
+        "action",
+        "player",
+        "match",
+        "striking"
+      ],
+      "loop": false,
+      "description": "Match striking (Character)"
+    },
+    {
+      "id": "character_swoosh_3",
+      "path": "sounds/Character/Swoosh_3.wav",
+      "category": "character",
+      "tags": [
+        "action",
+        "player",
+        "swoosh"
+      ],
+      "loop": false,
+      "description": "Swoosh 3 (Character)"
+    },
+    {
+      "id": "character_velcro",
+      "path": "sounds/Character/Velcro.wav",
+      "category": "character",
+      "tags": [
+        "action",
+        "player",
+        "velcro"
+      ],
+      "loop": false,
+      "description": "Velcro (Character)"
+    },
+    {
+      "id": "character_woosh",
+      "path": "sounds/Character/woosh.wav",
+      "category": "character",
+      "tags": [
+        "action",
+        "player",
+        "woosh"
+      ],
+      "loop": false,
+      "description": "woosh (Character)"
+    },
+    {
+      "id": "character_woosh_5",
+      "path": "sounds/Character/woosh_5.wav",
+      "category": "character",
+      "tags": [
+        "action",
+        "player",
+        "woosh"
+      ],
+      "loop": false,
+      "description": "woosh 5 (Character)"
+    },
+    {
+      "id": "character_zipper_bag",
+      "path": "sounds/Character/Zipper bag.wav",
+      "category": "character",
+      "tags": [
+        "action",
+        "player",
+        "zipper",
+        "bag"
+      ],
+      "loop": false,
+      "description": "Zipper bag (Character)"
+    },
+    {
+      "id": "character_zipper_up",
+      "path": "sounds/Character/Zipper up.wav",
+      "category": "character",
+      "tags": [
+        "action",
+        "player",
+        "zipper",
+        "up"
+      ],
+      "loop": false,
+      "description": "Zipper up (Character)"
+    },
+    {
+      "id": "cute_a",
+      "path": "sounds/Cute/a.mp3",
+      "category": "cute",
+      "tags": [
+        "gentle",
+        "positive",
+        "happy"
+      ],
+      "loop": false,
+      "description": "a (Cute)"
+    },
+    {
+      "id": "cute_b",
+      "path": "sounds/Cute/b.mp3",
+      "category": "cute",
+      "tags": [
+        "gentle",
+        "positive",
+        "happy"
+      ],
+      "loop": false,
+      "description": "b (Cute)"
+    },
+    {
+      "id": "cute_c",
+      "path": "sounds/Cute/c.mp3",
+      "category": "cute",
+      "tags": [
+        "gentle",
+        "positive",
+        "happy"
+      ],
+      "loop": false,
+      "description": "c (Cute)"
+    },
+    {
+      "id": "cute_d",
+      "path": "sounds/Cute/d.mp3",
+      "category": "cute",
+      "tags": [
+        "gentle",
+        "positive",
+        "happy"
+      ],
+      "loop": false,
+      "description": "d (Cute)"
+    },
+    {
+      "id": "cute_e",
+      "path": "sounds/Cute/e.mp3",
+      "category": "cute",
+      "tags": [
+        "gentle",
+        "positive",
+        "happy"
+      ],
+      "loop": false,
+      "description": "e (Cute)"
+    },
+    {
+      "id": "cute_f",
+      "path": "sounds/Cute/f.mp3",
+      "category": "cute",
+      "tags": [
+        "gentle",
+        "positive",
+        "happy"
+      ],
+      "loop": false,
+      "description": "f (Cute)"
+    },
+    {
+      "id": "cute_g",
+      "path": "sounds/Cute/g.mp3",
+      "category": "cute",
+      "tags": [
+        "gentle",
+        "positive",
+        "happy"
+      ],
+      "loop": false,
+      "description": "g (Cute)"
+    },
+    {
+      "id": "cute_h",
+      "path": "sounds/Cute/h.mp3",
+      "category": "cute",
+      "tags": [
+        "gentle",
+        "positive",
+        "happy"
+      ],
+      "loop": false,
+      "description": "h (Cute)"
+    },
+    {
+      "id": "cute_h2",
+      "path": "sounds/Cute/h2.mp3",
+      "category": "cute",
+      "tags": [
+        "gentle",
+        "positive",
+        "happy",
+        "h2"
+      ],
+      "loop": false,
+      "description": "h2 (Cute)"
+    },
+    {
+      "id": "cute_i",
+      "path": "sounds/Cute/i.mp3",
+      "category": "cute",
+      "tags": [
+        "gentle",
+        "positive",
+        "happy"
+      ],
+      "loop": false,
+      "description": "i (Cute)"
+    },
+    {
+      "id": "cute_i2",
+      "path": "sounds/Cute/i2.mp3",
+      "category": "cute",
+      "tags": [
+        "gentle",
+        "positive",
+        "happy",
+        "i2"
+      ],
+      "loop": false,
+      "description": "i2 (Cute)"
+    },
+    {
+      "id": "cute_j",
+      "path": "sounds/Cute/j.mp3",
+      "category": "cute",
+      "tags": [
+        "gentle",
+        "positive",
+        "happy"
+      ],
+      "loop": false,
+      "description": "j (Cute)"
+    },
+    {
+      "id": "cute_k",
+      "path": "sounds/Cute/k.mp3",
+      "category": "cute",
+      "tags": [
+        "gentle",
+        "positive",
+        "happy"
+      ],
+      "loop": false,
+      "description": "k (Cute)"
+    },
+    {
+      "id": "cute_l",
+      "path": "sounds/Cute/l.mp3",
+      "category": "cute",
+      "tags": [
+        "gentle",
+        "positive",
+        "happy"
+      ],
+      "loop": false,
+      "description": "l (Cute)"
+    },
+    {
+      "id": "cute_m",
+      "path": "sounds/Cute/m.mp3",
+      "category": "cute",
+      "tags": [
+        "gentle",
+        "positive",
+        "happy"
+      ],
+      "loop": false,
+      "description": "m (Cute)"
+    },
+    {
+      "id": "cute_p",
+      "path": "sounds/Cute/p.mp3",
+      "category": "cute",
+      "tags": [
+        "gentle",
+        "positive",
+        "happy"
+      ],
+      "loop": false,
+      "description": "p (Cute)"
+    },
+    {
+      "id": "cute_q",
+      "path": "sounds/Cute/q.mp3",
+      "category": "cute",
+      "tags": [
+        "gentle",
+        "positive",
+        "happy"
+      ],
+      "loop": false,
+      "description": "q (Cute)"
+    },
+    {
+      "id": "cute_r",
+      "path": "sounds/Cute/r.mp3",
+      "category": "cute",
+      "tags": [
+        "gentle",
+        "positive",
+        "happy"
+      ],
+      "loop": false,
+      "description": "r (Cute)"
+    },
+    {
+      "id": "cute_s",
+      "path": "sounds/Cute/s.mp3",
+      "category": "cute",
+      "tags": [
+        "gentle",
+        "positive",
+        "happy"
+      ],
+      "loop": false,
+      "description": "s (Cute)"
+    },
+    {
+      "id": "cute_t",
+      "path": "sounds/Cute/t.mp3",
+      "category": "cute",
+      "tags": [
+        "gentle",
+        "positive",
+        "happy"
+      ],
+      "loop": false,
+      "description": "t (Cute)"
+    },
+    {
+      "id": "cute_u",
+      "path": "sounds/Cute/u.mp3",
+      "category": "cute",
+      "tags": [
+        "gentle",
+        "positive",
+        "happy"
+      ],
+      "loop": false,
+      "description": "u (Cute)"
+    },
+    {
+      "id": "cute_u2",
+      "path": "sounds/Cute/u2.mp3",
+      "category": "cute",
+      "tags": [
+        "gentle",
+        "positive",
+        "happy",
+        "u2"
+      ],
+      "loop": false,
+      "description": "u2 (Cute)"
+    },
+    {
+      "id": "cute_v",
+      "path": "sounds/Cute/v.mp3",
+      "category": "cute",
+      "tags": [
+        "gentle",
+        "positive",
+        "happy"
+      ],
+      "loop": false,
+      "description": "v (Cute)"
+    },
+    {
+      "id": "cute_w",
+      "path": "sounds/Cute/w.mp3",
+      "category": "cute",
+      "tags": [
+        "gentle",
+        "positive",
+        "happy"
+      ],
+      "loop": false,
+      "description": "w (Cute)"
+    },
+    {
+      "id": "household_blender_running",
+      "path": "sounds/House & Office/Blender_running.wav",
+      "category": "household",
+      "tags": [
+        "environment",
+        "mundane",
+        "blender",
+        "running"
+      ],
+      "loop": false,
+      "description": "Blender running (House & Office)"
+    },
+    {
+      "id": "household_blender_start",
+      "path": "sounds/House & Office/Blender_start.wav",
+      "category": "household",
+      "tags": [
+        "environment",
+        "mundane",
+        "blender",
+        "start"
+      ],
+      "loop": false,
+      "description": "Blender start (House & Office)"
+    },
+    {
+      "id": "household_blender_stop",
+      "path": "sounds/House & Office/Blender_stop.wav",
+      "category": "household",
+      "tags": [
+        "environment",
+        "mundane",
+        "blender",
+        "stop"
+      ],
+      "loop": false,
+      "description": "Blender stop (House & Office)"
+    },
+    {
+      "id": "household_cabinet_shut",
+      "path": "sounds/House & Office/Cabinet_shut.wav",
+      "category": "household",
+      "tags": [
+        "environment",
+        "mundane",
+        "cabinet",
+        "shut"
+      ],
+      "loop": false,
+      "description": "Cabinet shut (House & Office)"
+    },
+    {
+      "id": "household_can_clink_4",
+      "path": "sounds/House & Office/Can_clink_4.wav",
+      "category": "household",
+      "tags": [
+        "environment",
+        "mundane",
+        "can",
+        "clink"
+      ],
+      "loop": false,
+      "description": "Can clink 4 (House & Office)"
+    },
+    {
+      "id": "household_can_crush_3",
+      "path": "sounds/House & Office/Can_crush_3.wav",
+      "category": "household",
+      "tags": [
+        "environment",
+        "mundane",
+        "can",
+        "crush"
+      ],
+      "loop": false,
+      "description": "Can crush 3 (House & Office)"
+    },
+    {
+      "id": "household_clock",
+      "path": "sounds/House & Office/Clock.wav",
+      "category": "household",
+      "tags": [
+        "environment",
+        "mundane",
+        "clock"
+      ],
+      "loop": false,
+      "description": "Clock (House & Office)"
+    },
+    {
+      "id": "household_cutting_board_chop_4",
+      "path": "sounds/House & Office/Cutting board_chop_4.wav",
+      "category": "household",
+      "tags": [
+        "environment",
+        "mundane",
+        "cutting",
+        "board",
+        "chop"
+      ],
+      "loop": false,
+      "description": "Cutting board chop 4 (House & Office)"
+    },
+    {
+      "id": "household_door_handle_jiggle_checking_if_locked",
+      "path": "sounds/House & Office/Door_handle_jiggle_checking if locked.wav",
+      "category": "household",
+      "tags": [
+        "environment",
+        "mundane",
+        "door",
+        "handle",
+        "jiggle",
+        "checking",
+        "if",
+        "locked"
+      ],
+      "loop": false,
+      "description": "Door handle jiggle checking if locked (House & Office)"
+    },
+    {
+      "id": "household_door_knocking_quiet",
+      "path": "sounds/House & Office/Door_knocking_quiet.wav",
+      "category": "household",
+      "tags": [
+        "environment",
+        "mundane",
+        "door",
+        "knocking",
+        "quiet"
+      ],
+      "loop": false,
+      "description": "Door knocking quiet (House & Office)"
+    },
+    {
+      "id": "household_door_squeeky_2",
+      "path": "sounds/House & Office/Door_squeeky_2.wav",
+      "category": "household",
+      "tags": [
+        "environment",
+        "mundane",
+        "door",
+        "squeeky"
+      ],
+      "loop": false,
+      "description": "Door squeeky 2 (House & Office)"
+    },
+    {
+      "id": "household_drawer_close_2",
+      "path": "sounds/House & Office/Drawer_close_2.wav",
+      "category": "household",
+      "tags": [
+        "environment",
+        "mundane",
+        "drawer",
+        "close"
+      ],
+      "loop": false,
+      "description": "Drawer close 2 (House & Office)"
+    },
+    {
+      "id": "household_drawer_open",
+      "path": "sounds/House & Office/Drawer_open.wav",
+      "category": "household",
+      "tags": [
+        "environment",
+        "mundane",
+        "drawer",
+        "open"
+      ],
+      "loop": false,
+      "description": "Drawer open (House & Office)"
+    },
+    {
+      "id": "household_drawer_open_2",
+      "path": "sounds/House & Office/Drawer_open_2.wav",
+      "category": "household",
+      "tags": [
+        "environment",
+        "mundane",
+        "drawer",
+        "open"
+      ],
+      "loop": false,
+      "description": "Drawer open 2 (House & Office)"
+    },
+    {
+      "id": "household_drawer_open_3",
+      "path": "sounds/House & Office/Drawer_open_3.wav",
+      "category": "household",
+      "tags": [
+        "environment",
+        "mundane",
+        "drawer",
+        "open"
+      ],
+      "loop": false,
+      "description": "Drawer open 3 (House & Office)"
+    },
+    {
+      "id": "household_drawer_squeeky_open_2",
+      "path": "sounds/House & Office/Drawer_squeeky_open_2.wav",
+      "category": "household",
+      "tags": [
+        "environment",
+        "mundane",
+        "drawer",
+        "squeeky",
+        "open"
+      ],
+      "loop": false,
+      "description": "Drawer squeeky open 2 (House & Office)"
+    },
+    {
+      "id": "household_drill_running",
+      "path": "sounds/House & Office/Drill running.wav",
+      "category": "household",
+      "tags": [
+        "environment",
+        "mundane",
+        "drill",
+        "running"
+      ],
+      "loop": false,
+      "description": "Drill running (House & Office)"
+    },
+    {
+      "id": "household_drill_starting",
+      "path": "sounds/House & Office/Drill starting.wav",
+      "category": "household",
+      "tags": [
+        "environment",
+        "mundane",
+        "drill",
+        "starting"
+      ],
+      "loop": false,
+      "description": "Drill starting (House & Office)"
+    },
+    {
+      "id": "household_drill_turning_off",
+      "path": "sounds/House & Office/Drill turning off.wav",
+      "category": "household",
+      "tags": [
+        "environment",
+        "mundane",
+        "drill",
+        "turning",
+        "off"
+      ],
+      "loop": false,
+      "description": "Drill turning off (House & Office)"
+    },
+    {
+      "id": "household_fast_crank_2",
+      "path": "sounds/House & Office/Fast crank_2.wav",
+      "category": "household",
+      "tags": [
+        "environment",
+        "mundane",
+        "fast",
+        "crank"
+      ],
+      "loop": false,
+      "description": "Fast crank 2 (House & Office)"
+    },
+    {
+      "id": "household_fluorescent_light_bulb_buzz_2",
+      "path": "sounds/House & Office/Fluorescent light bulb buzz_2.wav",
+      "category": "household",
+      "tags": [
+        "environment",
+        "mundane",
+        "fluorescent",
+        "light",
+        "bulb",
+        "buzz"
+      ],
+      "loop": false,
+      "description": "Fluorescent light bulb buzz 2 (House & Office)"
+    },
+    {
+      "id": "household_food_sizzling",
+      "path": "sounds/House & Office/Food_sizzling.wav",
+      "category": "household",
+      "tags": [
+        "environment",
+        "mundane",
+        "food",
+        "sizzling"
+      ],
+      "loop": false,
+      "description": "Food sizzling (House & Office)"
+    },
+    {
+      "id": "household_food_sizzling_5",
+      "path": "sounds/House & Office/Food_sizzling_5.wav",
+      "category": "household",
+      "tags": [
+        "environment",
+        "mundane",
+        "food",
+        "sizzling"
+      ],
+      "loop": false,
+      "description": "Food sizzling 5 (House & Office)"
+    },
+    {
+      "id": "household_food_sizzling_6",
+      "path": "sounds/House & Office/Food_sizzling_6.wav",
+      "category": "household",
+      "tags": [
+        "environment",
+        "mundane",
+        "food",
+        "sizzling"
+      ],
+      "loop": false,
+      "description": "Food sizzling 6 (House & Office)"
+    },
+    {
+      "id": "household_fridge_close",
+      "path": "sounds/House & Office/Fridge_close.wav",
+      "category": "household",
+      "tags": [
+        "environment",
+        "mundane",
+        "fridge",
+        "close"
+      ],
+      "loop": false,
+      "description": "Fridge close (House & Office)"
+    },
+    {
+      "id": "household_fridge_compressor_ambient_noise",
+      "path": "sounds/House & Office/Fridge compressor ambient noise.wav",
+      "category": "household",
+      "tags": [
+        "environment",
+        "mundane",
+        "fridge",
+        "compressor",
+        "ambient",
+        "noise"
+      ],
+      "loop": false,
+      "description": "Fridge compressor ambient noise (House & Office)"
+    },
+    {
+      "id": "household_fridge_door_opening",
+      "path": "sounds/House & Office/Fridge door_opening.wav",
+      "category": "household",
+      "tags": [
+        "environment",
+        "mundane",
+        "fridge",
+        "door",
+        "opening"
+      ],
+      "loop": false,
+      "description": "Fridge door opening (House & Office)"
+    },
+    {
+      "id": "household_garage_door",
+      "path": "sounds/House & Office/Garage door.wav",
+      "category": "household",
+      "tags": [
+        "environment",
+        "mundane",
+        "garage",
+        "door"
+      ],
+      "loop": false,
+      "description": "Garage door (House & Office)"
+    },
+    {
+      "id": "household_gas_funace_running",
+      "path": "sounds/House & Office/Gas funace_running.wav",
+      "category": "household",
+      "tags": [
+        "environment",
+        "mundane",
+        "gas",
+        "funace",
+        "running"
+      ],
+      "loop": false,
+      "description": "Gas funace running (House & Office)"
+    },
+    {
+      "id": "household_gas_stove_lighting",
+      "path": "sounds/House & Office/Gas Stove_lighting.wav",
+      "category": "household",
+      "tags": [
+        "environment",
+        "mundane",
+        "gas",
+        "stove",
+        "lighting"
+      ],
+      "loop": false,
+      "description": "Gas Stove lighting (House & Office)"
+    },
+    {
+      "id": "household_gas_stove_running",
+      "path": "sounds/House & Office/Gas Stove_running.wav",
+      "category": "household",
+      "tags": [
+        "environment",
+        "mundane",
+        "gas",
+        "stove",
+        "running"
+      ],
+      "loop": false,
+      "description": "Gas Stove running (House & Office)"
+    },
+    {
+      "id": "household_gas_stove_turning_off",
+      "path": "sounds/House & Office/Gas Stove_turning off.wav",
+      "category": "household",
+      "tags": [
+        "environment",
+        "mundane",
+        "gas",
+        "stove",
+        "turning",
+        "off"
+      ],
+      "loop": false,
+      "description": "Gas Stove turning off (House & Office)"
+    },
+    {
+      "id": "household_metal_scrape_scratch",
+      "path": "sounds/House & Office/Metal scrape_scratch.wav",
+      "category": "household",
+      "tags": [
+        "environment",
+        "mundane",
+        "metal",
+        "scrape",
+        "scratch"
+      ],
+      "loop": false,
+      "description": "Metal scrape scratch (House & Office)"
+    },
+    {
+      "id": "household_shaker_3",
+      "path": "sounds/House & Office/Shaker_3.wav",
+      "category": "household",
+      "tags": [
+        "environment",
+        "mundane",
+        "shaker"
+      ],
+      "loop": false,
+      "description": "Shaker 3 (House & Office)"
+    },
+    {
+      "id": "household_silverware_rustle_2",
+      "path": "sounds/House & Office/Silverware_rustle_2.wav",
+      "category": "household",
+      "tags": [
+        "environment",
+        "mundane",
+        "silverware",
+        "rustle"
+      ],
+      "loop": false,
+      "description": "Silverware rustle 2 (House & Office)"
+    },
+    {
+      "id": "household_silverware_rustle_3",
+      "path": "sounds/House & Office/Silverware_rustle_3.wav",
+      "category": "household",
+      "tags": [
+        "environment",
+        "mundane",
+        "silverware",
+        "rustle"
+      ],
+      "loop": false,
+      "description": "Silverware rustle 3 (House & Office)"
+    },
+    {
+      "id": "household_slow_crank",
+      "path": "sounds/House & Office/Slow crank.wav",
+      "category": "household",
+      "tags": [
+        "environment",
+        "mundane",
+        "slow",
+        "crank"
+      ],
+      "loop": false,
+      "description": "Slow crank (House & Office)"
+    },
+    {
+      "id": "household_switch",
+      "path": "sounds/House & Office/switch.wav",
+      "category": "household",
+      "tags": [
+        "environment",
+        "mundane",
+        "switch"
+      ],
+      "loop": false,
+      "description": "switch (House & Office)"
+    },
+    {
+      "id": "household_typing",
+      "path": "sounds/House & Office/Typing.wav",
+      "category": "household",
+      "tags": [
+        "environment",
+        "mundane",
+        "typing"
+      ],
+      "loop": false,
+      "description": "Typing (House & Office)"
+    },
+    {
+      "id": "household_water_boiling_4",
+      "path": "sounds/House & Office/Water_Boiling_4.wav",
+      "category": "household",
+      "tags": [
+        "environment",
+        "mundane",
+        "water",
+        "boiling"
+      ],
+      "loop": false,
+      "description": "Water Boiling 4 (House & Office)"
+    },
+    {
+      "id": "household_writing",
+      "path": "sounds/House & Office/Writing.wav",
+      "category": "household",
+      "tags": [
+        "environment",
+        "mundane",
+        "writing"
+      ],
+      "loop": false,
+      "description": "Writing (House & Office)"
+    },
+    {
+      "id": "liquid_bubble_artificial",
+      "path": "sounds/Liquids/Bubble_artificial.wav",
+      "category": "liquid",
+      "tags": [
+        "wet",
+        "fluid",
+        "bubble",
+        "artificial"
+      ],
+      "loop": false,
+      "description": "Bubble artificial (Liquids)"
+    },
+    {
+      "id": "liquid_bubbles",
+      "path": "sounds/Liquids/Bubbles.wav",
+      "category": "liquid",
+      "tags": [
+        "wet",
+        "fluid",
+        "bubbles"
+      ],
+      "loop": false,
+      "description": "Bubbles (Liquids)"
+    },
+    {
+      "id": "liquid_liquid_plash_poor",
+      "path": "sounds/Liquids/Liquid_plash poor.wav",
+      "category": "liquid",
+      "tags": [
+        "wet",
+        "fluid",
+        "liquid",
+        "plash",
+        "poor"
+      ],
+      "loop": false,
+      "description": "Liquid plash poor (Liquids)"
+    },
+    {
+      "id": "liquid_liquid_shake_2",
+      "path": "sounds/Liquids/Liquid_Shake_2.wav",
+      "category": "liquid",
+      "tags": [
+        "wet",
+        "fluid",
+        "liquid",
+        "shake"
+      ],
+      "loop": false,
+      "description": "Liquid Shake 2 (Liquids)"
+    },
+    {
+      "id": "liquid_liquid_slosh",
+      "path": "sounds/Liquids/Liquid_slosh.wav",
+      "category": "liquid",
+      "tags": [
+        "wet",
+        "fluid",
+        "liquid",
+        "slosh"
+      ],
+      "loop": false,
+      "description": "Liquid slosh (Liquids)"
+    },
+    {
+      "id": "liquid_liquid_stirring_glass_full",
+      "path": "sounds/Liquids/Liquid_stirring glass full.wav",
+      "category": "liquid",
+      "tags": [
+        "wet",
+        "fluid",
+        "liquid",
+        "stirring",
+        "glass",
+        "full"
+      ],
+      "loop": false,
+      "description": "Liquid stirring glass full (Liquids)"
+    },
+    {
+      "id": "liquid_spray",
+      "path": "sounds/Liquids/Spray.wav",
+      "category": "liquid",
+      "tags": [
+        "wet",
+        "fluid",
+        "spray"
+      ],
+      "loop": false,
+      "description": "Spray (Liquids)"
+    },
+    {
+      "id": "monster_abyssal_descent",
+      "path": "sounds/Abyssal Horror/Abyssal_Descent.mp3",
+      "category": "monster",
+      "tags": [
+        "horror",
+        "creature",
+        "abyssal",
+        "descent"
+      ],
+      "loop": false,
+      "description": "Abyssal Descent (Abyssal Horror)"
+    },
+    {
+      "id": "monster_abyssal_descent1",
+      "path": "sounds/Abyssal Horror/Abyssal_Descent1.mp3",
+      "category": "monster",
+      "tags": [
+        "horror",
+        "creature",
+        "abyssal",
+        "descent1"
+      ],
+      "loop": false,
+      "description": "Abyssal Descent1 (Abyssal Horror)"
+    },
+    {
+      "id": "monster_bite",
+      "path": "sounds/Monsters & Ghosts/Bite.wav",
+      "category": "monster",
+      "tags": [
+        "horror",
+        "creature",
+        "bite"
+      ],
+      "loop": false,
+      "description": "Bite (Monsters & Ghosts)"
+    },
+    {
+      "id": "monster_child_laugh",
+      "path": "sounds/Monsters & Ghosts/Child laugh.wav",
+      "category": "monster",
+      "tags": [
+        "horror",
+        "creature",
+        "child",
+        "laugh"
+      ],
+      "loop": false,
+      "description": "Child laugh (Monsters & Ghosts)"
+    },
+    {
+      "id": "monster_child_laugh_6",
+      "path": "sounds/Monsters & Ghosts/Child laugh_6.wav",
+      "category": "monster",
+      "tags": [
+        "horror",
+        "creature",
+        "child",
+        "laugh"
+      ],
+      "loop": false,
+      "description": "Child laugh 6 (Monsters & Ghosts)"
+    },
+    {
+      "id": "monster_child_laugh_7",
+      "path": "sounds/Monsters & Ghosts/Child laugh_7.wav",
+      "category": "monster",
+      "tags": [
+        "horror",
+        "creature",
+        "child",
+        "laugh"
+      ],
+      "loop": false,
+      "description": "Child laugh 7 (Monsters & Ghosts)"
+    },
+    {
+      "id": "monster_deepone_chatter",
+      "path": "sounds/Abyssal Horror/DeepOne_Chatter.mp3",
+      "category": "monster",
+      "tags": [
+        "horror",
+        "creature",
+        "deepone",
+        "chatter"
+      ],
+      "loop": false,
+      "description": "DeepOne Chatter (Abyssal Horror)"
+    },
+    {
+      "id": "monster_deepone_frothygrowl",
+      "path": "sounds/Abyssal Horror/DeepOne_FrothyGrowl.mp3",
+      "category": "monster",
+      "tags": [
+        "horror",
+        "creature",
+        "deepone",
+        "frothygrowl"
+      ],
+      "loop": false,
+      "description": "DeepOne FrothyGrowl (Abyssal Horror)"
+    },
+    {
+      "id": "monster_deepone_frothygrowl2",
+      "path": "sounds/Abyssal Horror/DeepOne_FrothyGrowl2.mp3",
+      "category": "monster",
+      "tags": [
+        "horror",
+        "creature",
+        "deepone",
+        "frothygrowl2"
+      ],
+      "loop": false,
+      "description": "DeepOne FrothyGrowl2 (Abyssal Horror)"
+    },
+    {
+      "id": "monster_deepone_groan1",
+      "path": "sounds/Abyssal Horror/DeepOne_Groan1.mp3",
+      "category": "monster",
+      "tags": [
+        "horror",
+        "creature",
+        "deepone",
+        "groan1"
+      ],
+      "loop": false,
+      "description": "DeepOne Groan1 (Abyssal Horror)"
+    },
+    {
+      "id": "monster_deepone_groan2",
+      "path": "sounds/Abyssal Horror/DeepOne_Groan2.mp3",
+      "category": "monster",
+      "tags": [
+        "horror",
+        "creature",
+        "deepone",
+        "groan2"
+      ],
+      "loop": false,
+      "description": "DeepOne Groan2 (Abyssal Horror)"
+    },
+    {
+      "id": "monster_deepone_growl",
+      "path": "sounds/Abyssal Horror/DeepOne_Growl.mp3",
+      "category": "monster",
+      "tags": [
+        "horror",
+        "creature",
+        "deepone",
+        "growl"
+      ],
+      "loop": false,
+      "description": "DeepOne Growl (Abyssal Horror)"
+    },
+    {
+      "id": "monster_deepone_growl2",
+      "path": "sounds/Abyssal Horror/DeepOne_Growl2.mp3",
+      "category": "monster",
+      "tags": [
+        "horror",
+        "creature",
+        "deepone",
+        "growl2"
+      ],
+      "loop": false,
+      "description": "DeepOne Growl2 (Abyssal Horror)"
+    },
+    {
+      "id": "monster_deepone_growl3",
+      "path": "sounds/Abyssal Horror/DeepOne_Growl3.mp3",
+      "category": "monster",
+      "tags": [
+        "horror",
+        "creature",
+        "deepone",
+        "growl3"
+      ],
+      "loop": false,
+      "description": "DeepOne Growl3 (Abyssal Horror)"
+    },
+    {
+      "id": "monster_deepone_growl4",
+      "path": "sounds/Abyssal Horror/DeepOne_Growl4.mp3",
+      "category": "monster",
+      "tags": [
+        "horror",
+        "creature",
+        "deepone",
+        "growl4"
+      ],
+      "loop": false,
+      "description": "DeepOne Growl4 (Abyssal Horror)"
+    },
+    {
+      "id": "monster_deepone_growl5",
+      "path": "sounds/Abyssal Horror/DeepOne_Growl5.mp3",
+      "category": "monster",
+      "tags": [
+        "horror",
+        "creature",
+        "deepone",
+        "growl5"
+      ],
+      "loop": false,
+      "description": "DeepOne Growl5 (Abyssal Horror)"
+    },
+    {
+      "id": "monster_deepone_growl6",
+      "path": "sounds/Abyssal Horror/DeepOne_Growl6.mp3",
+      "category": "monster",
+      "tags": [
+        "horror",
+        "creature",
+        "deepone",
+        "growl6"
+      ],
+      "loop": false,
+      "description": "DeepOne Growl6 (Abyssal Horror)"
+    },
+    {
+      "id": "monster_deepone_grunt1",
+      "path": "sounds/Abyssal Horror/DeepOne_Grunt1.mp3",
+      "category": "monster",
+      "tags": [
+        "horror",
+        "creature",
+        "deepone",
+        "grunt1"
+      ],
+      "loop": false,
+      "description": "DeepOne Grunt1 (Abyssal Horror)"
+    },
+    {
+      "id": "monster_deepone_grunt2",
+      "path": "sounds/Abyssal Horror/DeepOne_Grunt2.mp3",
+      "category": "monster",
+      "tags": [
+        "horror",
+        "creature",
+        "deepone",
+        "grunt2"
+      ],
+      "loop": false,
+      "description": "DeepOne Grunt2 (Abyssal Horror)"
+    },
+    {
+      "id": "monster_deepone_rumble",
+      "path": "sounds/Abyssal Horror/DeepOne_Rumble.mp3",
+      "category": "monster",
+      "tags": [
+        "horror",
+        "creature",
+        "deepone",
+        "rumble"
+      ],
+      "loop": false,
+      "description": "DeepOne Rumble (Abyssal Horror)"
+    },
+    {
+      "id": "monster_deepone_rumble1",
+      "path": "sounds/Abyssal Horror/DeepOne_Rumble1.mp3",
+      "category": "monster",
+      "tags": [
+        "horror",
+        "creature",
+        "deepone",
+        "rumble1"
+      ],
+      "loop": false,
+      "description": "DeepOne Rumble1 (Abyssal Horror)"
+    },
+    {
+      "id": "monster_deepone_rumble2",
+      "path": "sounds/Abyssal Horror/DeepOne_Rumble2.mp3",
+      "category": "monster",
+      "tags": [
+        "horror",
+        "creature",
+        "deepone",
+        "rumble2"
+      ],
+      "loop": false,
+      "description": "DeepOne Rumble2 (Abyssal Horror)"
+    },
+    {
+      "id": "monster_deepone_rumble3",
+      "path": "sounds/Abyssal Horror/DeepOne_Rumble3.mp3",
+      "category": "monster",
+      "tags": [
+        "horror",
+        "creature",
+        "deepone",
+        "rumble3"
+      ],
+      "loop": false,
+      "description": "DeepOne Rumble3 (Abyssal Horror)"
+    },
+    {
+      "id": "monster_ghost_chior",
+      "path": "sounds/Monsters & Ghosts/Ghost chior.wav",
+      "category": "monster",
+      "tags": [
+        "horror",
+        "creature",
+        "ghost",
+        "chior"
+      ],
+      "loop": false,
+      "description": "Ghost chior (Monsters & Ghosts)"
+    },
+    {
+      "id": "monster_ghost_moan_2",
+      "path": "sounds/Monsters & Ghosts/Ghost_moan_2.wav",
+      "category": "monster",
+      "tags": [
+        "horror",
+        "creature",
+        "ghost",
+        "moan"
+      ],
+      "loop": false,
+      "description": "Ghost moan 2 (Monsters & Ghosts)"
+    },
+    {
+      "id": "monster_ghost_scream_3",
+      "path": "sounds/Monsters & Ghosts/Ghost_scream_3.wav",
+      "category": "monster",
+      "tags": [
+        "horror",
+        "creature",
+        "ghost",
+        "scream"
+      ],
+      "loop": false,
+      "description": "Ghost scream 3 (Monsters & Ghosts)"
+    },
+    {
+      "id": "monster_gore_mushy",
+      "path": "sounds/Monsters & Ghosts/Gore_mushy.wav",
+      "category": "monster",
+      "tags": [
+        "horror",
+        "creature",
+        "gore",
+        "mushy"
+      ],
+      "loop": false,
+      "description": "Gore mushy (Monsters & Ghosts)"
+    },
+    {
+      "id": "monster_gore_ripping_4",
+      "path": "sounds/Monsters & Ghosts/Gore_Ripping_4.wav",
+      "category": "monster",
+      "tags": [
+        "horror",
+        "creature",
+        "gore",
+        "ripping"
+      ],
+      "loop": false,
+      "description": "Gore Ripping 4 (Monsters & Ghosts)"
+    },
+    {
+      "id": "monster_gore_ripping_5",
+      "path": "sounds/Monsters & Ghosts/Gore_Ripping_5.wav",
+      "category": "monster",
+      "tags": [
+        "horror",
+        "creature",
+        "gore",
+        "ripping"
+      ],
+      "loop": false,
+      "description": "Gore Ripping 5 (Monsters & Ghosts)"
+    },
+    {
+      "id": "monster_gore_wet_4",
+      "path": "sounds/Monsters & Ghosts/Gore_Wet_4.wav",
+      "category": "monster",
+      "tags": [
+        "horror",
+        "creature",
+        "gore",
+        "wet"
+      ],
+      "loop": false,
+      "description": "Gore Wet 4 (Monsters & Ghosts)"
+    },
+    {
+      "id": "monster_gore_wet_7",
+      "path": "sounds/Monsters & Ghosts/Gore_Wet_7.wav",
+      "category": "monster",
+      "tags": [
+        "horror",
+        "creature",
+        "gore",
+        "wet"
+      ],
+      "loop": false,
+      "description": "Gore Wet 7 (Monsters & Ghosts)"
+    },
+    {
+      "id": "monster_hiss",
+      "path": "sounds/Monsters & Ghosts/Hiss.wav",
+      "category": "monster",
+      "tags": [
+        "horror",
+        "creature",
+        "hiss"
+      ],
+      "loop": false,
+      "description": "Hiss (Monsters & Ghosts)"
+    },
+    {
+      "id": "monster_injured",
+      "path": "sounds/Monsters & Ghosts/Injured.wav",
+      "category": "monster",
+      "tags": [
+        "horror",
+        "creature",
+        "injured"
+      ],
+      "loop": false,
+      "description": "Injured (Monsters & Ghosts)"
+    },
+    {
+      "id": "monster_laugh_spooky_4",
+      "path": "sounds/Monsters & Ghosts/Laugh_spooky_4.wav",
+      "category": "monster",
+      "tags": [
+        "horror",
+        "creature",
+        "laugh",
+        "spooky"
+      ],
+      "loop": false,
+      "description": "Laugh spooky 4 (Monsters & Ghosts)"
+    },
+    {
+      "id": "monster_monster_breath",
+      "path": "sounds/Monsters & Ghosts/Monster_breath.wav",
+      "category": "monster",
+      "tags": [
+        "horror",
+        "creature",
+        "monster",
+        "breath"
+      ],
+      "loop": false,
+      "description": "Monster breath (Monsters & Ghosts)"
+    },
+    {
+      "id": "monster_monster_growl_1",
+      "path": "sounds/Monsters & Ghosts/Monster_growl_1.wav",
+      "category": "monster",
+      "tags": [
+        "horror",
+        "creature",
+        "monster",
+        "growl"
+      ],
+      "loop": false,
+      "description": "Monster growl 1 (Monsters & Ghosts)"
+    },
+    {
+      "id": "monster_monster_growl_5",
+      "path": "sounds/Monsters & Ghosts/Monster_growl_5.wav",
+      "category": "monster",
+      "tags": [
+        "horror",
+        "creature",
+        "monster",
+        "growl"
+      ],
+      "loop": false,
+      "description": "Monster growl 5 (Monsters & Ghosts)"
+    },
+    {
+      "id": "monster_monster_grunt_long",
+      "path": "sounds/Monsters & Ghosts/Monster_grunt_long.wav",
+      "category": "monster",
+      "tags": [
+        "horror",
+        "creature",
+        "monster",
+        "grunt",
+        "long"
+      ],
+      "loop": false,
+      "description": "Monster grunt long (Monsters & Ghosts)"
+    },
+    {
+      "id": "monster_monster_grunt_x2_ghmmm",
+      "path": "sounds/Monsters & Ghosts/Monster_grunt x2 (ghmmm).wav",
+      "category": "monster",
+      "tags": [
+        "horror",
+        "creature",
+        "monster",
+        "grunt",
+        "x2",
+        "(ghmmm)"
+      ],
+      "loop": false,
+      "description": "Monster grunt x2 (ghmmm) (Monsters & Ghosts)"
+    },
+    {
+      "id": "monster_monster_mech",
+      "path": "sounds/Monsters & Ghosts/Monster_Mech.wav",
+      "category": "monster",
+      "tags": [
+        "horror",
+        "creature",
+        "monster",
+        "mech"
+      ],
+      "loop": false,
+      "description": "Monster Mech (Monsters & Ghosts)"
+    },
+    {
+      "id": "monster_monster_roar_2",
+      "path": "sounds/Monsters & Ghosts/Monster_Roar_2.wav",
+      "category": "monster",
+      "tags": [
+        "horror",
+        "creature",
+        "monster",
+        "roar"
+      ],
+      "loop": false,
+      "description": "Monster Roar 2 (Monsters & Ghosts)"
+    },
+    {
+      "id": "monster_monster_roar_4",
+      "path": "sounds/Monsters & Ghosts/Monster_Roar_4.wav",
+      "category": "monster",
+      "tags": [
+        "horror",
+        "creature",
+        "monster",
+        "roar"
+      ],
+      "loop": false,
+      "description": "Monster Roar 4 (Monsters & Ghosts)"
+    },
+    {
+      "id": "monster_robotic_bass",
+      "path": "sounds/Monsters & Ghosts/Robotic_bass.wav",
+      "category": "monster",
+      "tags": [
+        "horror",
+        "creature",
+        "robotic",
+        "bass"
+      ],
+      "loop": false,
+      "description": "Robotic bass (Monsters & Ghosts)"
+    },
+    {
+      "id": "monster_robotic_groan_3",
+      "path": "sounds/Monsters & Ghosts/robotic_groan_3.wav",
+      "category": "monster",
+      "tags": [
+        "horror",
+        "creature",
+        "robotic",
+        "groan"
+      ],
+      "loop": false,
+      "description": "robotic groan 3 (Monsters & Ghosts)"
+    },
+    {
+      "id": "monster_robotic_hiss",
+      "path": "sounds/Monsters & Ghosts/robotic_hiss.wav",
+      "category": "monster",
+      "tags": [
+        "horror",
+        "creature",
+        "robotic",
+        "hiss"
+      ],
+      "loop": false,
+      "description": "robotic hiss (Monsters & Ghosts)"
+    },
+    {
+      "id": "monster_scream_robotic",
+      "path": "sounds/Monsters & Ghosts/Scream_Robotic.wav",
+      "category": "monster",
+      "tags": [
+        "horror",
+        "creature",
+        "scream",
+        "robotic"
+      ],
+      "loop": false,
+      "description": "Scream Robotic (Monsters & Ghosts)"
+    },
+    {
+      "id": "monster_tone_moaning",
+      "path": "sounds/Monsters & Ghosts/Tone_Moaning.wav",
+      "category": "monster",
+      "tags": [
+        "horror",
+        "creature",
+        "tone",
+        "moaning"
+      ],
+      "loop": false,
+      "description": "Tone Moaning (Monsters & Ghosts)"
+    },
+    {
+      "id": "monster_tone_moaning_deep_3",
+      "path": "sounds/Monsters & Ghosts/Tone_Moaning_Deep_3.wav",
+      "category": "monster",
+      "tags": [
+        "horror",
+        "creature",
+        "tone",
+        "moaning",
+        "deep"
+      ],
+      "loop": false,
+      "description": "Tone Moaning Deep 3 (Monsters & Ghosts)"
+    },
+    {
+      "id": "monster_zombie",
+      "path": "sounds/Monsters & Ghosts/Zombie.wav",
+      "category": "monster",
+      "tags": [
+        "horror",
+        "creature",
+        "zombie"
+      ],
+      "loop": false,
+      "description": "Zombie (Monsters & Ghosts)"
+    },
+    {
+      "id": "monster_zombie_6",
+      "path": "sounds/Monsters & Ghosts/Zombie_6.wav",
+      "category": "monster",
+      "tags": [
+        "horror",
+        "creature",
+        "zombie"
+      ],
+      "loop": false,
+      "description": "Zombie 6 (Monsters & Ghosts)"
+    },
+    {
+      "id": "monster_zombie_8",
+      "path": "sounds/Monsters & Ghosts/Zombie_8.wav",
+      "category": "monster",
+      "tags": [
+        "horror",
+        "creature",
+        "zombie"
+      ],
+      "loop": false,
+      "description": "Zombie 8 (Monsters & Ghosts)"
+    },
+    {
+      "id": "stinger_harmonized_tone_pleasant_but_spooky",
+      "path": "sounds/Stingers and Spooky Triggers/Harmonized Tone_Pleasant but Spooky.wav",
+      "category": "stinger",
+      "tags": [
+        "jumpscare",
+        "transition",
+        "tension",
+        "harmonized",
+        "tone",
+        "pleasant",
+        "but",
+        "spooky"
+      ],
+      "loop": false,
+      "description": "Harmonized Tone Pleasant but Spooky (Stingers and Spooky Triggers)"
+    },
+    {
+      "id": "stinger_metal_resonance",
+      "path": "sounds/Stingers and Spooky Triggers/Metal_resonance.wav",
+      "category": "stinger",
+      "tags": [
+        "jumpscare",
+        "transition",
+        "tension",
+        "metal",
+        "resonance"
+      ],
+      "loop": false,
+      "description": "Metal resonance (Stingers and Spooky Triggers)"
+    },
+    {
+      "id": "stinger_metal_twang",
+      "path": "sounds/Stingers and Spooky Triggers/Metal_twang.wav",
+      "category": "stinger",
+      "tags": [
+        "jumpscare",
+        "transition",
+        "tension",
+        "metal",
+        "twang"
+      ],
+      "loop": false,
+      "description": "Metal twang (Stingers and Spooky Triggers)"
+    },
+    {
+      "id": "stinger_piano_assending_dissonent",
+      "path": "sounds/Stingers and Spooky Triggers/Piano_assending_dissonent.wav",
+      "category": "stinger",
+      "tags": [
+        "jumpscare",
+        "transition",
+        "tension",
+        "piano",
+        "assending",
+        "dissonent"
+      ],
+      "loop": false,
+      "description": "Piano assending dissonent (Stingers and Spooky Triggers)"
+    },
+    {
+      "id": "stinger_piano_crescendo",
+      "path": "sounds/Stingers and Spooky Triggers/Piano_crescendo.wav",
+      "category": "stinger",
+      "tags": [
+        "jumpscare",
+        "transition",
+        "tension",
+        "piano",
+        "crescendo"
+      ],
+      "loop": false,
+      "description": "Piano crescendo (Stingers and Spooky Triggers)"
+    },
+    {
+      "id": "stinger_piano_drone_low_sustained_2",
+      "path": "sounds/Stingers and Spooky Triggers/Piano_drone_low_sustained_2.wav",
+      "category": "stinger",
+      "tags": [
+        "jumpscare",
+        "transition",
+        "tension",
+        "piano",
+        "drone",
+        "low",
+        "sustained"
+      ],
+      "loop": false,
+      "description": "Piano drone low sustained 2 (Stingers and Spooky Triggers)"
+    },
+    {
+      "id": "stinger_piano_stinger_dissonent",
+      "path": "sounds/Stingers and Spooky Triggers/Piano_stinger_dissonent.wav",
+      "category": "stinger",
+      "tags": [
+        "jumpscare",
+        "transition",
+        "tension",
+        "piano",
+        "stinger",
+        "dissonent"
+      ],
+      "loop": false,
+      "description": "Piano stinger dissonent (Stingers and Spooky Triggers)"
+    },
+    {
+      "id": "stinger_piano_stinger_dissonent_2",
+      "path": "sounds/Stingers and Spooky Triggers/Piano_stinger_dissonent_2.wav",
+      "category": "stinger",
+      "tags": [
+        "jumpscare",
+        "transition",
+        "tension",
+        "piano",
+        "stinger",
+        "dissonent"
+      ],
+      "loop": false,
+      "description": "Piano stinger dissonent 2 (Stingers and Spooky Triggers)"
+    },
+    {
+      "id": "stinger_scratch_high_pitch",
+      "path": "sounds/Stingers and Spooky Triggers/Scratch_high pitch.wav",
+      "category": "stinger",
+      "tags": [
+        "jumpscare",
+        "transition",
+        "tension",
+        "scratch",
+        "high",
+        "pitch"
+      ],
+      "loop": false,
+      "description": "Scratch high pitch (Stingers and Spooky Triggers)"
+    },
+    {
+      "id": "stinger_slide_guitar_decreasing_pitch",
+      "path": "sounds/Stingers and Spooky Triggers/Slide guitar_decreasing pitch.wav",
+      "category": "stinger",
+      "tags": [
+        "jumpscare",
+        "transition",
+        "tension",
+        "slide",
+        "guitar",
+        "decreasing",
+        "pitch"
+      ],
+      "loop": false,
+      "description": "Slide guitar decreasing pitch (Stingers and Spooky Triggers)"
+    },
+    {
+      "id": "stinger_slow_stinger",
+      "path": "sounds/Stingers and Spooky Triggers/Slow Stinger.wav",
+      "category": "stinger",
+      "tags": [
+        "jumpscare",
+        "transition",
+        "tension",
+        "slow",
+        "stinger"
+      ],
+      "loop": false,
+      "description": "Slow Stinger (Stingers and Spooky Triggers)"
+    },
+    {
+      "id": "stinger_spooky_ambience",
+      "path": "sounds/Stingers and Spooky Triggers/Spooky Ambience.wav",
+      "category": "stinger",
+      "tags": [
+        "jumpscare",
+        "transition",
+        "tension",
+        "spooky",
+        "ambience"
+      ],
+      "loop": false,
+      "description": "Spooky Ambience (Stingers and Spooky Triggers)"
+    },
+    {
+      "id": "stinger_stinger",
+      "path": "sounds/Stingers and Spooky Triggers/Stinger.wav",
+      "category": "stinger",
+      "tags": [
+        "jumpscare",
+        "transition",
+        "tension",
+        "stinger"
+      ],
+      "loop": false,
+      "description": "Stinger (Stingers and Spooky Triggers)"
+    },
+    {
+      "id": "stinger_suspenseful_pitch_increase",
+      "path": "sounds/Stingers and Spooky Triggers/Suspenseful pitch increase.wav",
+      "category": "stinger",
+      "tags": [
+        "jumpscare",
+        "transition",
+        "tension",
+        "suspenseful",
+        "pitch",
+        "increase"
+      ],
+      "loop": false,
+      "description": "Suspenseful pitch increase (Stingers and Spooky Triggers)"
+    }
+  ]
+}

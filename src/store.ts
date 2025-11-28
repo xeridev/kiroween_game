@@ -1,7 +1,8 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import type { GameState, Archetype, LogSource } from "./utils/types";
-import { logError, logWarning, logCritical } from "./utils/errorLogger";
+import type { GameState, Archetype, LogSource, AudioState, SoundContext } from "./utils/types";
+import { logError, logWarning, logCritical, logInfo } from "./utils/errorLogger";
+import { soundManager } from "./utils/soundManager";
 
 const initialState = {
   isInitialized: false,
@@ -23,6 +24,15 @@ const initialState = {
   gameDay: 0,
   logs: [],
   lastTickTime: Date.now(),
+};
+
+// Default audio state (Requirements 4.1, 4.2)
+const initialAudioState: AudioState = {
+  masterVolume: 0.7,    // 70% - comfortable default
+  sfxVolume: 0.8,       // 80% - slightly prominent for feedback
+  ambientVolume: 0.5,   // 50% - background, not overwhelming
+  isMuted: false,
+  hasUserInteracted: false,
 };
 
 // Helper function to calculate offline decay
@@ -89,6 +99,130 @@ export const useGameStore = create<GameState>()(
   persist(
     (set, get) => ({
       ...initialState,
+      ...initialAudioState,
+
+      // ============================================
+      // Audio Actions (Requirements 4.1, 4.2, 4.3, 4.4)
+      // ============================================
+
+      /**
+       * Set master volume and apply to sound manager
+       * Requirement 4.3: Immediately apply new volume
+       */
+      setMasterVolume: (volume: number) => {
+        const clampedVolume = Math.max(0, Math.min(1, volume));
+        set({ masterVolume: clampedVolume });
+        soundManager.setMasterVolume(clampedVolume);
+      },
+
+      /**
+       * Set SFX volume and apply to sound manager
+       * Requirement 4.3: Immediately apply new volume
+       */
+      setSfxVolume: (volume: number) => {
+        const clampedVolume = Math.max(0, Math.min(1, volume));
+        set({ sfxVolume: clampedVolume });
+        soundManager.setSfxVolume(clampedVolume);
+      },
+
+      /**
+       * Set ambient volume and apply to sound manager
+       * Requirement 4.3: Immediately apply new volume
+       */
+      setAmbientVolume: (volume: number) => {
+        const clampedVolume = Math.max(0, Math.min(1, volume));
+        set({ ambientVolume: clampedVolume });
+        soundManager.setAmbientVolume(clampedVolume);
+      },
+
+      /**
+       * Toggle mute state for all audio channels
+       * Requirement 4.4: Mute/unmute all channels simultaneously
+       */
+      toggleMute: () => {
+        const newMuted = !get().isMuted;
+        set({ isMuted: newMuted });
+        soundManager.setMuted(newMuted);
+      },
+
+      /**
+       * Mark that user has interacted (unlocks audio)
+       * Requirement 2.4: Unlock audio on first user interaction
+       */
+      setUserInteracted: () => {
+        if (!get().hasUserInteracted) {
+          set({ hasUserInteracted: true });
+          soundManager.handleUserInteraction();
+        }
+      },
+
+      /**
+       * Play sound via AI selection API
+       * Requirements 5.1, 7.2, 7.3
+       */
+      playSound: async (eventType: string, context?: SoundContext) => {
+        const state = get();
+        
+        // Build full context from game state
+        const fullContext = {
+          petName: context?.petName ?? state.traits.name,
+          stage: context?.stage ?? state.stage,
+          archetype: context?.archetype ?? state.traits.archetype,
+          itemType: context?.itemType,
+          sanity: context?.sanity ?? state.stats.sanity,
+          corruption: context?.corruption ?? state.stats.corruption,
+          narrativeText: context?.narrativeText,
+        };
+
+        try {
+          // Call the selectSound API
+          const response = await fetch('/api/selectSound', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              eventType,
+              context: fullContext,
+            }),
+          });
+
+          if (!response.ok) {
+            throw new Error(`Sound selection API failed: ${response.status}`);
+          }
+
+          const selection = await response.json();
+
+          // Play primary sound
+          if (selection.primarySound) {
+            soundManager.play(selection.primarySound, { volume: selection.volume });
+          }
+
+          // Play secondary sounds
+          if (selection.secondarySounds) {
+            for (const soundId of selection.secondarySounds) {
+              soundManager.play(soundId, { volume: selection.volume * 0.7 });
+            }
+          }
+
+          // Set ambient if specified
+          if (selection.ambientSound) {
+            soundManager.setAmbient(selection.ambientSound);
+          }
+
+          logInfo('Sound played', { eventType, primarySound: selection.primarySound });
+        } catch (error) {
+          // Requirement 7.2, 7.3: Log error and continue without crashing
+          logError(
+            'Failed to play sound',
+            error instanceof Error ? error : new Error(String(error)),
+            { eventType }
+          );
+          // Game continues without audio
+        }
+      },
+
+      // ============================================
+      // Game Actions
+      // ============================================
 
       initializePet: (name: string, archetype: Archetype, color: number) => {
         set({
@@ -176,6 +310,51 @@ export const useGameStore = create<GameState>()(
           get().addLog(evolutionLog, "SYSTEM");
         }
 
+        // Requirement 5.3: Play evolution sound when stage changes
+        if (newStage !== state.stage) {
+          // Call playSound with eventType "evolution" and new stage
+          get().playSound("evolution", {
+            stage: newStage,
+          });
+          
+          // Trigger ambient crossfade to stage-appropriate ambient
+          // Stage-based ambient mapping from design doc
+          const stageAmbientMap: Record<string, string> = {
+            EGG: "ambient_suburban_neighborhood_morning",
+            BABY: "ambient_rain_medium_2",
+            TEEN: "ambient_creepy_ambience_3",
+            ABOMINATION: "ambient_drone_doom",
+          };
+          const newAmbient = stageAmbientMap[newStage];
+          if (newAmbient) {
+            soundManager.setAmbient(newAmbient);
+          }
+        }
+
+        // Requirements 5.4, 5.5: Sanity-based ambient management
+        // Detect threshold crossing (above/below 30)
+        const SANITY_THRESHOLD = 30;
+        const previousSanity = state.stats.sanity;
+        const crossedBelowThreshold = previousSanity >= SANITY_THRESHOLD && newSanity < SANITY_THRESHOLD;
+        const crossedAboveThreshold = previousSanity < SANITY_THRESHOLD && newSanity >= SANITY_THRESHOLD;
+
+        if (crossedBelowThreshold) {
+          // Sanity dropped below 30 - switch to horror ambient
+          soundManager.setAmbient("ambient_creepy_ambience_3");
+        } else if (crossedAboveThreshold) {
+          // Sanity rose above 30 - switch to normal ambient based on stage
+          const stageAmbientMap: Record<string, string> = {
+            EGG: "ambient_suburban_neighborhood_morning",
+            BABY: "ambient_rain_medium_2",
+            TEEN: "ambient_creepy_ambience_3",
+            ABOMINATION: "ambient_drone_doom",
+          };
+          const normalAmbient = stageAmbientMap[newStage];
+          if (normalAmbient) {
+            soundManager.setAmbient(normalAmbient);
+          }
+        }
+
         // Check for critical events and add warnings (only on first occurrence)
         if (newHunger >= 100 && state.stats.hunger < 100) {
           get().addLog(`WARNING: ${state.traits.name} is starving!`, "SYSTEM");
@@ -228,6 +407,10 @@ export const useGameStore = create<GameState>()(
         set({
           inventory: [...state.inventory, offering],
         });
+
+        // Requirement 5.2: Play discovery sound effect on successful scavenge
+        // Use character_woosh for UI feedback
+        soundManager.play("character_woosh");
       },
 
       feed: (itemId: string) => {
@@ -285,6 +468,13 @@ export const useGameStore = create<GameState>()(
 
         // Add narrative log
         get().addLog(narrativeText, "PET");
+
+        // Requirement 5.1: Play sound with feeding context
+        // Call playSound with eventType "feed" and itemType context
+        get().playSound("feed", {
+          itemType: offering.type,
+          narrativeText,
+        });
       },
 
       addLog: (text: string, source: LogSource) => {
@@ -302,11 +492,32 @@ export const useGameStore = create<GameState>()(
       },
 
       reset: () => {
-        set(initialState);
+        set({ ...initialState, ...initialAudioState });
       },
     }),
     {
       name: "creepy-companion-storage",
+      // Persist both game state and audio state (Requirement 4.1)
+      partialize: (state) => ({
+        // Game state
+        isInitialized: state.isInitialized,
+        traits: state.traits,
+        stats: state.stats,
+        stage: state.stage,
+        age: state.age,
+        isAlive: state.isAlive,
+        inventory: state.inventory,
+        dailyFeeds: state.dailyFeeds,
+        gameDay: state.gameDay,
+        logs: state.logs,
+        lastTickTime: state.lastTickTime,
+        // Audio state (Requirement 4.1: Persist audio preferences)
+        masterVolume: state.masterVolume,
+        sfxVolume: state.sfxVolume,
+        ambientVolume: state.ambientVolume,
+        isMuted: state.isMuted,
+        // Note: hasUserInteracted is NOT persisted - must be re-established each session
+      }),
       // Custom storage with error handling
       storage: {
         getItem: (name: string) => {
@@ -376,7 +587,7 @@ export const useGameStore = create<GameState>()(
           }
         },
       },
-      // Apply offline decay when state is restored
+      // Apply offline decay and restore audio settings when state is restored
       onRehydrateStorage: () => {
         return (state, error) => {
           if (error) {
@@ -385,6 +596,21 @@ export const useGameStore = create<GameState>()(
               error instanceof Error ? error : new Error(String(error))
             );
             return;
+          }
+
+          if (state) {
+            // Restore audio settings to sound manager (Requirement 4.2)
+            soundManager.setMasterVolume(state.masterVolume ?? initialAudioState.masterVolume);
+            soundManager.setSfxVolume(state.sfxVolume ?? initialAudioState.sfxVolume);
+            soundManager.setAmbientVolume(state.ambientVolume ?? initialAudioState.ambientVolume);
+            soundManager.setMuted(state.isMuted ?? initialAudioState.isMuted);
+            
+            logInfo('Audio settings restored', {
+              masterVolume: state.masterVolume,
+              sfxVolume: state.sfxVolume,
+              ambientVolume: state.ambientVolume,
+              isMuted: state.isMuted,
+            });
           }
 
           if (state && state.isInitialized && state.isAlive) {

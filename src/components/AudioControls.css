@@ -1,0 +1,205 @@
+/* =============================================================================
+   AudioControls.css - Retro Theme Audio Controls
+   Requirements: 6.5 - Style with consistent game aesthetic
+   ============================================================================= */
+
+.audio-controls {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem 1rem;
+  background: var(--retro-bg);
+  border: var(--retro-border);
+  border-radius: 0;
+  box-shadow: var(--retro-shadow);
+  font-family: 'VT323', monospace;
+}
+
+/* Individual control group */
+.audio-control-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Labels */
+.audio-label {
+  font-family: 'Press Start 2P', cursive;
+  font-size: 0.5rem;
+  text-transform: uppercase;
+  color: var(--retro-text);
+  min-width: 3.5rem;
+}
+
+/* Volume value display */
+.audio-value {
+  font-family: 'VT323', monospace;
+  font-size: 1rem;
+  color: var(--retro-accent);
+  min-width: 2.5rem;
+  text-align: right;
+}
+
+/* Slider styling */
+.audio-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 80px;
+  height: 8px;
+  background: #222;
+  border: 2px solid #444;
+  border-radius: 0;
+  cursor: pointer;
+  box-shadow: inset 2px 2px 0 #000;
+}
+
+.audio-slider:focus {
+  outline: 2px dashed var(--retro-accent);
+  outline-offset: 2px;
+}
+
+/* Slider thumb - WebKit */
+.audio-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 12px;
+  height: 16px;
+  background: var(--retro-accent);
+  border: 2px solid #fff;
+  border-radius: 0;
+  cursor: pointer;
+  box-shadow: 2px 2px 0 #000;
+}
+
+.audio-slider::-webkit-slider-thumb:hover {
+  background: #fff;
+  border-color: var(--retro-accent);
+}
+
+.audio-slider::-webkit-slider-thumb:active {
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0 #000;
+}
+
+/* Slider thumb - Firefox */
+.audio-slider::-moz-range-thumb {
+  width: 12px;
+  height: 16px;
+  background: var(--retro-accent);
+  border: 2px solid #fff;
+  border-radius: 0;
+  cursor: pointer;
+  box-shadow: 2px 2px 0 #000;
+}
+
+.audio-slider::-moz-range-thumb:hover {
+  background: #fff;
+  border-color: var(--retro-accent);
+}
+
+/* Slider track - Firefox */
+.audio-slider::-moz-range-track {
+  background: #222;
+  border: 2px solid #444;
+  border-radius: 0;
+  height: 8px;
+}
+
+/* Mute button */
+.audio-mute-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  padding: 0;
+  font-size: 1.25rem;
+  background: var(--retro-bg);
+  border: 2px solid var(--retro-accent);
+  border-radius: 0;
+  cursor: pointer;
+  box-shadow: 2px 2px 0 #000;
+  transition: none;
+}
+
+.audio-mute-button:hover {
+  background: var(--retro-accent);
+  color: var(--retro-bg);
+}
+
+.audio-mute-button:active {
+  transform: translate(2px, 2px);
+  box-shadow: none;
+}
+
+.audio-mute-button:focus {
+  outline: 2px dashed var(--retro-accent);
+  outline-offset: 2px;
+}
+
+/* Muted state visual indicator (Requirement 6.5) */
+.audio-mute-button.muted {
+  background: #330000;
+  border-color: #ff3333;
+  box-shadow: 2px 2px 0 #ff3333;
+}
+
+.audio-mute-button.muted:hover {
+  background: #ff3333;
+  color: #000;
+}
+
+/* =============================================================================
+   Responsive Layout (Requirement 6.5)
+   ============================================================================= */
+
+/* Stack controls vertically on smaller screens */
+@media (max-width: 600px) {
+  .audio-controls {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+    padding: 1rem;
+  }
+
+  .audio-control-group {
+    justify-content: space-between;
+  }
+
+  .audio-slider {
+    flex: 1;
+    width: auto;
+    min-width: 100px;
+  }
+
+  .audio-mute-button {
+    align-self: center;
+    width: 3rem;
+    height: 3rem;
+    font-size: 1.5rem;
+  }
+}
+
+/* Compact mode for inline placement */
+.audio-controls.compact {
+  padding: 0.5rem;
+  gap: 0.5rem;
+}
+
+.audio-controls.compact .audio-label {
+  display: none;
+}
+
+.audio-controls.compact .audio-value {
+  display: none;
+}
+
+.audio-controls.compact .audio-slider {
+  width: 60px;
+}
+
+.audio-controls.compact .audio-mute-button {
+  width: 2rem;
+  height: 2rem;
+  font-size: 1rem;
+}
