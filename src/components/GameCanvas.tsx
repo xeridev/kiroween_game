@@ -291,7 +291,7 @@ export function GameCanvas({
           // Load texture and create sprite
           // Use alias with .jpg extension hint for PixiJS to recognize as image
           const textureAlias = `pet-art-${Date.now()}`;
-          PIXI.Assets.add({ alias: textureAlias, src: petArtUrl, loadParser: "loadTextures" });
+          PIXI.Assets.add({ alias: textureAlias, src: petArtUrl, parser: "loadTextures" });
           const texture = await PIXI.Assets.load(textureAlias);
 
           if (!texture || !texture.source) {
