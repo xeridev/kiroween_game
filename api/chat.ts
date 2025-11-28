@@ -81,23 +81,35 @@ async function generateWithRunPod(
     if (statusResult.status === "COMPLETED") {
       const output = statusResult.output;
 
-      // Handle different output formats from Qwen3-32B-AWQ
+      // Handle Qwen3-32B-AWQ output format: [{choices: [{tokens: ["text"]}]}]
+      if (Array.isArray(output) && output.length > 0) {
+        const firstOutput = output[0];
+
+        // Standard format: {choices: [{tokens: ["text"]}]}
+        if (firstOutput.choices && Array.isArray(firstOutput.choices) && firstOutput.choices.length > 0) {
+          const firstChoice = firstOutput.choices[0];
+          if (firstChoice.tokens && Array.isArray(firstChoice.tokens) && firstChoice.tokens.length > 0) {
+            return firstChoice.tokens[0]; // Return first token as the generated text
+          }
+        }
+
+        // Fallback: if array of strings
+        if (typeof firstOutput === "string") {
+          return firstOutput;
+        }
+      }
+
+      // Fallback for other formats
       if (typeof output === "string") {
-        // Direct string output
         return output;
       } else if (output && output.text) {
-        // {text: "..."} format
         return output.text;
       } else if (output && output.output) {
-        // {output: "..."} format
         return typeof output.output === "string" ? output.output : JSON.stringify(output.output);
-      } else if (output && Array.isArray(output) && output.length > 0) {
-        // Array format - take first element
-        return typeof output[0] === "string" ? output[0] : JSON.stringify(output[0]);
-      } else {
-        console.error("Unexpected Qwen3 output format:", JSON.stringify(output));
-        throw new Error(`Unexpected output format from RunPod: ${JSON.stringify(output)}`);
       }
+
+      console.error("Unexpected Qwen3 output format:", JSON.stringify(output));
+      throw new Error(`Unexpected output format from RunPod: ${JSON.stringify(output)}`);
     } else if (statusResult.status === "FAILED") {
       throw new Error(`RunPod job failed: ${statusResult.error}`);
     }
