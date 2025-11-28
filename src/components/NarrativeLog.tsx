@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import type { NarrativeLog as NarrativeLogType } from "../utils/types";
 import { FadeIn } from "./animations/FadeIn";
+import { SplitText } from "./reactbits/SplitText";
 import { GlassPanel } from "./GlassPanel";
 import { useTheme } from "../contexts/ThemeContext";
 import "./NarrativeLog.css";
@@ -164,9 +165,38 @@ export function NarrativeLog({ logs, sanityLevel }: NarrativeLogProps) {
           logs.map((log, index) => {
             const isNew = isNewEntry(log.id);
             const staggerDelay = isNew ? getStaggerDelay(index) : 0;
+            const isPending = log.isPending ?? false;
             
             // Build class names for the entry
-            const entryClassName = `log-entry log-${log.source.toLowerCase()}`;
+            const entryClassName = `log-entry log-${log.source.toLowerCase()}${isPending ? " log-pending" : ""}`;
+
+            // Render text content - use SplitText for newly resolved AI text
+            const renderLogText = () => {
+              // If pending, show shimmer placeholder
+              if (isPending) {
+                return <span className="log-text log-text-shimmer">{log.text}</span>;
+              }
+              
+              // If this is a new entry that just resolved (was pending), use typing animation
+              if (isNew && !isPending) {
+                return (
+                  <span className="log-text">
+                    <SplitText
+                      text={log.text}
+                      splitType="chars"
+                      staggerDelay={20}
+                      duration={0.3}
+                      from={{ opacity: 0, y: 5 }}
+                      to={{ opacity: 1, y: 0 }}
+                      onComplete={isLastInBatch(index) ? scrollToBottom : undefined}
+                    />
+                  </span>
+                );
+              }
+              
+              // Default: static text
+              return <span className="log-text">{log.text}</span>;
+            };
 
             const entryContent = (
               <div
@@ -177,14 +207,14 @@ export function NarrativeLog({ logs, sanityLevel }: NarrativeLogProps) {
                 <span className="log-timestamp">
                   [{formatAge(log.timestamp)}]
                 </span>
-                <span className="log-text">{log.text}</span>
+                {renderLogText()}
               </div>
             );
 
             // Only wrap new entries in FadeIn animation (Requirements 4.1, 4.5)
             if (isNew) {
-              // Auto-scroll when the last entry in batch completes animation (Requirements 4.3)
-              const handleAnimationComplete = isLastInBatch(index) ? scrollToBottom : undefined;
+              // Auto-scroll handled by SplitText onComplete for typing animation
+              const handleAnimationComplete = isPending || isLastInBatch(index) ? scrollToBottom : undefined;
               
               return (
                 <FadeIn

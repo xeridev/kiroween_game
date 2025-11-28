@@ -318,21 +318,22 @@ export const useGameStore = create<GameState>()(
 
         // Check for evolution
         let newStage = state.stage;
-        let evolutionLog: string | null = null;
+        let evolutionOccurred = false;
+        let fromStage = state.stage;
 
         // Corruption-based evolution (highest priority)
         if (state.stats.corruption > 80 && state.stage !== "ABOMINATION") {
           newStage = "ABOMINATION";
-          evolutionLog = `The corruption consumes ${state.traits.name}. It has become an ABOMINATION.`;
+          evolutionOccurred = true;
         }
         // Age-based evolution
         else if (state.stage === "EGG" && newAge >= 5) {
           newStage = "BABY";
-          evolutionLog = `${state.traits.name} hatches from its egg. A BABY emerges.`;
+          evolutionOccurred = true;
         } else if (state.stage === "BABY" && newAge >= 24 * 60) {
           // 24 hours = 1440 minutes
           newStage = "TEEN";
-          evolutionLog = `${state.traits.name} has matured into a TEEN.`;
+          evolutionOccurred = true;
         }
 
         // Update state
@@ -349,9 +350,34 @@ export const useGameStore = create<GameState>()(
           lastTickTime: Date.now(),
         });
 
-        // Add evolution log if evolution occurred
-        if (evolutionLog) {
-          get().addLog(evolutionLog, "SYSTEM");
+        // Add evolution log with AI narrative if evolution occurred
+        if (evolutionOccurred) {
+          // Import narrative generator dynamically
+          import("./utils/narrativeGenerator").then(async ({ generateEvolutionNarrative, getPlaceholderText }) => {
+            const eventType = fromStage === "EGG" ? "hatch" : "evolution";
+            const placeholderText = getPlaceholderText(eventType, state.traits.name);
+            const logId = get().addLog(placeholderText, "SYSTEM", true);
+
+            // Log evolution for debugging
+            logInfo("Evolution detected", { from: fromStage, to: newStage });
+
+            try {
+              const aiNarrative = await generateEvolutionNarrative({
+                petName: state.traits.name,
+                stage: newStage,
+                archetype: state.traits.archetype,
+                sanity: newSanity,
+                corruption: state.stats.corruption,
+                fromStage,
+                toStage: newStage,
+              });
+              get().updateLogText(logId, aiNarrative);
+            } catch (error) {
+              logWarning("Failed to generate evolution narrative", {
+                error: error instanceof Error ? error.message : "Unknown",
+              });
+            }
+          });
         }
 
         // Requirement 5.3: Play evolution sound when stage changes
@@ -457,7 +483,7 @@ export const useGameStore = create<GameState>()(
         soundManager.play("character_woosh");
       },
 
-      feed: (itemId: string) => {
+      feed: async (itemId: string) => {
         const state = get();
 
         // Find offering by ID
@@ -470,19 +496,16 @@ export const useGameStore = create<GameState>()(
         let newHunger = state.stats.hunger;
         let newSanity = state.stats.sanity;
         let newCorruption = state.stats.corruption;
-        let narrativeText = "";
 
         if (offering.type === "PURITY") {
           newHunger = Math.max(0, state.stats.hunger - 20);
           newSanity = Math.min(100, state.stats.sanity + 10);
           newCorruption = Math.max(0, state.stats.corruption - 5);
-          narrativeText = `${state.traits.name} purrs softly as it consumes the offering. A gentle warmth fills the air.`;
         } else {
           // ROT
           newHunger = Math.max(0, state.stats.hunger - 20);
           newSanity = Math.max(0, state.stats.sanity - 15);
           newCorruption = Math.min(100, state.stats.corruption + 10);
-          narrativeText = `${state.traits.name} glitches violently as it devours the offering. Something writhes beneath its surface.`;
         }
 
         // Remove offering from inventory
@@ -492,14 +515,14 @@ export const useGameStore = create<GameState>()(
 
         // Increment dailyFeeds counter
         const newDailyFeeds = state.dailyFeeds + 1;
+        const isOverfed = newDailyFeeds > 3;
 
         // Check for vomit event (more than 3 feeds)
-        if (newDailyFeeds > 3) {
+        if (isOverfed) {
           newSanity = Math.max(0, newSanity - 20);
-          narrativeText = `${state.traits.name} convulses and vomits. It has eaten too much today.`;
         }
 
-        // Update state
+        // Update state immediately
         set({
           stats: {
             hunger: newHunger,
@@ -510,15 +533,41 @@ export const useGameStore = create<GameState>()(
           dailyFeeds: newDailyFeeds,
         });
 
-        // Add narrative log
-        get().addLog(narrativeText, "PET");
+        // Import narrative generator
+        const { generateFeedingNarrative, getPlaceholderText } = await import("./utils/narrativeGenerator");
+
+        // Add placeholder log immediately with pending state
+        const eventType = isOverfed ? "overfeed" : "feed";
+        const placeholderText = getPlaceholderText(eventType, state.traits.name);
+        const logId = get().addLog(placeholderText, "PET", true);
 
         // Requirement 5.1: Play sound with feeding context
-        // Call playSound with eventType "feed" and itemType context
         get().playSound("feed", {
           itemType: offering.type,
-          narrativeText,
+          narrativeText: placeholderText,
         });
+
+        // Generate AI narrative async
+        try {
+          const aiNarrative = await generateFeedingNarrative({
+            petName: state.traits.name,
+            stage: state.stage,
+            archetype: state.traits.archetype,
+            sanity: newSanity,
+            corruption: newCorruption,
+            itemName: offering.description,
+            itemType: offering.type,
+            isOverfed,
+          });
+
+          // Update log with AI-generated text
+          get().updateLogText(logId, aiNarrative);
+        } catch (error) {
+          // Fallback already handled in narrativeGenerator
+          logWarning("Failed to generate feeding narrative", {
+            error: error instanceof Error ? error.message : "Unknown",
+          });
+        }
       },
 
       reorderInventory: (newInventory: Offering[]) => {
@@ -526,18 +575,32 @@ export const useGameStore = create<GameState>()(
         set({ inventory: newInventory });
       },
 
-      addLog: (text: string, source: LogSource) => {
+      addLog: (text: string, source: LogSource, isPending?: boolean) => {
         const state = get();
+        const logId = crypto.randomUUID();
         const newLog = {
-          id: crypto.randomUUID(),
+          id: logId,
           text,
           source,
           timestamp: state.age,
+          isPending: isPending ?? false,
         };
 
         set({
           logs: [...state.logs, newLog],
         });
+
+        return logId; // Return ID so caller can update it later
+      },
+
+      updateLogText: (logId: string, newText: string) => {
+        const state = get();
+        const updatedLogs = state.logs.map((log) =>
+          log.id === logId
+            ? { ...log, text: newText, isPending: false }
+            : log
+        );
+        set({ logs: updatedLogs });
       },
 
       reset: () => {

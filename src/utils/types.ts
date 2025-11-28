@@ -32,6 +32,7 @@ export interface NarrativeLog {
   text: string;
   source: LogSource;
   timestamp: number; // Game time in minutes
+  isPending?: boolean; // True while AI is generating text
 }
 
 // Sound System Types
@@ -166,8 +167,9 @@ export interface GameState extends AudioState, AudioActions, SettingsState, Sett
   initializePet: (name: string, archetype: Archetype, color: number) => void;
   tick: () => void;
   scavenge: () => Promise<void>;
-  feed: (itemId: string) => void;
+  feed: (itemId: string) => Promise<void>;
   reorderInventory: (newInventory: Offering[]) => void;
-  addLog: (text: string, source: LogSource) => void;
+  addLog: (text: string, source: LogSource, isPending?: boolean) => string;
+  updateLogText: (logId: string, newText: string) => void;
   reset: () => void;
 }

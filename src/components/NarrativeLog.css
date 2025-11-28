@@ -270,3 +270,67 @@
     animation: none !important;
   }
 }
+
+/* 
+Pending log entry - shimmer effect while AI generates text */
+.log-pending {
+  position: relative;
+}
+
+.log-text-shimmer {
+  position: relative;
+  overflow: hidden;
+}
+
+.log-text-shimmer::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.15) 50%,
+    transparent 100%
+  );
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
+/* Horror theme shimmer - red tint */
+.narrative-log-panel--horror .log-text-shimmer::after {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(233, 69, 96, 0.2) 50%,
+    transparent 100%
+  );
+}
+
+/* Cute theme shimmer - pink tint */
+.narrative-log-panel--cute .log-text-shimmer::after {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 183, 217, 0.2) 50%,
+    transparent 100%
+  );
+}
+
+/* Reduced motion - disable shimmer */
+@media (prefers-reduced-motion: reduce) {
+  .log-text-shimmer::after {
+    animation: none !important;
+    display: none;
+  }
+}
