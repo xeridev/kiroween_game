@@ -8,6 +8,14 @@ import type { VercelRequest, VercelResponse } from "@vercel/node";
  * and generates a composed horror scene using the RunPod image editing API.
  */
 
+interface VisualTraits {
+  archetype: "GLOOM" | "SPARK" | "ECHO";
+  stage: "EGG" | "BABY" | "TEEN" | "ABOMINATION";
+  colorPalette: string[]; // Hex colors
+  keyFeatures: string[]; // e.g., ["glowing purple eyes", "translucent body"]
+  styleKeywords: string[]; // e.g., ["ethereal", "shadowy", "crystalline"]
+}
+
 interface GenerateImageRequest {
   narrativeText: string;
   petName: string;
@@ -18,7 +26,46 @@ interface GenerateImageRequest {
   eventType?: "evolution" | "death" | "placate" | "vomit" | "insanity" | "haunt" | "feed";
   insanityEventType?: "WHISPERS" | "SHADOWS" | "GLITCH" | "INVERSION";
   ghostName?: string;
+  visualTraits?: VisualTraits; // For character consistency (Requirements 8.1, 8.2, 8.3, 8.5)
 }
+
+/**
+ * Inject visual traits into prompt for character consistency.
+ * Requirements: 8.1, 8.2, 8.3, 8.5
+ */
+function injectVisualTraits(
+  prompt: string,
+  traits: VisualTraits | null | undefined
+): string {
+  if (!traits) {
+    return prompt;
+  }
+
+  const traitString = `
+
+IMPORTANT - Character Consistency Requirements:
+- Maintain exact appearance from previous images
+- Key features: ${traits.keyFeatures.join(", ")}
+- Color palette: ${traits.colorPalette.join(", ")}
+- Style: ${traits.styleKeywords.join(", ")}
+- Keep the same character design throughout`;
+
+  return prompt + traitString;
+}
+
+/**
+ * Scene composition layouts for complex events (Requirements 9.1, 9.2, 9.3, 9.4)
+ * Multi-panel layouts that provide dramatic visual storytelling
+ */
+const SCENE_COMPOSITIONS: Record<string, string> = {
+  evolution: "Two-panel comic layout: LEFT panel shows [fromStage] appearance, RIGHT panel shows [toStage] appearance, connected by transformation energy. Use split-screen composition with clear division.",
+  haunt: "Split-screen composition: LEFT shows translucent ghost of [ghostName], RIGHT shows current pet [petName] sensing the presence, ethereal connection between them. Vertical split with ghostly wisps crossing the divide.",
+  vomit: "Three-panel sequence composition: TOP panel shows pet looking uncomfortable and queasy, MIDDLE panel shows expulsion moment with dramatic action, BOTTOM panel shows aftermath with pet exhausted. Comic strip style with clear panel borders.",
+  insanity: "Fragmented multi-panel layout with 4-6 irregular panels showing different perspectives of the same moment, reality breaking apart. Shattered mirror effect with distorted reflections.",
+  death: "Single solemn panel with vignette effect, pet fading into spectral wisps. No multi-panel layout needed.",
+  placate: "Single intimate panel with warm glow, close-up of comforting moment. No multi-panel layout needed.",
+  feed: "Single panel showing feeding moment. No multi-panel layout needed.",
+};
 
 /**
  * Event-specific prompt extensions for specialized image generation
@@ -30,6 +77,58 @@ const EVENT_PROMPT_EXTENSIONS: Record<string, string> = {
   haunt: "spectral visitation, translucent apparition appearing, memories bleeding through, current pet sensing presence, ethereal horror",
   feed: "", // Regular feeding has no special extension
 };
+
+/**
+ * Build scene composition prompt with layout instructions (Requirements 9.1, 9.2, 9.3, 9.4, 9.5, 15.5)
+ * Falls back to single-panel if composition is not supported or fails
+ * 
+ * Error Handling (Requirement 15.5):
+ * - Returns empty string on any error
+ * - Empty string causes fallback to single-panel composition
+ * - Image generation continues without multi-panel layout
+ */
+function buildSceneCompositionPrompt(
+  eventType: string,
+  context: {
+    petName: string;
+    fromStage?: string;
+    toStage?: string;
+    ghostName?: string;
+  }
+): string {
+  try {
+    // Check if event type has a composition
+    const composition = SCENE_COMPOSITIONS[eventType];
+    
+    if (!composition) {
+      // Fall back to single-panel (Requirement 15.5)
+      return "";
+    }
+    
+    // Inject context variables into composition template
+    let compositionPrompt = composition;
+    
+    if (context.fromStage) {
+      compositionPrompt = compositionPrompt.replace("[fromStage]", context.fromStage);
+    }
+    if (context.toStage) {
+      compositionPrompt = compositionPrompt.replace("[toStage]", context.toStage);
+    }
+    if (context.ghostName) {
+      compositionPrompt = compositionPrompt.replace("[ghostName]", context.ghostName);
+    }
+    if (context.petName) {
+      compositionPrompt = compositionPrompt.replace("[petName]", context.petName);
+    }
+    
+    // Return composition with explicit layout instructions (Requirement 9.5)
+    return `\n\nIMPORTANT LAYOUT INSTRUCTIONS:\n${compositionPrompt}\n\nFollow the specified panel layout exactly. This is a multi-panel composition.`;
+  } catch (error) {
+    // Graceful fallback on any error (Requirement 15.5)
+    console.error("Error building scene composition:", error);
+    return "";
+  }
+}
 
 /**
  * Archetype-specific descriptions for placate events
@@ -52,6 +151,7 @@ const INSANITY_EVENT_EXTENSIONS: Record<string, string> = {
 
 /**
  * Build specialized prompt based on event type
+ * Now includes scene composition for complex events (Requirements 9.1, 9.2, 9.3, 9.4, 9.5)
  */
 function buildEventImagePrompt(
   eventType: string,
@@ -64,6 +164,7 @@ function buildEventImagePrompt(
     toStage?: string;
     insanityEventType?: string;
     ghostName?: string;
+    visualTraits?: VisualTraits;
   }
 ): string {
   const { narrativeText, petName, archetype, stage, fromStage, toStage, insanityEventType, ghostName } = context;
@@ -101,11 +202,23 @@ function buildEventImagePrompt(
     eventExtension = EVENT_PROMPT_EXTENSIONS[eventType] || "";
   }
 
-  return `Combine these images into a single realistic horror scene: use the first image (${petName} the ${archetype} pet sprite) as the main character. ${petName} is a ${archetypeDesc}, currently in ${stage} stage (${stageDesc}). ${eventExtension}
+  const basePrompt = `Combine these images into a single realistic horror scene: use the first image (${petName} the ${archetype} pet sprite) as the main character. ${petName} is a ${archetypeDesc}, currently in ${stage} stage (${stageDesc}). ${eventExtension}
 
 Scene description from narrative: "${narrativeText}"
 
 Apply dark horror lighting with dramatic shadows, unsettling atmosphere, creepy companion pet aesthetic, digital horror art style. Keep the pet's exact appearance from the provided sprite. Maintain visual continuity with any previous images provided.`;
+
+  // Add scene composition for complex events (Requirements 9.1, 9.2, 9.3, 9.4, 9.5)
+  // Handles composition errors gracefully with fallback (Requirement 15.5)
+  const compositionPrompt = buildSceneCompositionPrompt(eventType, {
+    petName,
+    fromStage,
+    toStage,
+    ghostName,
+  });
+
+  // Inject visual traits for character consistency (Requirements 8.1, 8.2, 8.3, 8.5)
+  return injectVisualTraits(basePrompt + compositionPrompt, context.visualTraits);
 }
 
 /**
@@ -116,7 +229,8 @@ function buildImagePrompt(
   petName: string,
   archetype: string,
   stage: string,
-  itemType?: string
+  itemType?: string,
+  visualTraits?: VisualTraits
 ): string {
   const archetypeDescriptions: Record<string, string> = {
     GLOOM: "shadowy, melancholic creature with hollow eyes",
@@ -140,11 +254,14 @@ function buildImagePrompt(
       : "devouring a rotting, corrupted offering"
     : "";
 
-  return `Combine these images into a single realistic horror scene: use the first image (${petName} the ${archetype} pet sprite) as the main character. ${petName} is a ${archetypeDesc}, currently in ${stage} stage (${stageDesc}). ${itemContext}
+  const basePrompt = `Combine these images into a single realistic horror scene: use the first image (${petName} the ${archetype} pet sprite) as the main character. ${petName} is a ${archetypeDesc}, currently in ${stage} stage (${stageDesc}). ${itemContext}
 
 Scene description from narrative: "${narrativeText}"
 
 Apply dark horror lighting with dramatic shadows, unsettling atmosphere, creepy companion pet aesthetic, digital horror art style. Keep the pet's exact appearance from the provided sprite. Maintain visual continuity with any previous images provided.`;
+
+  // Inject visual traits for character consistency (Requirements 8.1, 8.2, 8.3, 8.5)
+  return injectVisualTraits(basePrompt, visualTraits);
 }
 
 export default async function handler(
@@ -166,6 +283,7 @@ export default async function handler(
     eventType,
     insanityEventType,
     ghostName,
+    visualTraits,
   } = req.body as GenerateImageRequest;
 
   // Validate required fields
@@ -201,7 +319,7 @@ export default async function handler(
     let prompt: string;
     
     if (eventType) {
-      // Use specialized prompt for event types
+      // Use specialized prompt for event types (Requirements 8.1, 8.2, 8.3, 8.5)
       prompt = buildEventImagePrompt(eventType, {
         narrativeText,
         petName,
@@ -209,10 +327,11 @@ export default async function handler(
         stage,
         insanityEventType,
         ghostName,
+        visualTraits,
       });
     } else {
-      // Use standard prompt
-      prompt = buildImagePrompt(narrativeText, petName, archetype, stage, itemType);
+      // Use standard prompt (Requirements 8.1, 8.2, 8.3, 8.5)
+      prompt = buildImagePrompt(narrativeText, petName, archetype, stage, itemType, visualTraits);
     }
 
     // RunPod Nano Banana Edit endpoint

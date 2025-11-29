@@ -111,6 +111,66 @@ export type ToneInfluence = string[];
 // Event types for specialized image prompts
 export type EventType = "evolution" | "death" | "placate" | "vomit" | "insanity" | "haunt" | "feed";
 
+// Gallery-related types
+export type GalleryViewMode = "grid" | "timeline";
+export type GalleryFilter = EventType | "all";
+
+// Progress tracking for image generation
+export interface GenerationProgress {
+  startTime: number;
+  pollCount: number;
+  estimatedTimeRemaining: number;
+}
+
+// Dialogue choice system
+export interface DialogueChoice {
+  id: string;
+  text: string;
+  emotionalTone: "comforting" | "fearful" | "loving" | "neutral";
+  statDelta: StatDelta;
+}
+
+export interface DialogueChoicePoint {
+  logId: string;
+  choices: DialogueChoice[];
+  selectedChoiceId: string | null;
+  timestamp: number;
+}
+
+// Visual traits for character consistency
+export interface VisualTraits {
+  archetype: Archetype;
+  stage: PetStage;
+  colorPalette: string[]; // Hex colors
+  keyFeatures: string[]; // e.g., ["glowing purple eyes", "translucent body"]
+  styleKeywords: string[]; // e.g., ["ethereal", "shadowy", "crystalline"]
+}
+
+// Story summary
+export interface StorySummary {
+  petName: string;
+  summaryText: string;
+  generatedAt: number;
+  keyEvents: string[]; // Event descriptions
+  finalStats: PetStats;
+  totalAge: number;
+}
+
+// Narrative context for memory system
+export interface NarrativeContext {
+  recentLogs: NarrativeLog[]; // Last 5 entries
+  keyEvents: {
+    type: EventType;
+    text: string;
+    age: number;
+  }[];
+  statChanges: {
+    sanity: number;
+    corruption: number;
+  };
+  timeElapsed: number; // Game minutes since last narrative
+}
+
 export interface NarrativeLog {
   id: string;
   text: string;
@@ -126,6 +186,10 @@ export interface NarrativeLog {
   // Auto-image generation fields
   autoGenerateImage?: boolean;
   eventType?: EventType;
+  // Narrative enhancements fields
+  generationProgress?: GenerationProgress;
+  dialogueChoice?: DialogueChoicePoint;
+  visualTraits?: VisualTraits;
 }
 
 // Sound System Types
@@ -284,6 +348,18 @@ export interface GameState extends AudioState, AudioActions, SettingsState, Sett
   
   // Auto-image generation flag (Requirement 8.2)
   autoGenerateImages: boolean;
+  
+  // Gallery state (narrative-enhancements)
+  galleryOpen: boolean;
+  galleryFilter: GalleryFilter;
+  galleryViewMode: GalleryViewMode;
+  
+  // Visual traits for character consistency (narrative-enhancements)
+  currentVisualTraits: VisualTraits | null;
+  
+  // Story summary cache (narrative-enhancements)
+  cachedSummary: StorySummary | null;
+  summaryCacheTime: number | null;
 
   // Actions
   initializePet: (name: string, archetype: Archetype, color: number) => void;
@@ -319,6 +395,23 @@ export interface GameState extends AudioState, AudioActions, SettingsState, Sett
   // Reaction System Actions (Requirements 1.2, 1.5, 3.1)
   addReaction: (logId: string, reactionType: ReactionType) => Promise<void>;
   getReactionHistory: () => ReactionData[];
+  
+  // Dialogue Choice System Actions (Requirements 6.3, 6.4, 6.7)
+  selectDialogueChoice: (logId: string, choiceId: string, statDelta: StatDelta) => Promise<void>;
+  
+  // Visual Traits System Actions (Requirements 8.4, 8.5)
+  storeVisualTraits: (logId: string, traits: VisualTraits) => void;
+  getVisualTraits: () => VisualTraits | null;
+  
+  // Gallery System Actions (Requirements 1.1, 2.2)
+  getCompletedImages: () => NarrativeLog[];
+  getImagesByEventType: (eventType: EventType) => NarrativeLog[];
+  setGalleryOpen: (isOpen: boolean) => void;
+  setGalleryFilter: (filter: GalleryFilter) => void;
+  setGalleryViewMode: (viewMode: GalleryViewMode) => void;
+  
+  // Story Summary System Actions (Requirements 7.1, 14.4)
+  generateStorySummary: () => Promise<StorySummary | null>;
 }
 
 // Reaction System Constants

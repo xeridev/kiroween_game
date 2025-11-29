@@ -7,6 +7,8 @@ import { useTheme } from "../contexts/ThemeContext";
 import { useGameStore } from "../store";
 import { ReactionButtons } from "./ReactionButtons";
 import { StatChangeIndicator } from "./StatChangeIndicator";
+import { ProgressIndicator } from "./ProgressIndicator";
+import { DialogueChoices } from "./DialogueChoices";
 import "./NarrativeLog.css";
 
 interface NarrativeLogProps {
@@ -89,6 +91,13 @@ export function NarrativeLog({ logs, sanityLevel }: NarrativeLogProps) {
   const currentPetSpriteUrl = useGameStore((state) => state.currentPetSpriteUrl);
   const autoGenerateImages = useGameStore((state) => state.autoGenerateImages);
   const [selectedImageUrl, setSelectedImageUrl] = useState<string | null>(null);
+
+  // Dialogue choice state
+  const selectDialogueChoice = useGameStore((state) => state.selectDialogueChoice);
+  const petName = useGameStore((state) => state.traits.name);
+  const archetype = useGameStore((state) => state.traits.archetype);
+  const stage = useGameStore((state) => state.stage);
+  const stats = useGameStore((state) => state.stats);
 
   // Stat change indicator state (Requirement 7.1)
   const [statChanges, setStatChanges] = useState<Array<{
@@ -270,6 +279,63 @@ export function NarrativeLog({ logs, sanityLevel }: NarrativeLogProps) {
     });
   }, [logs, autoGenerateImages, currentPetSpriteUrl, generateLogImage]);
 
+  // Generate dialogue choices for significant events (Requirements 6.1, 6.2)
+  useEffect(() => {
+    // Check for logs that need dialogue choices
+    logs.forEach(async (log) => {
+      // Only trigger for significant events (evolution, insanity, haunt)
+      const significantEvents = ["evolution", "insanity", "haunt"];
+      
+      // Check if this log should trigger dialogue choices
+      if (
+        log.eventType &&
+        significantEvents.includes(log.eventType) &&
+        !log.isPending &&
+        !log.dialogueChoice // Don't regenerate if already has choices
+      ) {
+        // Import dialogue choice generator
+        const { generateDialogueChoices } = await import("../utils/narrativeGenerator");
+        
+        try {
+          // Generate dialogue choices (30% probability check inside)
+          const choices = await generateDialogueChoices({
+            petName,
+            archetype,
+            stage,
+            sanity: stats.sanity,
+            corruption: stats.corruption,
+            eventType: log.eventType,
+            narrativeText: log.text,
+          });
+
+          // If choices were generated, update the log
+          if (choices && choices.length >= 2) {
+            // Update log with dialogue choices
+            useGameStore.setState((state) => ({
+              logs: state.logs.map((l) =>
+                l.id === log.id
+                  ? {
+                      ...l,
+                      dialogueChoice: {
+                        logId: log.id,
+                        choices,
+                        selectedChoiceId: null,
+                        timestamp: Date.now(),
+                      },
+                    }
+                  : l
+              ),
+            }));
+          }
+        } catch (error) {
+          // Requirement 15.2: Fallback to standard narrative on generation failure
+          // Dialogue choices are optional - game continues without them
+          console.warn("Failed to generate dialogue choices, continuing without them", error);
+        }
+      }
+    });
+  }, [logs, petName, archetype, stage, stats.sanity, stats.corruption]);
+
   // Calculate stagger delay for a log entry based on its position in the batch
   const getStaggerDelay = (index: number): number => {
     if (batchStartIndexRef.current === null) return 0;
@@ -394,6 +460,13 @@ export function NarrativeLog({ logs, sanityLevel }: NarrativeLogProps) {
                   )}
                 </div>
                 {renderLogText()}
+                {/* Progress indicator for generating images (Requirements 4.1, 4.6, 4.7) */}
+                {log.generationProgress && (
+                  <ProgressIndicator
+                    progress={log.generationProgress}
+                    status={log.imageStatus || "generating"}
+                  />
+                )}
                 {/* Inline image preview */}
                 {hasImage && log.imageUrl && (
                   <div className="log-image-preview">
@@ -404,8 +477,20 @@ export function NarrativeLog({ logs, sanityLevel }: NarrativeLogProps) {
                     />
                   </div>
                 )}
+                {/* Dialogue choices for eligible entries (Requirements 6.1, 6.2) */}
+                {log.dialogueChoice && !log.dialogueChoice.selectedChoiceId && !isPending && (
+                  <DialogueChoices
+                    choices={log.dialogueChoice.choices}
+                    onSelect={(choiceId, statDelta) => {
+                      selectDialogueChoice(log.id, choiceId, statDelta);
+                      // Also trigger stat change animation
+                      handleReactionApplied(log.id, statDelta);
+                    }}
+                    timeoutSeconds={60}
+                  />
+                )}
                 {/* Reaction buttons for eligible entries (Requirements 1.1, 1.3, 1.4) */}
-                {canReact && (
+                {canReact && !log.dialogueChoice && (
                   <ReactionButtons 
                     log={log}
                     onReactionApplied={(statDelta) => handleReactionApplied(log.id, statDelta)}

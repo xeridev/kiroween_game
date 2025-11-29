@@ -18,6 +18,10 @@ export interface ActionDockProps {
   onZenMode: () => void;
   /** Handler for placate action */
   onPlacate: () => void;
+  /** Handler for gallery action */
+  onGallery: () => void;
+  /** Handler for story summary action */
+  onStorySummary: () => void;
   /** Whether scavenging is currently in progress */
   isScavenging?: boolean;
   /** Whether scavenge is disabled (inventory full) */
@@ -42,6 +46,8 @@ export function ActionDock({
   onSettings,
   onZenMode,
   onPlacate,
+  onGallery,
+  onStorySummary,
   isScavenging = false,
   canScavenge = true,
   isPlacateOnCooldown = false,
@@ -78,6 +84,18 @@ export function ActionDock({
       className: `action-placate ${isPlacateOnCooldown ? 'action-disabled' : ''}`,
     },
     {
+      icon: '🖼️',
+      label: 'Gallery',
+      onClick: onGallery,
+      className: 'action-gallery',
+    },
+    {
+      icon: '📖',
+      label: 'Story',
+      onClick: onStorySummary,
+      className: 'action-story',
+    },
+    {
       icon: '⚙️',
       label: 'Settings',
       onClick: onSettings,
@@ -89,7 +107,7 @@ export function ActionDock({
       onClick: onZenMode,
       className: 'action-zen',
     },
-  ], [onScavenge, onSettings, onZenMode, onPlacate, isScavenging, canScavenge, isPlacateOnCooldown, placateCooldownRemaining]);
+  ], [onScavenge, onSettings, onZenMode, onPlacate, onGallery, onStorySummary, isScavenging, canScavenge, isPlacateOnCooldown, placateCooldownRemaining]);
 
   return (
     <div 

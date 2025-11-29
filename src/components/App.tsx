@@ -25,6 +25,8 @@ import { NarrativeLog } from "./NarrativeLog";
 import { DebugPanel } from "./DebugPanel";
 import { AudioControls } from "./AudioControls";
 import { SettingsPanel } from "./SettingsPanel";
+import { ImageGallery } from "./ImageGallery";
+import { StorySummary } from "./StorySummary";
 import { BackgroundLayer } from "./BackgroundLayer";
 import { ActionDock } from "./ActionDock";
 import { GameLoop } from "../utils/gameLoop";
@@ -77,6 +79,7 @@ function AppContent() {
   const gameCanvasRef = useRef<GameCanvasHandle | null>(null);
   const [debugPanelOpen, setDebugPanelOpen] = useState(false);
   const [settingsPanelOpen, setSettingsPanelOpen] = useState(false);
+  const [storySummaryOpen, setStorySummaryOpen] = useState(false);
   const [zenMode, setZenMode] = useState(false);
   const [isScavenging, setIsScavenging] = useState(false);
   const [audioInitialized, setAudioInitialized] = useState(false);
@@ -118,6 +121,9 @@ function AppContent() {
   const placateEffect = useGameStore((state) => state.placateEffect);
   const vomitEffect = useGameStore((state) => state.vomitEffect);
   const insanityEffect = useGameStore((state) => state.insanityEffect);
+  const galleryOpen = useGameStore((state) => state.galleryOpen);
+  const setGalleryOpen = useGameStore((state) => state.setGalleryOpen);
+  const generateStorySummary = useGameStore((state) => state.generateStorySummary);
   
   // Get the currently dragged item for DragOverlay
   const activeItem: Offering | undefined = activeId 
@@ -347,6 +353,14 @@ function AppContent() {
     previousStageRef.current = stage;
   }, [stage]);
 
+  // Auto-open story summary on death (Requirement 7.5)
+  useEffect(() => {
+    if (!isAlive && deathData) {
+      // Open story summary modal automatically when pet dies
+      setStorySummaryOpen(true);
+    }
+  }, [isAlive, deathData]);
+
   // Apply theme to document root on mount and when theme changes (Requirements 1.3, 6.4)
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", theme);
@@ -396,7 +410,9 @@ function AppContent() {
 
       // Support Escape to close panels
       if (event.key === "Escape") {
-        if (settingsPanelOpen) {
+        if (storySummaryOpen) {
+          setStorySummaryOpen(false);
+        } else if (settingsPanelOpen) {
           setSettingsPanelOpen(false);
         } else if (debugPanelOpen) {
           setDebugPanelOpen(false);
@@ -586,6 +602,8 @@ function AppContent() {
                 onSettings={() => setSettingsPanelOpen(true)}
                 onZenMode={() => setZenMode(true)}
                 onPlacate={placate}
+                onGallery={() => setGalleryOpen(true)}
+                onStorySummary={() => setStorySummaryOpen(true)}
                 isScavenging={isScavenging}
                 canScavenge={canScavenge}
                 isPlacateOnCooldown={isPlacateOnCooldown}
@@ -649,6 +667,18 @@ function AppContent() {
         
         {/* Settings Panel */}
         <SettingsPanel isOpen={settingsPanelOpen} onClose={() => setSettingsPanelOpen(false)} />
+        
+        {/* Image Gallery */}
+        <ImageGallery isOpen={galleryOpen} onClose={() => setGalleryOpen(false)} />
+        
+        {/* Story Summary */}
+        <StorySummary
+          isOpen={storySummaryOpen}
+          onClose={() => setStorySummaryOpen(false)}
+          petName={traits.name}
+          autoGenerate={!isAlive && deathData !== null}
+          onGenerate={generateStorySummary}
+        />
         
         {/* DragOverlay renders the dragged item preview (Requirement 1.1, 7.5, 9.3, 9.5) */}
         <DragOverlay modifiers={[touchOffsetModifier]}>

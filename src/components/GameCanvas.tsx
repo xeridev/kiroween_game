@@ -12,6 +12,7 @@ import {
 } from "../utils/petArtGenerator";
 import { AnimatedPetName } from "./AnimatedPetName";
 import { AnimatedStageIndicator } from "./AnimatedStageIndicator";
+import { useGameStore } from "../store";
 import "./GameCanvas.css";
 
 // Expose capture method via ref
@@ -121,8 +122,11 @@ export const GameCanvas = forwardRef<GameCanvasHandle, GameCanvasProps>(function
   const resizeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [renderError, setRenderError] = useState<string | null>(null);
   const [canvasSize, setCanvasSize] = useState(calculateCanvasSize);
-  const [petArtUrl, setPetArtUrl] = useState<string | null>(null);
   const [useAIArt, setUseAIArt] = useState(true); // Toggle for AI art vs shapes
+  
+  // Use pet sprite URL from store (updated by narrative image generation)
+  const petArtUrl = useGameStore((state) => state.currentPetSpriteUrl);
+  const updatePetSprite = useGameStore((state) => state.updatePetSprite);
 
   /**
    * Capture the current pet sprite as a base64 data URL
@@ -327,13 +331,13 @@ export const GameCanvas = forwardRef<GameCanvasHandle, GameCanvasProps>(function
       // 1. Try to load placeholder immediately (instant feedback)
       const hasPlaceholder = await placeholderExists(traits.archetype, stage);
       if (hasPlaceholder) {
-        setPetArtUrl(getPlaceholderPath(traits.archetype, stage));
+        updatePetSprite(getPlaceholderPath(traits.archetype, stage));
       }
 
       // 2. Check cache for AI-generated art
       const cached = loadCachedArt(petName, traits.archetype, stage);
       if (cached) {
-        setPetArtUrl(cached);
+        updatePetSprite(cached);
         return;
       }
 
@@ -346,7 +350,7 @@ export const GameCanvas = forwardRef<GameCanvasHandle, GameCanvasProps>(function
           colorHex,
           petName
         );
-        setPetArtUrl(artUrl);
+        updatePetSprite(artUrl);
         saveCachedArt(petName, traits.archetype, stage, artUrl);
       } catch (error) {
         logError(

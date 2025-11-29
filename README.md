@@ -8,12 +8,22 @@ A browser-based horror pet simulator that inverts traditional virtual pet mechan
 
 ## 🎮 Features
 
+### Core Gameplay
 - **Real-time Evolution**: Watch your pet transform from EGG → BABY → TEEN → ABOMINATION
 - **AI-Generated Pet Art**: Unique 512×512 pixel artwork for each archetype and stage
 - **Mystery Feeding**: Scavenge for AI-generated offerings with hidden PURITY/ROT effects
 - **Persistent State**: Your pet continues to exist (and decay) even when offline
 - **Dynamic Narrative**: AI-generated horror descriptions create unique experiences
 - **Zen Mode**: Fullscreen canvas view (press Z)
+
+### Narrative Enhancements
+- **Image Gallery**: Browse all generated pet artwork with filtering by event type (evolution, death, placate, etc.)
+- **Timeline View**: See your pet's visual journey chronologically with stage transition markers
+- **Progress Indicators**: Real-time feedback during 90-second image generation with time estimates
+- **Dialogue Choices**: Occasionally choose how to respond to narrative events (30% chance on significant events)
+- **Story Summary**: AI-generated life recap covering your pet's entire journey from egg to current state
+- **Memory System**: Narratives reference past events for story continuity (last 5 events)
+- **Character Consistency**: Visual traits maintained across generated images for cohesive appearance
 
 ---
 
@@ -255,6 +265,219 @@ creepy cute aesthetic
 
 ---
 
+## 🖼️ Image Gallery
+
+Browse all generated pet artwork in a dedicated gallery view with powerful filtering and timeline features.
+
+### Opening the Gallery
+- Click the **"Gallery"** button in the UI overlay
+- Gallery displays all completed images in chronological order (most recent first)
+
+### View Modes
+
+**Grid View** (default):
+- 3 columns on desktop (>1024px)
+- 2 columns on tablet (768-1024px)
+- 1 column on mobile (<768px)
+- Click any image to open full-screen modal
+
+**Timeline View**:
+- Vertical timeline showing pet's visual journey
+- Age displayed at each image generation point
+- Stage transition markers (EGG → BABY → TEEN → ABOMINATION)
+- Death event marked with distinct indicator
+
+### Filtering
+Filter images by event type:
+- **All**: Show all images
+- **Evolution**: Stage transformations
+- **Death**: Final moments
+- **Placate**: Comforting interactions
+- **Vomit**: Overfeeding events
+- **Insanity**: Sanity-related events
+- **Haunt**: Ghost encounters
+
+### Navigation
+- **Click image**: Open full-screen modal
+- **Arrow keys**: Navigate between images in modal
+- **Escape**: Close modal
+- **Swipe gestures**: Navigate on mobile devices
+
+### Accessibility
+- Alt text for all images describing event and pet state
+- Keyboard navigation fully supported
+- Screen reader announcements for filter changes
+- Focus trap in modal for keyboard users
+
+---
+
+## 💬 Dialogue Choices
+
+Occasionally respond to narrative events with player-selected dialogue choices that influence the story and stats.
+
+### When Choices Appear
+- **30% chance** on significant events (evolution, insanity, haunt)
+- 2-3 options presented with clear emotional tones
+- Each choice has different stat effects
+
+### Emotional Tones
+- **Comforting**: Increases sanity, decreases corruption
+- **Fearful**: Decreases sanity, may increase corruption
+- **Loving**: Increases sanity significantly
+- **Neutral**: Minimal stat changes
+
+### Making a Choice
+1. Read the narrative event
+2. Review the 2-3 dialogue options
+3. Click your preferred response
+4. Watch the 60-second countdown timer
+5. If no choice made, neutral option auto-selected
+
+### Effects
+- **Stat Changes**: Applied immediately based on emotional tone
+- **Follow-up Narrative**: AI generates response reflecting your choice
+- **Memory**: Choice stored and referenced in future narratives
+
+### Accessibility
+- Keyboard navigation with Tab, Enter, and Space
+- Screen reader announcements for options and countdown
+- Visual focus indicators
+- Timeout announcements at 30s, 10s, and 5s remaining
+
+---
+
+## 📖 Story Summary
+
+Generate an AI-powered narrative recap of your pet's entire life journey.
+
+### Generating a Summary
+
+**Manual Generation**:
+1. Click **"Story Summary"** button in UI overlay
+2. Wait 5-10 seconds for AI generation
+3. Read the cohesive 300-500 word narrative
+
+**Automatic Generation**:
+- Summary auto-generates when pet dies
+- Displayed as memorial summary
+
+### What's Included
+- Pet's name and archetype
+- Key events (birth, evolutions, significant stat changes)
+- Final stats and age
+- Cohesive narrative (not just a list of events)
+- Emotional tone matching pet's journey
+
+### Export Options
+- **Copy to Clipboard**: One-click copy for sharing
+- **Download as Text**: Save as `.txt` file
+- **Print-friendly**: Formatted for printing
+
+### Caching
+- Summaries cached for 5 minutes
+- Regenerate anytime by closing and reopening
+- Cache cleared on pet death
+
+---
+
+## ⏱️ Progress Indicators
+
+Real-time feedback during image generation so you know the system is working.
+
+### What You'll See
+- **Spinner animation**: Visual indicator of active generation
+- **Time estimates**: Updated every 2 seconds
+  - 0-30s: "Generating..."
+  - 30-60s: "Generating... ~60s remaining"
+  - 60-90s: "Generating... ~30s remaining"
+  - 90s+: "Taking longer than expected..."
+
+### Generation Timeline
+1. **0s**: Progress indicator appears
+2. **2-15s**: Typical completion time
+3. **15-60s**: Cold start (first request after idle)
+4. **60-90s**: Polling continues
+5. **90s+**: Extended wait message shown
+
+### On Completion
+- **Success**: Progress indicator replaced with generated image
+- **Failure**: Error message with retry button
+
+### Accessibility
+- aria-live regions announce time updates
+- Screen reader announcements on start/complete/fail
+- Non-blocking UI (can continue using app while generating)
+
+---
+
+## 🧠 Memory System
+
+Narratives reference past events to create story continuity and cohesive character development.
+
+### How It Works
+- **Context Window**: Last 5 narrative log entries included in AI prompts
+- **Key Events**: Significant moments (evolution, death, placate) explicitly referenced
+- **Stat Changes**: Large sanity/corruption shifts (>20 points) mentioned
+- **Time Awareness**: Long-lived pets (>24 game hours) get time-passage references
+- **Preferences**: Multiple feedings of same item type create preference patterns
+
+### What Gets Remembered
+- Previous pet deaths (if restarting)
+- Evolution transformations
+- Placate/comfort interactions
+- Insanity events
+- Haunt encounters
+- Feeding patterns
+
+### Performance
+- Context limited to 2000 characters max
+- Cached for 5 minutes to avoid redundant processing
+- Only recent entries processed (last 100 logs max)
+
+### Example
+```
+Without Memory:
+"The creature consumes the offering hungrily."
+
+With Memory:
+"The creature, still trembling from its recent evolution,
+approaches the offering with newfound caution. The memory
+of yesterday's vomit incident lingers..."
+```
+
+---
+
+## 🎨 Character Consistency
+
+Visual traits maintained across generated images for cohesive pet appearance.
+
+### How It Works
+1. **First Image**: AI generates pet with archetype-specific features
+2. **Trait Extraction**: System stores key visual descriptors:
+   - Color palette (hex codes)
+   - Key features ("glowing purple eyes", "translucent body")
+   - Style keywords ("ethereal", "shadowy", "crystalline")
+3. **Subsequent Images**: Traits injected into prompts with "maintain character appearance" instruction
+
+### What's Preserved
+- **Colors**: Primary and accent colors
+- **Features**: Eyes, body texture, distinctive markings
+- **Style**: Art style and aesthetic tone
+- **Proportions**: Relative size and shape
+
+### Evolution Handling
+- Previous stage appearance included in prompt
+- New stage characteristics added
+- Smooth visual transition maintained
+
+### Storage
+- Traits stored in localStorage
+- LRU cache (last 10 trait sets)
+- Separate from main game state
+- Graceful degradation if storage fails
+
+---
+
 ## 📡 API Endpoints
 
 ### `/api/chat` - AI Narrative Text
@@ -421,9 +644,21 @@ npm run lint
 
 ## 🎮 Keyboard Shortcuts
 
+### Global
 - **Z**: Toggle zen mode (fullscreen canvas)
-- **Escape**: Exit zen mode or close debug panel
+- **Escape**: Exit zen mode, close modals, or close debug panel
 - **D**: Toggle debug panel (dev mode only)
+
+### Gallery
+- **Arrow Left/Right**: Navigate between images in modal
+- **Escape**: Close gallery modal
+- **Tab**: Navigate filter buttons and images
+- **Enter/Space**: Select focused item
+
+### Dialogue Choices
+- **Tab**: Navigate between choice options
+- **Enter/Space**: Select focused choice
+- **1-3**: Quick select choice by number
 
 ---
 

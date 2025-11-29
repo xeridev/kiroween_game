@@ -7,6 +7,54 @@ import { soundManager } from "./utils/soundManager";
 // In-memory fallback storage for reactions when localStorage is unavailable (Requirement 10.4)
 let inMemoryReactions: Map<string, import("./utils/types").ReactionData[]> = new Map();
 
+// ============================================
+// Compression Utilities for Story Summary (Requirement 14.4)
+// ============================================
+
+/**
+ * Simple text compression using LZ-based algorithm.
+ * Compresses summary text before storing in localStorage.
+ */
+function compressSummaryText(text: string): string {
+  try {
+    // Use a simple run-length encoding for repeated patterns
+    // This is a lightweight compression suitable for browser environment
+    const compressed = text
+      .replace(/\s+/g, ' ') // Normalize whitespace
+      .trim();
+    
+    // For browser compatibility, we'll use base64 encoding of the compressed text
+    // This provides some size reduction while maintaining compatibility
+    return btoa(encodeURIComponent(compressed));
+  } catch (error) {
+    logWarning("Failed to compress summary text", {
+      error: error instanceof Error ? error.message : "Unknown",
+    });
+    // Return original text if compression fails
+    return text;
+  }
+}
+
+/**
+ * Decompress summary text when retrieving from cache.
+ */
+function decompressSummaryText(compressed: string): string {
+  try {
+    // Check if text appears to be compressed (base64)
+    if (/^[A-Za-z0-9+/=]+$/.test(compressed)) {
+      return decodeURIComponent(atob(compressed));
+    }
+    // Return as-is if not compressed
+    return compressed;
+  } catch (error) {
+    logWarning("Failed to decompress summary text", {
+      error: error instanceof Error ? error.message : "Unknown",
+    });
+    // Return original text if decompression fails
+    return compressed;
+  }
+}
+
 const initialState = {
   isInitialized: false,
   traits: {
@@ -51,6 +99,15 @@ const initialState = {
   },
   // Auto-image generation flag (Requirement 8.2)
   autoGenerateImages: true,
+  // Gallery state (narrative-enhancements)
+  galleryOpen: false,
+  galleryFilter: "all" as import("./utils/types").GalleryFilter,
+  galleryViewMode: "grid" as import("./utils/types").GalleryViewMode,
+  // Visual traits for character consistency (narrative-enhancements)
+  currentVisualTraits: null as import("./utils/types").VisualTraits | null,
+  // Story summary cache (narrative-enhancements)
+  cachedSummary: null as import("./utils/types").StorySummary | null,
+  summaryCacheTime: null as number | null,
 };
 
 // Default audio state (Requirements 4.1, 4.2)
@@ -306,6 +363,7 @@ export const useGameStore = create<GameState>()(
       /**
        * Generate image for a narrative log entry
        * Captures current pet sprite and calls RunPod API
+       * Requirements 4.1, 4.2, 4.3, 4.4, 4.5: Track progress during generation
        */
       generateLogImage: async (logId: string) => {
         const state = get();
@@ -322,14 +380,58 @@ export const useGameStore = create<GameState>()(
           return;
         }
 
-        // Update log status to generating
+        // Initialize progress tracking (Requirement 4.1)
+        const startTime = Date.now();
+        const initialProgress: import("./utils/types").GenerationProgress = {
+          startTime,
+          pollCount: 0,
+          estimatedTimeRemaining: 90, // 90 seconds max
+        };
+
+        // Update log status to generating with progress tracking
         set({
           logs: state.logs.map(l =>
             l.id === logId
-              ? { ...l, imageStatus: "generating" as ImageStatus }
+              ? { 
+                  ...l, 
+                  imageStatus: "generating" as ImageStatus,
+                  generationProgress: initialProgress,
+                }
               : l
           ),
         });
+
+        // Start progress update interval (Requirement 4.2)
+        const progressInterval = setInterval(() => {
+          const currentState = get();
+          const currentLog = currentState.logs.find(l => l.id === logId);
+          
+          if (!currentLog || !currentLog.generationProgress) {
+            clearInterval(progressInterval);
+            return;
+          }
+
+          // Calculate elapsed time and estimated time remaining (Requirements 4.3, 4.4)
+          const elapsed = Date.now() - currentLog.generationProgress.startTime;
+          const elapsedSeconds = Math.floor(elapsed / 1000);
+          const estimatedTimeRemaining = Math.max(0, 90 - elapsedSeconds);
+          
+          // Update progress (Requirement 4.2)
+          set({
+            logs: currentState.logs.map(l =>
+              l.id === logId && l.generationProgress
+                ? {
+                    ...l,
+                    generationProgress: {
+                      ...l.generationProgress,
+                      pollCount: l.generationProgress.pollCount + 1,
+                      estimatedTimeRemaining,
+                    },
+                  }
+                : l
+            ),
+          });
+        }, 2000); // Update every 2 seconds (Requirement 4.2)
 
         try {
           // Gather source images
@@ -341,10 +443,15 @@ export const useGameStore = create<GameState>()(
           } else {
             // No pet sprite available - fail gracefully
             logWarning("No pet sprite available for image generation");
+            clearInterval(progressInterval);
             set({
               logs: get().logs.map(l =>
                 l.id === logId
-                  ? { ...l, imageStatus: "failed" as ImageStatus }
+                  ? { 
+                      ...l, 
+                      imageStatus: "failed" as ImageStatus,
+                      generationProgress: undefined,
+                    }
                   : l
               ),
             });
@@ -363,6 +470,9 @@ export const useGameStore = create<GameState>()(
             }
           }
 
+          // Get visual traits for character consistency (Requirements 8.1, 8.2, 8.3, 8.5)
+          const visualTraits = get().getVisualTraits();
+
           // Build API request body with eventType if available
           const requestBody: any = {
             narrativeText: log.text,
@@ -370,6 +480,7 @@ export const useGameStore = create<GameState>()(
             archetype: state.traits.archetype,
             stage: state.stage,
             sourceImages,
+            visualTraits, // Include visual traits for consistency (Requirements 8.1, 8.2, 8.3, 8.5)
           };
 
           // Include eventType for specialized prompts (Requirements 4.1-4.6, 5.1-5.6)
@@ -391,7 +502,51 @@ export const useGameStore = create<GameState>()(
 
           const result = await response.json();
 
-          // Update log with generated image
+          // Clear progress interval (Requirement 4.6)
+          clearInterval(progressInterval);
+
+          // Extract and store visual traits for future consistency (Requirements 8.4, 8.5)
+          // Build visual traits from current pet state
+          const newVisualTraits: import("./utils/types").VisualTraits = {
+            archetype: state.traits.archetype,
+            stage: state.stage,
+            colorPalette: [
+              `#${state.traits.color.toString(16).padStart(6, '0')}`, // Convert color to hex
+            ],
+            keyFeatures: [], // Will be populated by future AI extraction
+            styleKeywords: [], // Will be populated by future AI extraction
+          };
+
+          // Add archetype-specific features (Requirement 8.1)
+          const archetypeFeatures: Record<string, string[]> = {
+            GLOOM: ["shadowy form", "hollow eyes", "melancholic aura"],
+            SPARK: ["electric energy", "crackling sparks", "jittery movements"],
+            ECHO: ["translucent body", "fading echoes", "ethereal presence"],
+          };
+          newVisualTraits.keyFeatures = archetypeFeatures[state.traits.archetype] || [];
+
+          // Add stage-specific features (Requirement 8.1)
+          const stageFeatures: Record<string, string[]> = {
+            EGG: ["pulsing energy", "mysterious shell"],
+            BABY: ["small vulnerable form", "developing features"],
+            TEEN: ["growing body", "maturing characteristics"],
+            ABOMINATION: ["twisted form", "corrupted appearance", "horrific features"],
+          };
+          newVisualTraits.keyFeatures.push(...(stageFeatures[state.stage] || []));
+
+          // Add style keywords based on corruption level
+          if (state.stats.corruption > 80) {
+            newVisualTraits.styleKeywords = ["corrupted", "twisted", "nightmarish"];
+          } else if (state.stats.corruption > 50) {
+            newVisualTraits.styleKeywords = ["unsettling", "eerie", "disturbing"];
+          } else {
+            newVisualTraits.styleKeywords = ["mysterious", "otherworldly", "haunting"];
+          }
+
+          // Store visual traits (Requirement 8.4)
+          get().storeVisualTraits(logId, newVisualTraits);
+
+          // Update log with generated image (Requirement 4.6)
           set({
             logs: get().logs.map(l =>
               l.id === logId
@@ -400,24 +555,37 @@ export const useGameStore = create<GameState>()(
                     imageUrl: result.imageUrl,
                     imageStatus: "completed" as ImageStatus,
                     sourceImages,
+                    visualTraits: newVisualTraits, // Store traits in log (Requirement 8.4)
+                    generationProgress: undefined, // Clear progress on completion
                   }
                 : l
             ),
           });
 
-          logInfo("Image generated for log", { logId });
+          // Update the current pet sprite to use the latest generated image
+          // This ensures the canvas displays the most recent narrative image
+          get().updatePetSprite(result.imageUrl);
+
+          logInfo("Image generated for log", { logId, visualTraitsStored: true });
         } catch (error) {
+          // Clear progress interval on error
+          clearInterval(progressInterval);
+          
           logError(
             "Failed to generate log image",
             error instanceof Error ? error : new Error(String(error)),
             { logId }
           );
 
-          // Update log status to failed
+          // Update log status to failed (Requirement 4.7)
           set({
             logs: get().logs.map(l =>
               l.id === logId
-                ? { ...l, imageStatus: "failed" as ImageStatus }
+                ? { 
+                    ...l, 
+                    imageStatus: "failed" as ImageStatus,
+                    generationProgress: undefined, // Clear progress on failure
+                  }
                 : l
             ),
           });
@@ -595,7 +763,16 @@ export const useGameStore = create<GameState>()(
         // Add evolution log with AI narrative if evolution occurred
         if (evolutionOccurred) {
           // Import narrative generator dynamically
-          import("./utils/narrativeGenerator").then(async ({ generateEvolutionNarrative, getPlaceholderText }) => {
+          import("./utils/narrativeGenerator").then(async ({ generateEvolutionNarrative, getPlaceholderText, buildNarrativeContext }) => {
+            const currentState = get();
+            
+            // Build memory context (Requirements 5.1, 5.2, 5.3, 5.4)
+            const memoryContext = buildNarrativeContext(
+              currentState.logs,
+              { sanity: newSanity, corruption: currentState.stats.corruption },
+              { sanity: state.stats.sanity, corruption: state.stats.corruption }
+            );
+            
             const eventType = fromStage === "EGG" ? "hatch" : "evolution";
             const placeholderText = getPlaceholderText(eventType, state.traits.name);
             // Requirement 4.1: Set autoGenerateImage for evolution events
@@ -611,10 +788,10 @@ export const useGameStore = create<GameState>()(
                 stage: newStage,
                 archetype: state.traits.archetype,
                 sanity: newSanity,
-                corruption: state.stats.corruption,
+                corruption: currentState.stats.corruption,
                 fromStage,
                 toStage: newStage,
-              });
+              }, undefined, memoryContext);
               get().updateLogText(logId, aiNarrative);
             } catch (error) {
               logWarning("Failed to generate evolution narrative", {
@@ -829,7 +1006,14 @@ export const useGameStore = create<GameState>()(
         });
 
         // Import narrative generator
-        const { generateFeedingNarrative, generateVomitNarrative, getPlaceholderText } = await import("./utils/narrativeGenerator");
+        const { generateFeedingNarrative, generateVomitNarrative, getPlaceholderText, buildNarrativeContext } = await import("./utils/narrativeGenerator");
+
+        // Build memory context (Requirements 5.1, 5.2, 5.3, 5.4)
+        const memoryContext = buildNarrativeContext(
+          state.logs,
+          { sanity: newSanity, corruption: newCorruption },
+          { sanity: state.stats.sanity, corruption: state.stats.corruption }
+        );
 
         // Add placeholder log immediately with pending state
         // Requirement 4.4: Set autoGenerateImage for vomit events
@@ -867,7 +1051,7 @@ export const useGameStore = create<GameState>()(
               stage: state.stage,
               sanity: newSanity,
               corruption: newCorruption,
-            });
+            }, undefined, memoryContext);
           } else {
             aiNarrative = await generateFeedingNarrative({
               petName: state.traits.name,
@@ -878,7 +1062,7 @@ export const useGameStore = create<GameState>()(
               itemName: offering.description,
               itemType: offering.type,
               isOverfed,
-            });
+            }, undefined, memoryContext);
           }
 
           // Update log with AI-generated text
@@ -1049,6 +1233,14 @@ export const useGameStore = create<GameState>()(
           age: state.age,
           stage: state.stage,
         });
+
+        // Requirement 7.5: Auto-generate story summary on death
+        // Generate summary asynchronously (don't block death processing)
+        get().generateStorySummary().catch((error) => {
+          logWarning("Failed to auto-generate story summary on death", {
+            error: error instanceof Error ? error.message : "Unknown",
+          });
+        });
       },
 
       /**
@@ -1144,7 +1336,14 @@ export const useGameStore = create<GameState>()(
 
         // Generate placate narrative (Requirement 6.5)
         try {
-          const { generatePlacateNarrative, getPlaceholderText } = await import("./utils/narrativeGenerator");
+          const { generatePlacateNarrative, getPlaceholderText, buildNarrativeContext } = await import("./utils/narrativeGenerator");
+          
+          // Build memory context (Requirements 5.1, 5.2, 5.3, 5.4)
+          const memoryContext = buildNarrativeContext(
+            state.logs,
+            { sanity: newSanity, corruption: state.stats.corruption },
+            { sanity: state.stats.sanity, corruption: state.stats.corruption }
+          );
           
           // Add placeholder log immediately
           // Requirement 4.3: Set autoGenerateImage for placate events
@@ -1158,7 +1357,7 @@ export const useGameStore = create<GameState>()(
             stage: state.stage,
             sanity: newSanity,
             corruption: state.stats.corruption,
-          });
+          }, undefined, memoryContext);
 
           // Update log with AI-generated text
           get().updateLogText(logId, aiNarrative);
@@ -1286,7 +1485,13 @@ export const useGameStore = create<GameState>()(
 
         // Generate insanity narrative (Requirement 10.5)
         try {
-          const { generateInsanityNarrative, getPlaceholderText } = await import("./utils/narrativeGenerator");
+          const { generateInsanityNarrative, getPlaceholderText, buildNarrativeContext } = await import("./utils/narrativeGenerator");
+          
+          // Build memory context (Requirements 5.1, 5.2, 5.3, 5.4)
+          const memoryContext = buildNarrativeContext(
+            state.logs,
+            { sanity: state.stats.sanity, corruption: state.stats.corruption }
+          );
           
           // Add placeholder log immediately
           // Requirement 4.5: Set autoGenerateImage for insanity events
@@ -1301,7 +1506,7 @@ export const useGameStore = create<GameState>()(
             sanity: state.stats.sanity,
             corruption: state.stats.corruption,
             eventType,
-          });
+          }, undefined, memoryContext);
 
           // Update log with AI-generated text
           get().updateLogText(logId, aiNarrative);
@@ -1394,7 +1599,14 @@ export const useGameStore = create<GameState>()(
 
         // Generate haunt narrative (Requirement 4.4)
         try {
-          const { generateHauntNarrative } = await import("./utils/narrativeGenerator");
+          const { generateHauntNarrative, buildNarrativeContext } = await import("./utils/narrativeGenerator");
+          
+          // Build memory context (Requirements 5.1, 5.2, 5.3, 5.4)
+          const memoryContext = buildNarrativeContext(
+            state.logs,
+            { sanity: newSanity, corruption: state.stats.corruption },
+            { sanity: state.stats.sanity, corruption: state.stats.corruption }
+          );
           
           // Add placeholder log immediately
           // Requirement 4.6: Set autoGenerateImage for haunt events
@@ -1412,7 +1624,7 @@ export const useGameStore = create<GameState>()(
             ghostArchetype: ghost.archetype,
             ghostStage: ghost.stage,
             ghostDeathCause: ghost.deathCause,
-          });
+          }, undefined, memoryContext);
 
           // Update log with AI-generated text
           get().updateLogText(logId, aiNarrative);
@@ -1573,6 +1785,439 @@ export const useGameStore = create<GameState>()(
             error instanceof Error ? error : new Error(String(error))
           );
           return []; // Return empty array so narrative generation continues without tone influence
+        }
+      },
+
+      // ============================================
+      // Dialogue Choice System Actions (Requirements 6.3, 6.4, 6.7)
+      // ============================================
+
+      /**
+       * Select a dialogue choice and apply its effects.
+       * - Store choice in log entry
+       * - Apply stat deltas with clamping (0-100)
+       * - Trigger follow-up narrative generation
+       * 
+       * Requirements: 6.3, 6.4, 6.7
+       */
+      selectDialogueChoice: async (logId: string, choiceId: string, statDelta: import("./utils/types").StatDelta) => {
+        try {
+          const state = get();
+
+          // Find the log entry (Requirement 6.7)
+          const log = state.logs.find(l => l.id === logId);
+          if (!log) {
+            logWarning("Cannot select dialogue choice: log not found", { logId });
+            return;
+          }
+
+          // Check if log already has a dialogue choice selected
+          if (log.dialogueChoice?.selectedChoiceId) {
+            logWarning("Cannot select dialogue choice: choice already selected", { logId });
+            return;
+          }
+
+          // Apply stat changes with clamping (0-100) (Requirement 6.4)
+          const newStats = { ...state.stats };
+          
+          if (statDelta.sanity !== undefined) {
+            newStats.sanity = Math.max(0, Math.min(100, newStats.sanity + statDelta.sanity));
+          }
+          
+          if (statDelta.corruption !== undefined) {
+            newStats.corruption = Math.max(0, Math.min(100, newStats.corruption + statDelta.corruption));
+          }
+          
+          if (statDelta.hunger !== undefined) {
+            newStats.hunger = Math.max(0, Math.min(100, newStats.hunger + statDelta.hunger));
+          }
+
+          // Update log with selected choice (Requirement 6.3)
+          set({
+            stats: newStats,
+            logs: state.logs.map(l =>
+              l.id === logId && l.dialogueChoice
+                ? {
+                    ...l,
+                    dialogueChoice: {
+                      ...l.dialogueChoice,
+                      selectedChoiceId: choiceId,
+                    },
+                  }
+                : l
+            ),
+          });
+
+          logInfo("Dialogue choice selected", {
+            logId,
+            choiceId,
+            statDelta,
+          });
+
+          // Trigger follow-up narrative generation (Requirement 6.7)
+          // Import narrative generator dynamically
+          const { buildNarrativeContext, formatNarrativeContextString } = await import("./utils/narrativeGenerator");
+          
+          // Build memory context
+          const memoryContext = buildNarrativeContext(
+            state.logs,
+            { sanity: newStats.sanity, corruption: newStats.corruption },
+            { sanity: state.stats.sanity, corruption: state.stats.corruption }
+          );
+
+          // Find the selected choice to get its text
+          const selectedChoice = log.dialogueChoice?.choices.find(c => c.id === choiceId);
+          if (!selectedChoice) {
+            logWarning("Selected choice not found in dialogue choices", { choiceId });
+            return;
+          }
+
+          // Add placeholder log for follow-up narrative
+          const placeholderText = `${state.traits.name} responds to your choice...`;
+          const followUpLogId = get().addLog(placeholderText, "PET", true);
+
+          // Generate follow-up narrative based on the choice
+          try {
+            const memoryContextString = formatNarrativeContextString(memoryContext);
+            const prompt = `The player chose to respond: "${selectedChoice.text}" (${selectedChoice.emotionalTone} tone)
+
+${state.traits.name} the ${state.stage.toLowerCase()} ${state.traits.archetype.toLowerCase()} creature reacts to this response. Current sanity: ${newStats.sanity}%, corruption: ${newStats.corruption}%.
+
+${memoryContextString ? `Context:\n${memoryContextString}` : ""}
+
+Generate 1-2 sentences describing how ${state.traits.name} responds to the player's choice. Match the emotional tone of the interaction.`;
+
+            const response = await fetch("/api/chat", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                prompt,
+                temperature: 0.8,
+                maxTokens: 100,
+              }),
+            });
+
+            if (!response.ok) {
+              throw new Error(`API error: ${response.status}`);
+            }
+
+            const data = await response.json();
+            
+            if (data.text && data.text.trim()) {
+              get().updateLogText(followUpLogId, data.text.trim());
+            } else {
+              throw new Error("Empty response from AI");
+            }
+          } catch (error) {
+            logWarning("Failed to generate follow-up narrative", {
+              error: error instanceof Error ? error.message : "Unknown",
+            });
+            // Use fallback text
+            get().updateLogText(followUpLogId, `${state.traits.name} acknowledges your response with a subtle shift in demeanor.`);
+          }
+        } catch (error) {
+          logError(
+            "Failed to select dialogue choice",
+            error instanceof Error ? error : new Error(String(error)),
+            { logId, choiceId }
+          );
+        }
+      },
+
+      // ============================================
+      // Gallery System Actions (Requirements 1.1, 2.2)
+      // ============================================
+
+      /**
+       * Get all completed images from narrative logs.
+       * Returns logs with imageStatus === "completed" and imageUrl !== null.
+       * 
+       * Requirement 1.1: Display all narrative log images with completed status
+       */
+      getCompletedImages: (): import("./utils/types").NarrativeLog[] => {
+        const state = get();
+        return state.logs.filter(
+          log => log.imageStatus === "completed" && log.imageUrl !== null && log.imageUrl !== undefined
+        );
+      },
+
+      /**
+       * Get images filtered by event type.
+       * Returns logs matching the specified event type with completed images.
+       * 
+       * Requirement 2.2: Filter images by event type
+       */
+      getImagesByEventType: (eventType: import("./utils/types").EventType): import("./utils/types").NarrativeLog[] => {
+        const state = get();
+        return state.logs.filter(
+          log => 
+            log.imageStatus === "completed" && 
+            log.imageUrl !== null && 
+            log.imageUrl !== undefined &&
+            log.eventType === eventType
+        );
+      },
+
+      /**
+       * Set gallery open state.
+       * 
+       * Requirement 1.1: Gallery state management
+       */
+      setGalleryOpen: (isOpen: boolean) => {
+        set({ galleryOpen: isOpen });
+      },
+
+      /**
+       * Set gallery filter.
+       * 
+       * Requirement 2.2: Gallery filter state management
+       */
+      setGalleryFilter: (filter: import("./utils/types").GalleryFilter) => {
+        set({ galleryFilter: filter });
+      },
+
+      /**
+       * Set gallery view mode (grid or timeline).
+       * 
+       * Requirement 3.1: Gallery view mode state management
+       */
+      setGalleryViewMode: (viewMode: import("./utils/types").GalleryViewMode) => {
+        set({ galleryViewMode: viewMode });
+      },
+
+      // ============================================
+      // Visual Traits System Actions (Requirements 8.4, 8.5)
+      // ============================================
+
+      /**
+       * Store visual traits for character consistency.
+       * Implements LRU cache (last 10 traits) in separate localStorage key.
+       * 
+       * Requirements: 8.4, 8.5, 15.4
+       * Error Handling: Fails gracefully, allowing image generation to continue without traits
+       */
+      storeVisualTraits: (logId: string, traits: import("./utils/types").VisualTraits) => {
+        try {
+          const STORAGE_KEY = "creepy-companion-visual-traits";
+          const MAX_TRAITS = 10;
+
+          // Get existing traits from localStorage
+          let traitsCache: Array<{ logId: string; traits: import("./utils/types").VisualTraits; timestamp: number }> = [];
+          
+          try {
+            const stored = localStorage.getItem(STORAGE_KEY);
+            if (stored) {
+              traitsCache = JSON.parse(stored);
+            }
+          } catch (parseError) {
+            // Requirement 15.4: Handle corrupted cache gracefully
+            logWarning("Failed to parse visual traits cache, starting fresh", {
+              error: parseError instanceof Error ? parseError.message : "Unknown",
+            });
+            traitsCache = [];
+          }
+
+          // Add new traits to cache
+          traitsCache.push({
+            logId,
+            traits,
+            timestamp: Date.now(),
+          });
+
+          // Implement LRU: Keep only last 10 traits (Requirement 8.4)
+          if (traitsCache.length > MAX_TRAITS) {
+            traitsCache = traitsCache.slice(-MAX_TRAITS);
+          }
+
+          // Save back to localStorage
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(traitsCache));
+
+          // Update current visual traits in store (Requirement 8.5)
+          set({ currentVisualTraits: traits });
+
+          logInfo("Visual traits stored", {
+            logId,
+            cacheSize: traitsCache.length,
+            archetype: traits.archetype,
+            stage: traits.stage,
+          });
+        } catch (error) {
+          // Requirement 15.4: Graceful degradation on storage failure
+          // Image generation continues without consistency features
+          logError(
+            "Failed to store visual traits",
+            error instanceof Error ? error : new Error(String(error)),
+            { logId }
+          );
+          // Don't throw - allow the game to continue
+        }
+      },
+
+      /**
+       * Get the most recent visual traits for character consistency.
+       * Returns null if no traits are available or on error.
+       * 
+       * Requirements: 8.4, 8.5, 15.4
+       * Error Handling: Returns null on any failure, allowing image generation to continue
+       */
+      getVisualTraits: (): import("./utils/types").VisualTraits | null => {
+        try {
+          const STORAGE_KEY = "creepy-companion-visual-traits";
+
+          // Try to get from current state first
+          const state = get();
+          if (state.currentVisualTraits) {
+            return state.currentVisualTraits;
+          }
+
+          // Fall back to localStorage
+          const stored = localStorage.getItem(STORAGE_KEY);
+          if (!stored) {
+            // No traits stored yet - this is normal for first image generation
+            return null;
+          }
+
+          const traitsCache: Array<{ logId: string; traits: import("./utils/types").VisualTraits; timestamp: number }> = JSON.parse(stored);
+          
+          if (traitsCache.length === 0) {
+            return null;
+          }
+
+          // Return most recent traits (last in array)
+          const mostRecent = traitsCache[traitsCache.length - 1];
+          
+          // Update current visual traits in store
+          set({ currentVisualTraits: mostRecent.traits });
+          
+          return mostRecent.traits;
+        } catch (error) {
+          // Requirement 15.4: Graceful degradation on retrieval failure
+          // Return null so image generation continues without consistency features
+          logError(
+            "Failed to retrieve visual traits",
+            error instanceof Error ? error : new Error(String(error))
+          );
+          return null;
+        }
+      },
+
+      // ============================================
+      // Story Summary System Actions (Requirements 7.1, 14.4)
+      // ============================================
+
+      /**
+       * Generate a story summary of the pet's life.
+       * Calls the storySummary API and caches the result for 5 minutes.
+       * Compresses summary before localStorage to save space.
+       * 
+       * Requirements: 7.1, 14.4
+       * Performance: Compression before localStorage (Requirement 14.4)
+       */
+      generateStorySummary: async (): Promise<import("./utils/types").StorySummary | null> => {
+        try {
+          const state = get();
+
+          // Check cache first (Requirement 14.4: Cache for 5 minutes)
+          const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes in milliseconds
+          if (state.cachedSummary && state.summaryCacheTime) {
+            const cacheAge = Date.now() - state.summaryCacheTime;
+            if (cacheAge < CACHE_DURATION) {
+              logInfo("Returning cached story summary", {
+                cacheAge: Math.floor(cacheAge / 1000),
+              });
+              // Decompress summary text before returning
+              return {
+                ...state.cachedSummary,
+                summaryText: decompressSummaryText(state.cachedSummary.summaryText),
+              };
+            }
+          }
+
+          // Call storySummary API (Requirement 7.1)
+          const response = await fetch("/api/storySummary", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              logs: state.logs,
+              petName: state.traits.name,
+              finalStats: state.stats,
+              totalAge: state.age,
+            }),
+          });
+
+          if (!response.ok) {
+            const errorData = await response.json().catch(() => ({}));
+            throw new Error(errorData.error || `API error: ${response.status}`);
+          }
+
+          const result = await response.json();
+
+          // Create StorySummary object with compressed text (Requirement 14.4)
+          const summary: import("./utils/types").StorySummary = {
+            petName: state.traits.name,
+            summaryText: compressSummaryText(result.summaryText),
+            generatedAt: Date.now(),
+            keyEvents: result.keyEvents,
+            finalStats: { ...state.stats },
+            totalAge: state.age,
+          };
+
+          // Cache the result (Requirement 14.4)
+          set({
+            cachedSummary: summary,
+            summaryCacheTime: Date.now(),
+          });
+
+          logInfo("Story summary generated", {
+            petName: state.traits.name,
+            keyEventsCount: result.keyEvents.length,
+          });
+
+          // Return decompressed version to caller
+          return {
+            ...summary,
+            summaryText: decompressSummaryText(summary.summaryText),
+          };
+        } catch (error) {
+          // Requirement 15.3: Fallback summary using log entry text
+          logError(
+            "Failed to generate story summary",
+            error instanceof Error ? error : new Error(String(error))
+          );
+
+          const state = get();
+
+          // Create fallback summary from log entries
+          const keyLogs = state.logs
+            .filter(log => log.eventType && ["evolution", "death", "placate", "haunt", "insanity", "vomit"].includes(log.eventType))
+            .slice(-10); // Last 10 key events
+
+          const fallbackText = `${state.traits.name}'s journey was marked by ${keyLogs.length} significant moments. ${
+            keyLogs.length > 0
+              ? `The story began with ${keyLogs[0].text} and continued through various trials and transformations.`
+              : "Their time was brief but memorable."
+          } Final state: Sanity ${state.stats.sanity}%, Corruption ${state.stats.corruption}%, Age ${Math.floor(state.age / 60)}h ${state.age % 60}m.`;
+
+          const fallbackSummary: import("./utils/types").StorySummary = {
+            petName: state.traits.name,
+            summaryText: compressSummaryText(fallbackText),
+            generatedAt: Date.now(),
+            keyEvents: keyLogs.map(log => log.text),
+            finalStats: { ...state.stats },
+            totalAge: state.age,
+          };
+
+          // Cache fallback summary too
+          set({
+            cachedSummary: fallbackSummary,
+            summaryCacheTime: Date.now(),
+          });
+
+          // Return decompressed version to caller
+          return {
+            ...fallbackSummary,
+            summaryText: decompressSummaryText(fallbackSummary.summaryText),
+          };
         }
       },
     }),

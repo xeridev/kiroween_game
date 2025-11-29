@@ -4,7 +4,7 @@
  */
 
 import { logWarning } from "./errorLogger";
-import type { Archetype, PetStage, ReactionData, ToneInfluence } from "./types";
+import type { Archetype, PetStage, ReactionData, ToneInfluence, NarrativeLog, NarrativeContext, EventType } from "./types";
 import { REACTION_TONE_KEYWORDS } from "./types";
 
 import type { DeathCause } from "./types";
@@ -88,12 +88,12 @@ const FALLBACK_MESSAGES = {
   ],
 };
 
-type EventType = keyof typeof FALLBACK_MESSAGES;
+type FallbackEventType = keyof typeof FALLBACK_MESSAGES;
 
 /**
  * Get a random fallback message for an event type
  */
-function getFallbackMessage(eventType: EventType, petName: string): string {
+function getFallbackMessage(eventType: FallbackEventType, petName: string): string {
   const messages = FALLBACK_MESSAGES[eventType];
   const message = messages[Math.floor(Math.random() * messages.length)];
   return `${petName} ${message}`;
@@ -158,7 +158,224 @@ function buildToneContext(toneInfluence?: ToneInfluence): string {
   }
 }
 
-interface NarrativeContext {
+// ============================================
+// Memory System Helper Functions (Requirements 5.1, 5.2, 5.3, 5.4, 13.1, 13.2)
+// ============================================
+
+// Cache for narrative context (Requirement 13.3)
+interface ContextCache {
+  context: NarrativeContext;
+  timestamp: number;
+  logIds: string; // Hash of log IDs for cache invalidation
+}
+
+let narrativeContextCache: ContextCache | null = null;
+const CONTEXT_CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
+
+// Cache for key events extraction (Requirement 13.3)
+interface KeyEventsCache {
+  events: Array<{ type: EventType; text: string; age: number }>;
+  timestamp: number;
+  logIds: string;
+}
+
+let keyEventsCache: KeyEventsCache | null = null;
+
+/**
+ * Generate a hash of log IDs for cache invalidation.
+ * Uses shallow comparison of log array.
+ */
+function generateLogHash(logs: NarrativeLog[]): string {
+  return logs.map(log => log.id).join(',');
+}
+
+/**
+ * Extract key events from narrative logs with memoization.
+ * Identifies significant events by eventType and formats them with age/timestamp.
+ * 
+ * Requirements 5.2, 13.3, 13.4
+ */
+export function extractKeyEvents(logs: NarrativeLog[]): Array<{ type: EventType; text: string; age: number }> {
+  try {
+    const logHash = generateLogHash(logs);
+    const now = Date.now();
+    
+    // Check cache (Requirement 13.3)
+    if (keyEventsCache && 
+        keyEventsCache.logIds === logHash && 
+        now - keyEventsCache.timestamp < CONTEXT_CACHE_DURATION) {
+      return keyEventsCache.events;
+    }
+    
+    const keyEventTypes: EventType[] = ["evolution", "death", "placate", "haunt", "insanity", "vomit"];
+    
+    const keyEvents = logs
+      .filter(log => log.eventType && keyEventTypes.includes(log.eventType))
+      .map(log => ({
+        type: log.eventType as EventType,
+        text: log.text,
+        age: log.timestamp,
+      }));
+    
+    // Update cache
+    keyEventsCache = {
+      events: keyEvents,
+      timestamp: now,
+      logIds: logHash,
+    };
+    
+    return keyEvents;
+  } catch (error) {
+    logWarning("Failed to extract key events", {
+      error: error instanceof Error ? error.message : "Unknown",
+    });
+    return [];
+  }
+}
+
+/**
+ * Build narrative context from recent logs for AI continuity with caching.
+ * Retrieves last 5 log entries, extracts key events, and builds context string.
+ * 
+ * Requirements 5.1, 5.2, 5.3, 5.4, 13.1, 13.2, 13.3, 13.4
+ */
+export function buildNarrativeContext(
+  logs: NarrativeLog[],
+  currentStats: { sanity: number; corruption: number },
+  previousStats?: { sanity: number; corruption: number }
+): NarrativeContext {
+  try {
+    // Retrieve last 5 log entries (Requirement 5.1, 13.1)
+    // For performance, only process recent entries if there are >100 logs (Requirement 13.4)
+    const recentLogs = logs.length > 100 ? logs.slice(-5) : logs.slice(-5);
+    
+    const logHash = generateLogHash(recentLogs);
+    const now = Date.now();
+    
+    // Check cache (Requirement 13.3)
+    if (narrativeContextCache && 
+        narrativeContextCache.logIds === logHash && 
+        now - narrativeContextCache.timestamp < CONTEXT_CACHE_DURATION) {
+      // Update stat changes even if using cached context
+      const cachedContext = narrativeContextCache.context;
+      const statChanges = previousStats
+        ? {
+            sanity: currentStats.sanity - previousStats.sanity,
+            corruption: currentStats.corruption - previousStats.corruption,
+          }
+        : { sanity: 0, corruption: 0 };
+      
+      return {
+        ...cachedContext,
+        statChanges,
+      };
+    }
+    
+    // Extract key events (Requirement 5.2) - uses memoization
+    const keyEvents = extractKeyEvents(recentLogs);
+    
+    // Calculate stat changes since last narrative (Requirement 5.4)
+    const statChanges = previousStats
+      ? {
+          sanity: currentStats.sanity - previousStats.sanity,
+          corruption: currentStats.corruption - previousStats.corruption,
+        }
+      : { sanity: 0, corruption: 0 };
+    
+    // Calculate time elapsed (Requirement 5.5)
+    const timeElapsed = recentLogs.length > 0
+      ? recentLogs[recentLogs.length - 1].timestamp - (recentLogs[0]?.timestamp || 0)
+      : 0;
+    
+    const context: NarrativeContext = {
+      recentLogs,
+      keyEvents,
+      statChanges,
+      timeElapsed,
+    };
+    
+    // Update cache
+    narrativeContextCache = {
+      context,
+      timestamp: now,
+      logIds: logHash,
+    };
+    
+    return context;
+  } catch (error) {
+    logWarning("Failed to build narrative context", {
+      error: error instanceof Error ? error.message : "Unknown",
+    });
+    // Return empty context on failure
+    return {
+      recentLogs: [],
+      keyEvents: [],
+      statChanges: { sanity: 0, corruption: 0 },
+      timeElapsed: 0,
+    };
+  }
+}
+
+/**
+ * Format narrative context into a string for AI prompts.
+ * Limits context to 2000 characters, truncating older entries first.
+ * 
+ * Requirements 5.1, 5.2, 5.3, 5.4, 13.1, 13.2
+ */
+export function formatNarrativeContextString(context: NarrativeContext): string {
+  try {
+    let contextString = "";
+    
+    // Add key events if present (Requirement 5.2)
+    if (context.keyEvents.length > 0) {
+      contextString += "Recent significant events:\n";
+      for (const event of context.keyEvents) {
+        contextString += `- At age ${event.age} minutes: ${event.text}\n`;
+      }
+      contextString += "\n";
+    }
+    
+    // Add stat changes if significant (Requirement 5.4)
+    if (Math.abs(context.statChanges.sanity) > 20) {
+      contextString += `Sanity has changed significantly (${context.statChanges.sanity > 0 ? '+' : ''}${context.statChanges.sanity}).\n`;
+    }
+    if (Math.abs(context.statChanges.corruption) > 20) {
+      contextString += `Corruption has changed significantly (${context.statChanges.corruption > 0 ? '+' : ''}${context.statChanges.corruption}).\n`;
+    }
+    
+    // Add time passage if significant (Requirement 5.5)
+    if (context.timeElapsed > 24 * 60) { // More than 24 game hours
+      const hours = Math.floor(context.timeElapsed / 60);
+      contextString += `${hours} hours have passed since the last event.\n`;
+    }
+    
+    // Add recent narrative excerpts
+    if (context.recentLogs.length > 0) {
+      contextString += "\nRecent narrative:\n";
+      for (const log of context.recentLogs) {
+        // Truncate long narratives to save space
+        const truncatedText = log.text.length > 100 
+          ? log.text.substring(0, 100) + "..."
+          : log.text;
+        contextString += `- ${truncatedText}\n`;
+      }
+    }
+    
+    // Truncate if exceeds 2000 characters (Requirements 13.1, 13.2)
+    if (contextString.length > 2000) {
+      contextString = contextString.substring(0, 2000) + "...";
+    }
+    
+    return contextString;
+  } catch (error) {
+    logWarning("Failed to format narrative context string", {
+      error: error instanceof Error ? error.message : "Unknown",
+    });
+    return "";
+  }
+}
+
+interface BaseNarrativeContext {
   petName: string;
   stage: PetStage;
   archetype: Archetype;
@@ -166,33 +383,37 @@ interface NarrativeContext {
   corruption: number;
 }
 
-interface FeedingContext extends NarrativeContext {
+interface FeedingContext extends BaseNarrativeContext {
   itemName: string;
   itemType: "PURITY" | "ROT";
   isOverfed: boolean;
 }
 
-interface EvolutionContext extends NarrativeContext {
+interface EvolutionContext extends BaseNarrativeContext {
   fromStage: PetStage;
   toStage: PetStage;
 }
 
 /**
  * Generate AI narrative for feeding events
+ * Requirements 5.1, 5.2, 5.3, 5.4, 5.5
  */
 export async function generateFeedingNarrative(
   context: FeedingContext,
-  toneInfluence?: ToneInfluence
+  toneInfluence?: ToneInfluence,
+  memoryContext?: NarrativeContext
 ): Promise<string> {
   const { petName, stage, archetype, sanity, corruption, itemName, itemType, isOverfed } = context;
 
   // Handle overfeeding separately
   if (isOverfed) {
-    return generateOverfeedNarrative(context, toneInfluence);
+    return generateOverfeedNarrative(context, toneInfluence, memoryContext);
   }
 
   const toneContext = buildToneContext(toneInfluence);
-  const prompt = `${petName} the ${stage.toLowerCase()} ${archetype.toLowerCase()} creature consumes "${itemName}" (a ${itemType.toLowerCase()} offering). Current sanity: ${sanity}%, corruption: ${corruption}%.${toneContext} Generate 1-2 sentences of atmospheric horror narrative describing this feeding moment.`;
+  const memoryContextString = memoryContext ? formatNarrativeContextString(memoryContext) : "";
+  
+  const prompt = `${petName} the ${stage.toLowerCase()} ${archetype.toLowerCase()} creature consumes "${itemName}" (a ${itemType.toLowerCase()} offering). Current sanity: ${sanity}%, corruption: ${corruption}%.${toneContext}${memoryContextString ? `\n\nContext:\n${memoryContextString}` : ""} Generate 1-2 sentences of atmospheric horror narrative describing this feeding moment.`;
 
   try {
     const response = await fetch("/api/chat", {
@@ -229,15 +450,19 @@ export async function generateFeedingNarrative(
 
 /**
  * Generate AI narrative for overfeeding events
+ * Requirements 5.1, 5.2, 5.3, 5.4, 5.5
  */
 async function generateOverfeedNarrative(
-  context: NarrativeContext,
-  toneInfluence?: ToneInfluence
+  context: BaseNarrativeContext,
+  toneInfluence?: ToneInfluence,
+  memoryContext?: NarrativeContext
 ): Promise<string> {
   const { petName, stage, archetype, sanity, corruption } = context;
 
   const toneContext = buildToneContext(toneInfluence);
-  const prompt = `${petName} the ${stage.toLowerCase()} ${archetype.toLowerCase()} creature has been overfed and is rejecting the excess. Sanity: ${sanity}%, corruption: ${corruption}%.${toneContext} Generate 1-2 sentences of visceral horror narrative about this rejection.`;
+  const memoryContextString = memoryContext ? formatNarrativeContextString(memoryContext) : "";
+  
+  const prompt = `${petName} the ${stage.toLowerCase()} ${archetype.toLowerCase()} creature has been overfed and is rejecting the excess. Sanity: ${sanity}%, corruption: ${corruption}%.${toneContext}${memoryContextString ? `\n\nContext:\n${memoryContextString}` : ""} Generate 1-2 sentences of visceral horror narrative about this rejection.`;
 
   try {
     const response = await fetch("/api/chat", {
@@ -273,19 +498,22 @@ async function generateOverfeedNarrative(
 
 /**
  * Generate AI narrative for evolution events
+ * Requirements 5.1, 5.2, 5.3, 5.4, 5.5
  */
 export async function generateEvolutionNarrative(
   context: EvolutionContext,
-  toneInfluence?: ToneInfluence
+  toneInfluence?: ToneInfluence,
+  memoryContext?: NarrativeContext
 ): Promise<string> {
   const { petName, archetype, sanity, corruption, fromStage, toStage } = context;
 
   const isHatching = fromStage === "EGG";
   const toneContext = buildToneContext(toneInfluence);
+  const memoryContextString = memoryContext ? formatNarrativeContextString(memoryContext) : "";
   
   const prompt = isHatching
-    ? `${petName} the ${archetype.toLowerCase()} creature hatches from its egg, emerging as a ${toStage.toLowerCase()}.${toneContext} Generate 1-2 sentences of atmospheric horror narrative about this birth.`
-    : `${petName} the ${archetype.toLowerCase()} creature evolves from ${fromStage.toLowerCase()} to ${toStage.toLowerCase()}. Sanity: ${sanity}%, corruption: ${corruption}%.${toneContext} Generate 1-2 sentences of body-horror narrative about this transformation.`;
+    ? `${petName} the ${archetype.toLowerCase()} creature hatches from its egg, emerging as a ${toStage.toLowerCase()}.${toneContext}${memoryContextString ? `\n\nContext:\n${memoryContextString}` : ""} Generate 1-2 sentences of atmospheric horror narrative about this birth.`
+    : `${petName} the ${archetype.toLowerCase()} creature evolves from ${fromStage.toLowerCase()} to ${toStage.toLowerCase()}. Sanity: ${sanity}%, corruption: ${corruption}%.${toneContext}${memoryContextString ? `\n\nContext:\n${memoryContextString}` : ""} Generate 1-2 sentences of body-horror narrative about this transformation.`;
 
   try {
     const response = await fetch("/api/chat", {
@@ -417,7 +645,7 @@ export async function generateDeathNarrative(
     });
     
     const eventType = cause === "STARVATION" ? "death_starvation" : "death_insanity";
-    return getFallbackMessage(eventType as EventType, petName);
+    return getFallbackMessage(eventType as FallbackEventType, petName);
   }
 }
 
@@ -491,11 +719,12 @@ interface PlacateContext {
  * Generate AI placate narrative based on pet archetype.
  * Returns fallback message on failure.
  * 
- * Requirement 6.5, 6.8
+ * Requirements 6.5, 6.8, 5.1, 5.2, 5.3, 5.4, 5.5
  */
 export async function generatePlacateNarrative(
   context: PlacateContext,
-  toneInfluence?: ToneInfluence
+  toneInfluence?: ToneInfluence,
+  memoryContext?: NarrativeContext
 ): Promise<string> {
   const { petName, archetype, stage, sanity, corruption } = context;
 
@@ -508,8 +737,9 @@ export async function generatePlacateNarrative(
 
   const archetypeDesc = archetypeDescriptions[archetype];
   const toneContext = buildToneContext(toneInfluence);
+  const memoryContextString = memoryContext ? formatNarrativeContextString(memoryContext) : "";
 
-  const prompt = `${petName} the ${stage.toLowerCase()} ${archetype.toLowerCase()} creature ${archetypeDesc}. Current sanity: ${sanity}%, corruption: ${corruption}%.${toneContext} Generate 1-2 sentences of atmospheric narrative describing how this creature responds to being comforted. Match the ${archetype.toLowerCase()} archetype's personality.`;
+  const prompt = `${petName} the ${stage.toLowerCase()} ${archetype.toLowerCase()} creature ${archetypeDesc}. Current sanity: ${sanity}%, corruption: ${corruption}%.${toneContext}${memoryContextString ? `\n\nContext:\n${memoryContextString}` : ""} Generate 1-2 sentences of atmospheric narrative describing how this creature responds to being comforted. Match the ${archetype.toLowerCase()} archetype's personality.`;
 
   try {
     const response = await fetch("/api/chat", {
@@ -559,16 +789,19 @@ interface VomitContext {
  * Generate AI vomit narrative for overfeeding events.
  * Returns fallback message on failure.
  * 
- * Requirement 9.3, 9.5
+ * Requirements 9.3, 9.5, 5.1, 5.2, 5.3, 5.4, 5.5
  */
 export async function generateVomitNarrative(
   context: VomitContext,
-  toneInfluence?: ToneInfluence
+  toneInfluence?: ToneInfluence,
+  memoryContext?: NarrativeContext
 ): Promise<string> {
   const { petName, archetype, stage, sanity, corruption } = context;
 
   const toneContext = buildToneContext(toneInfluence);
-  const prompt = `${petName} the ${stage.toLowerCase()} ${archetype.toLowerCase()} creature has been overfed and is violently rejecting the excess. Sanity: ${sanity}%, corruption: ${corruption}%.${toneContext} Generate 1-2 sentences of visceral, grotesque horror narrative describing this creature vomiting and expelling what it cannot contain. Be disturbing but not gratuitous.`;
+  const memoryContextString = memoryContext ? formatNarrativeContextString(memoryContext) : "";
+  
+  const prompt = `${petName} the ${stage.toLowerCase()} ${archetype.toLowerCase()} creature has been overfed and is violently rejecting the excess. Sanity: ${sanity}%, corruption: ${corruption}%.${toneContext}${memoryContextString ? `\n\nContext:\n${memoryContextString}` : ""} Generate 1-2 sentences of visceral, grotesque horror narrative describing this creature vomiting and expelling what it cannot contain. Be disturbing but not gratuitous.`;
 
   try {
     const response = await fetch("/api/chat", {
@@ -621,7 +854,7 @@ interface InsanityContext {
  * Generate AI insanity narrative for hallucination events.
  * Returns fallback message on failure.
  * 
- * Requirement 10.5, 10.7
+ * Requirements 10.5, 10.7, 5.1, 5.2, 5.3, 5.4, 5.5
  */
 // ============================================
 // Haunt Narrative Generation (Requirements 4.4, 4.7)
@@ -643,16 +876,19 @@ interface HauntContext {
  * Generate AI haunt narrative referencing the ghost's name and traits.
  * Returns fallback message on failure.
  * 
- * Requirement 4.4, 4.7
+ * Requirements 4.4, 4.7, 5.1, 5.2, 5.3, 5.4, 5.5
  */
 export async function generateHauntNarrative(
   context: HauntContext,
-  toneInfluence?: ToneInfluence
+  toneInfluence?: ToneInfluence,
+  memoryContext?: NarrativeContext
 ): Promise<string> {
   const { petName, archetype, stage, sanity, corruption, ghostName, ghostArchetype, ghostStage, ghostDeathCause } = context;
 
   const toneContext = buildToneContext(toneInfluence);
-  const prompt = `${petName} the ${stage.toLowerCase()} ${archetype.toLowerCase()} creature is being haunted by the ghost of ${ghostName}, a ${ghostArchetype.toLowerCase()} creature who died as a ${ghostStage.toLowerCase()} from ${ghostDeathCause.toLowerCase()}. Current sanity: ${sanity}%, corruption: ${corruption}%.${toneContext} Generate 1-2 sentences of atmospheric horror narrative describing this haunting encounter. Reference the ghost's presence and how it affects ${petName}.`;
+  const memoryContextString = memoryContext ? formatNarrativeContextString(memoryContext) : "";
+  
+  const prompt = `${petName} the ${stage.toLowerCase()} ${archetype.toLowerCase()} creature is being haunted by the ghost of ${ghostName}, a ${ghostArchetype.toLowerCase()} creature who died as a ${ghostStage.toLowerCase()} from ${ghostDeathCause.toLowerCase()}. Current sanity: ${sanity}%, corruption: ${corruption}%.${toneContext}${memoryContextString ? `\n\nContext:\n${memoryContextString}` : ""} Generate 1-2 sentences of atmospheric horror narrative describing this haunting encounter. Reference the ghost's presence and how it affects ${petName}.`;
 
   try {
     const response = await fetch("/api/chat", {
@@ -700,7 +936,8 @@ function getHauntFallbackMessage(petName: string, ghostName: string): string {
 
 export async function generateInsanityNarrative(
   context: InsanityContext,
-  toneInfluence?: ToneInfluence
+  toneInfluence?: ToneInfluence,
+  memoryContext?: NarrativeContext
 ): Promise<string> {
   const { petName, archetype, stage, sanity, corruption, eventType } = context;
 
@@ -714,8 +951,9 @@ export async function generateInsanityNarrative(
 
   const eventDesc = eventDescriptions[eventType];
   const toneContext = buildToneContext(toneInfluence);
+  const memoryContextString = memoryContext ? formatNarrativeContextString(memoryContext) : "";
 
-  const prompt = `${petName} the ${stage.toLowerCase()} ${archetype.toLowerCase()} creature is experiencing a moment of insanity: ${eventDesc}. Sanity: ${sanity}%, corruption: ${corruption}%.${toneContext} Generate 1-2 sentences of atmospheric horror narrative describing this hallucination or disturbing perception. Match the ${eventType.toLowerCase()} theme.`;
+  const prompt = `${petName} the ${stage.toLowerCase()} ${archetype.toLowerCase()} creature is experiencing a moment of insanity: ${eventDesc}. Sanity: ${sanity}%, corruption: ${corruption}%.${toneContext}${memoryContextString ? `\n\nContext:\n${memoryContextString}` : ""} Generate 1-2 sentences of atmospheric horror narrative describing this hallucination or disturbing perception. Match the ${eventType.toLowerCase()} theme.`;
 
   try {
     const response = await fetch("/api/chat", {
@@ -746,7 +984,196 @@ export async function generateInsanityNarrative(
     });
     
     // Select fallback based on event type
-    const fallbackKey = `insanity_${eventType.toLowerCase()}` as EventType;
+    const fallbackKey = `insanity_${eventType.toLowerCase()}` as FallbackEventType;
     return getFallbackMessage(fallbackKey, petName);
   }
+}
+
+// ============================================
+// Dialogue Choice Generation (Requirements 6.1, 6.2)
+// ============================================
+
+interface DialogueChoiceContext {
+  petName: string;
+  archetype: Archetype;
+  stage: PetStage;
+  sanity: number;
+  corruption: number;
+  eventType: EventType;
+  narrativeText: string;
+}
+
+// Cache for dialogue choices (Requirement 6.1)
+interface DialogueChoiceCache {
+  choices: import("./types").DialogueChoice[];
+  timestamp: number;
+  contextHash: string;
+}
+
+let dialogueChoiceCache: DialogueChoiceCache | null = null;
+const DIALOGUE_CACHE_DURATION = 60 * 1000; // 60 seconds
+
+/**
+ * Generate a hash for dialogue choice context to enable caching.
+ */
+function generateDialogueContextHash(context: DialogueChoiceContext): string {
+  return `${context.petName}-${context.eventType}-${context.narrativeText.substring(0, 50)}`;
+}
+
+/**
+ * Generate dialogue choices for a narrative event with caching.
+ * Returns null if the 30% probability check fails.
+ * Returns 2-3 dialogue options with emotional tones and stat deltas.
+ * 
+ * Requirements 6.1, 6.2
+ * Performance: Caches choices for 60s (Requirement 6.1)
+ */
+export async function generateDialogueChoices(
+  context: DialogueChoiceContext
+): Promise<import("./types").DialogueChoice[] | null> {
+  // 30% probability check (Requirement 6.1)
+  if (Math.random() > 0.3) {
+    return null;
+  }
+
+  const contextHash = generateDialogueContextHash(context);
+  const now = Date.now();
+
+  // Check cache (Requirement 6.1)
+  if (dialogueChoiceCache && 
+      dialogueChoiceCache.contextHash === contextHash && 
+      now - dialogueChoiceCache.timestamp < DIALOGUE_CACHE_DURATION) {
+    return dialogueChoiceCache.choices;
+  }
+
+  const { petName, archetype, stage, sanity, corruption, eventType, narrativeText } = context;
+
+  const prompt = `${petName} the ${stage.toLowerCase()} ${archetype.toLowerCase()} creature just experienced: "${narrativeText}"
+
+Current state: Sanity ${sanity}%, Corruption ${corruption}%
+
+Generate 2-3 dialogue response options for the player. Each option should:
+- Be brief (max 50 characters)
+- Have a clear emotional tone: "comforting", "fearful", "loving", or "neutral"
+- Suggest appropriate stat changes (sanity and/or corruption)
+
+Format as JSON array:
+[
+  {
+    "text": "response text",
+    "emotionalTone": "comforting",
+    "statDelta": { "sanity": 2 }
+  },
+  ...
+]`;
+
+  try {
+    const response = await fetch("/api/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        prompt,
+        temperature: 0.8,
+        maxTokens: 300,
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`API error: ${response.status}`);
+    }
+
+    const data = await response.json();
+    
+    if (!data.text || !data.text.trim()) {
+      throw new Error("Empty response from AI");
+    }
+
+    // Parse JSON response
+    const jsonMatch = data.text.match(/\[[\s\S]*\]/);
+    if (!jsonMatch) {
+      throw new Error("No JSON array found in response");
+    }
+
+    const choices = JSON.parse(jsonMatch[0]);
+    
+    // Validate and transform choices
+    const validatedChoices: import("./types").DialogueChoice[] = choices
+      .slice(0, 3) // Max 3 choices
+      .map((choice: any, _index: number) => ({
+        id: crypto.randomUUID(),
+        text: choice.text?.substring(0, 50) || "...",
+        emotionalTone: ["comforting", "fearful", "loving", "neutral"].includes(choice.emotionalTone)
+          ? choice.emotionalTone
+          : "neutral",
+        statDelta: {
+          sanity: typeof choice.statDelta?.sanity === "number" ? choice.statDelta.sanity : 0,
+          corruption: typeof choice.statDelta?.corruption === "number" ? choice.statDelta.corruption : 0,
+        },
+      }));
+
+    // Ensure we have at least 2 choices
+    if (validatedChoices.length < 2) {
+      throw new Error("Not enough valid choices generated");
+    }
+
+    // Update cache
+    dialogueChoiceCache = {
+      choices: validatedChoices,
+      timestamp: now,
+      contextHash,
+    };
+
+    return validatedChoices;
+  } catch (error) {
+    logWarning("AI dialogue choice generation failed, using fallback", {
+      error: error instanceof Error ? error.message : "Unknown",
+      eventType,
+    });
+    
+    // Fallback: Generate default choices based on event type
+    const fallbackChoices = generateFallbackDialogueChoices(petName, eventType);
+    
+    // Cache fallback choices too
+    dialogueChoiceCache = {
+      choices: fallbackChoices,
+      timestamp: now,
+      contextHash,
+    };
+    
+    return fallbackChoices;
+  }
+}
+
+/**
+ * Generate fallback dialogue choices when AI generation fails.
+ * Returns 2-3 default choices based on event type.
+ */
+function generateFallbackDialogueChoices(
+  petName: string,
+  _eventType: EventType
+): import("./types").DialogueChoice[] {
+  const baseChoices: import("./types").DialogueChoice[] = [
+    {
+      id: crypto.randomUUID(),
+      text: `It's okay, ${petName}...`,
+      emotionalTone: "comforting",
+      statDelta: { sanity: 2 },
+    },
+    {
+      id: crypto.randomUUID(),
+      text: "What's happening?!",
+      emotionalTone: "fearful",
+      statDelta: { sanity: -2, corruption: 1 },
+    },
+    {
+      id: crypto.randomUUID(),
+      text: `I'm here for you, ${petName}`,
+      emotionalTone: "loving",
+      statDelta: { sanity: 3, corruption: -1 },
+    },
+  ];
+
+  // Return 2-3 random choices
+  const shuffled = baseChoices.sort(() => Math.random() - 0.5);
+  return shuffled.slice(0, 2 + Math.floor(Math.random() * 2)); // 2 or 3 choices
 }

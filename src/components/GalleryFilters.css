@@ -1,0 +1,99 @@
+/* =============================================================================
+   GalleryFilters.css - Filter buttons for gallery
+   ============================================================================= */
+
+.gallery-filters {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  padding: 1rem;
+  border-bottom: var(--retro-border);
+  background: var(--retro-bg);
+}
+
+.gallery-filter-button {
+  padding: 0.5rem 1rem;
+  border-radius: 0;
+  border: var(--retro-border);
+  background: var(--retro-bg);
+  color: var(--retro-text);
+  font-family: 'Press Start 2P', cursive;
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.1s steps(2);
+  box-shadow: 2px 2px 0 #000;
+}
+
+.gallery-filter-button:hover {
+  background: #222;
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0 #000;
+}
+
+.gallery-filter-button:active {
+  transform: translate(2px, 2px);
+  box-shadow: none;
+}
+
+.gallery-filter-button.active {
+  background: var(--retro-accent);
+  color: #000;
+  border-color: var(--retro-accent);
+  box-shadow: 2px 2px 0 var(--retro-accent-dark, #00aa00);
+}
+
+.gallery-filter-button:focus-visible {
+  outline: 2px dashed var(--retro-accent);
+  outline-offset: 2px;
+}
+
+/* Mobile optimizations (Requirement 2.5) */
+@media (max-width: 768px) {
+  .gallery-filters {
+    padding: 0.75rem;
+    gap: 0.4rem;
+  }
+
+  .gallery-filter-button {
+    /* Larger touch targets - minimum 44px */
+    padding: 0.4rem 0.8rem;
+    min-height: 44px;
+    font-size: 0.55rem;
+    /* Reduced animations for mobile performance */
+    transition: transform 0.05s ease;
+  }
+
+  .gallery-filter-button:hover {
+    /* Simplified hover effect for touch devices */
+    transform: translate(0.5px, 0.5px);
+    box-shadow: 1.5px 1.5px 0 #000;
+  }
+}
+
+/* Touch device optimizations */
+@media (hover: none) and (pointer: coarse) {
+  .gallery-filter-button {
+    /* Remove hover effects on touch devices */
+    transition: none;
+  }
+
+  .gallery-filter-button:hover {
+    transform: none;
+    box-shadow: 2px 2px 0 #000;
+  }
+
+  .gallery-filter-button:active {
+    /* Provide tactile feedback on tap */
+    opacity: 0.9;
+    transform: translate(1px, 1px);
+    box-shadow: 1px 1px 0 #000;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .gallery-filter-button {
+    transition: none !important;
+  }
+}

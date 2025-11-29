@@ -1,0 +1,254 @@
+/* =============================================================================
+   ImageGallery.css - Main gallery container
+   ============================================================================= */
+
+.image-gallery-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1500;
+  background: rgba(0, 0, 0, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.image-gallery-container {
+  width: 95vw;
+  height: 95vh;
+  max-width: 1400px;
+  background: var(--retro-bg);
+  border: var(--retro-border);
+  box-shadow: var(--retro-shadow);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Header */
+.image-gallery-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  border-bottom: var(--retro-border);
+  background: #000;
+}
+
+.image-gallery-title {
+  font-family: 'Press Start 2P', cursive;
+  font-size: 1rem;
+  color: var(--retro-accent);
+  margin: 0;
+  text-transform: uppercase;
+}
+
+.image-gallery-controls {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.image-gallery-view-toggle {
+  padding: 0.5rem 1rem;
+  background: var(--retro-bg);
+  border: var(--retro-border);
+  color: var(--retro-text);
+  font-family: 'Press Start 2P', cursive;
+  font-size: 0.6rem;
+  cursor: pointer;
+  transition: all 0.1s steps(2);
+  box-shadow: 2px 2px 0 #000;
+}
+
+.image-gallery-view-toggle:hover {
+  background: #222;
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0 #000;
+}
+
+.image-gallery-view-toggle:active {
+  transform: translate(2px, 2px);
+  box-shadow: none;
+}
+
+.image-gallery-view-toggle:focus-visible {
+  outline: 2px dashed var(--retro-accent);
+  outline-offset: 2px;
+}
+
+.image-gallery-close {
+  width: 3rem;
+  height: 3rem;
+  background: var(--retro-bg);
+  border: var(--retro-border);
+  color: var(--retro-text);
+  font-family: 'Press Start 2P', cursive;
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: all 0.1s steps(2);
+  box-shadow: 2px 2px 0 #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.image-gallery-close:hover {
+  background: #222;
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0 #000;
+}
+
+.image-gallery-close:active {
+  transform: translate(2px, 2px);
+  box-shadow: none;
+}
+
+.image-gallery-close:focus-visible {
+  outline: 2px dashed var(--retro-accent);
+  outline-offset: 2px;
+}
+
+/* Content */
+.image-gallery-content {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.image-gallery-empty {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  color: #666;
+  font-family: 'VT323', monospace;
+  font-size: 1.2rem;
+  text-align: center;
+}
+
+.image-gallery-empty p {
+  max-width: 500px;
+  margin: 0;
+}
+
+/* Error state (Requirement 15.1) */
+.image-gallery-error {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  gap: 1.5rem;
+  color: var(--retro-accent);
+  font-family: 'VT323', monospace;
+  font-size: 1.2rem;
+  text-align: center;
+}
+
+.image-gallery-error p {
+  max-width: 500px;
+  margin: 0;
+}
+
+.image-gallery-retry-button {
+  padding: 0.75rem 1.5rem;
+  background: var(--retro-bg);
+  border: var(--retro-border);
+  color: var(--retro-text);
+  font-family: 'Press Start 2P', cursive;
+  font-size: 0.7rem;
+  cursor: pointer;
+  transition: all 0.1s steps(2);
+  box-shadow: 2px 2px 0 #000;
+}
+
+.image-gallery-retry-button:hover:not(:disabled) {
+  background: #222;
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0 #000;
+}
+
+.image-gallery-retry-button:active:not(:disabled) {
+  transform: translate(2px, 2px);
+  box-shadow: none;
+}
+
+.image-gallery-retry-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.image-gallery-retry-button:focus-visible {
+  outline: 2px dashed var(--retro-accent);
+  outline-offset: 2px;
+}
+
+/* Screen reader only class */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+  .image-gallery-container {
+    width: 100vw;
+    height: 100vh;
+  }
+
+  .image-gallery-header {
+    padding: 0.75rem;
+  }
+
+  .image-gallery-title {
+    font-size: 0.8rem;
+  }
+
+  .image-gallery-view-toggle {
+    font-size: 0.55rem;
+    padding: 0.4rem 0.8rem;
+  }
+
+  .image-gallery-close {
+    width: 2.5rem;
+    height: 2.5rem;
+    font-size: 1.2rem;
+  }
+
+  .image-gallery-empty {
+    font-size: 1rem;
+    padding: 1.5rem;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .image-gallery-overlay {
+    animation: none !important;
+  }
+
+  .image-gallery-view-toggle,
+  .image-gallery-close {
+    transition: none !important;
+  }
+}
