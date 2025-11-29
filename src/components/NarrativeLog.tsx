@@ -1,10 +1,12 @@
 import { useEffect, useRef, useState, useCallback } from "react";
-import type { NarrativeLog as NarrativeLogType } from "../utils/types";
+import type { NarrativeLog as NarrativeLogType, StatDelta } from "../utils/types";
 import { FadeIn } from "./animations/FadeIn";
 import { SplitText } from "./reactbits/SplitText";
 import { GlassPanel } from "./GlassPanel";
 import { useTheme } from "../contexts/ThemeContext";
 import { useGameStore } from "../store";
+import { ReactionButtons } from "./ReactionButtons";
+import { StatChangeIndicator } from "./StatChangeIndicator";
 import "./NarrativeLog.css";
 
 interface NarrativeLogProps {
@@ -85,7 +87,18 @@ export function NarrativeLog({ logs, sanityLevel }: NarrativeLogProps) {
   // Image generation state
   const generateLogImage = useGameStore((state) => state.generateLogImage);
   const currentPetSpriteUrl = useGameStore((state) => state.currentPetSpriteUrl);
+  const autoGenerateImages = useGameStore((state) => state.autoGenerateImages);
   const [selectedImageUrl, setSelectedImageUrl] = useState<string | null>(null);
+
+  // Stat change indicator state (Requirement 7.1)
+  const [statChanges, setStatChanges] = useState<Array<{
+    id: string;
+    statName: "sanity" | "corruption";
+    delta: number;
+  }>>([]);
+
+  // Aria-live region for screen reader announcements (Requirement 9.4)
+  const [ariaAnnouncement, setAriaAnnouncement] = useState<string>("");
 
   // Handle log click for image generation
   const handleLogClick = useCallback((log: NarrativeLogType) => {
@@ -100,6 +113,53 @@ export function NarrativeLog({ logs, sanityLevel }: NarrativeLogProps) {
       generateLogImage(log.id);
     }
   }, [generateLogImage, currentPetSpriteUrl]);
+
+  // Handle reaction applied - trigger stat change animation (Requirement 7.1)
+  const handleReactionApplied = useCallback((logId: string, statDelta: StatDelta) => {
+    const changes: Array<{ id: string; statName: "sanity" | "corruption"; delta: number }> = [];
+    
+    // Create stat change indicators for each affected stat
+    if (statDelta.sanity !== undefined && statDelta.sanity !== 0) {
+      changes.push({
+        id: `${logId}-sanity-${Date.now()}`,
+        statName: "sanity",
+        delta: statDelta.sanity,
+      });
+    }
+    
+    if (statDelta.corruption !== undefined && statDelta.corruption !== 0) {
+      changes.push({
+        id: `${logId}-corruption-${Date.now()}`,
+        statName: "corruption",
+        delta: statDelta.corruption,
+      });
+    }
+
+    // Add stat changes with stagger delay (Requirement 7.4)
+    changes.forEach((change, index) => {
+      setTimeout(() => {
+        setStatChanges(prev => [...prev, change]);
+      }, index * 100); // 100ms stagger
+    });
+
+    // Update aria-live region for screen readers (Requirement 9.4)
+    const announcements: string[] = [];
+    if (statDelta.sanity !== undefined && statDelta.sanity !== 0) {
+      announcements.push(`Sanity ${statDelta.sanity > 0 ? 'increased' : 'decreased'} by ${Math.abs(statDelta.sanity)}`);
+    }
+    if (statDelta.corruption !== undefined && statDelta.corruption !== 0) {
+      announcements.push(`Corruption ${statDelta.corruption > 0 ? 'increased' : 'decreased'} by ${Math.abs(statDelta.corruption)}`);
+    }
+    setAriaAnnouncement(announcements.join(', '));
+    
+    // Clear announcement after screen reader has time to read it
+    setTimeout(() => setAriaAnnouncement(""), 3000);
+  }, []);
+
+  // Remove stat change indicator after animation completes
+  const handleStatChangeComplete = useCallback((id: string) => {
+    setStatChanges(prev => prev.filter(change => change.id !== id));
+  }, []);
 
   // Format age for display
   const formatAge = (ageInMinutes: number): string => {
@@ -182,6 +242,34 @@ export function NarrativeLog({ logs, sanityLevel }: NarrativeLogProps) {
     prevLogCountRef.current = currentLogCount;
   }, [logs]);
 
+  // Auto-generate images for logs with autoGenerateImage flag
+  // Requirements 4.1-4.8, 8.3, 8.4
+  useEffect(() => {
+    // Skip if auto-generation is disabled (mobile or user preference)
+    if (!autoGenerateImages) {
+      return;
+    }
+
+    // Skip if no pet sprite available
+    if (!currentPetSpriteUrl) {
+      return;
+    }
+
+    // Find logs that need auto-generation
+    logs.forEach((log) => {
+      // Check if this log should auto-generate
+      if (
+        log.autoGenerateImage && 
+        !log.isPending && 
+        !log.imageStatus && 
+        !log.imageUrl
+      ) {
+        // Trigger image generation
+        generateLogImage(log.id);
+      }
+    });
+  }, [logs, autoGenerateImages, currentPetSpriteUrl, generateLogImage]);
+
   // Calculate stagger delay for a log entry based on its position in the batch
   const getStaggerDelay = (index: number): number => {
     if (batchStartIndexRef.current === null) return 0;
@@ -228,6 +316,12 @@ export function NarrativeLog({ logs, sanityLevel }: NarrativeLogProps) {
             
             // Build class names for the entry
             const entryClassName = `log-entry log-${log.source.toLowerCase()}${isPending ? " log-pending" : ""}`;
+
+            // Determine if log can be reacted to (Requirement 1.1)
+            // Last 5 entries, not pending, not system logs
+            const canReact = index >= logs.length - 5 && 
+                            !isPending && 
+                            log.source !== "SYSTEM";
 
             // Render text content - use SplitText for newly resolved AI text
             const renderLogText = () => {
@@ -310,6 +404,13 @@ export function NarrativeLog({ logs, sanityLevel }: NarrativeLogProps) {
                     />
                   </div>
                 )}
+                {/* Reaction buttons for eligible entries (Requirements 1.1, 1.3, 1.4) */}
+                {canReact && (
+                  <ReactionButtons 
+                    log={log}
+                    onReactionApplied={(statDelta) => handleReactionApplied(log.id, statDelta)}
+                  />
+                )}
               </div>
             );
 
@@ -344,6 +445,24 @@ export function NarrativeLog({ logs, sanityLevel }: NarrativeLogProps) {
           onClose={() => setSelectedImageUrl(null)} 
         />
       )}
+      {/* Aria-live region for screen reader announcements (Requirement 9.4) */}
+      <div 
+        className="sr-only" 
+        role="status" 
+        aria-live="polite" 
+        aria-atomic="true"
+      >
+        {ariaAnnouncement}
+      </div>
+      {/* Stat change indicators (Requirement 7.1) */}
+      {statChanges.map(change => (
+        <StatChangeIndicator
+          key={change.id}
+          statName={change.statName}
+          delta={change.delta}
+          onComplete={() => handleStatChangeComplete(change.id)}
+        />
+      ))}
     </GlassPanel>
   );
 }

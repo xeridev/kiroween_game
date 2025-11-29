@@ -2,7 +2,7 @@ import "@testing-library/jest-dom";
 import { vi } from "vitest";
 
 // Mock global fetch for API calls
-global.fetch = vi.fn((url) => {
+globalThis.fetch = vi.fn((url) => {
   // Mock /api/chat endpoint
   if (url.toString().includes('/api/chat')) {
     return Promise.resolve({
@@ -32,7 +32,7 @@ global.fetch = vi.fn((url) => {
 }) as typeof fetch;
 
 // Mock IntersectionObserver for tests
-global.IntersectionObserver = class IntersectionObserver {
+globalThis.IntersectionObserver = class IntersectionObserver {
   constructor() {}
   observe() {}
   unobserve() {}

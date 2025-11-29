@@ -4,7 +4,8 @@
  */
 
 import { logWarning } from "./errorLogger";
-import type { Archetype, PetStage } from "./types";
+import type { Archetype, PetStage, ReactionData, ToneInfluence } from "./types";
+import { REACTION_TONE_KEYWORDS } from "./types";
 
 import type { DeathCause } from "./types";
 
@@ -98,6 +99,65 @@ function getFallbackMessage(eventType: EventType, petName: string): string {
   return `${petName} ${message}`;
 }
 
+// ============================================
+// Tone Influence Helper Functions (Requirements 3.2, 3.5)
+// ============================================
+
+/**
+ * Map reaction data to tone keywords for AI context.
+ * Requirements 3.2, 10.3
+ */
+export function mapReactionsToToneKeywords(reactions: ReactionData[]): ToneInfluence {
+  try {
+    return reactions.map(reaction => REACTION_TONE_KEYWORDS[reaction.reactionType]);
+  } catch (error) {
+    // Requirement 10.3: Graceful degradation - return empty array on failure
+    logWarning("Failed to map reactions to tone keywords", {
+      error: error instanceof Error ? error.message : "Unknown",
+    });
+    return [];
+  }
+}
+
+/**
+ * Deduplicate tone keywords to avoid repetition in AI prompts.
+ * Requirements 3.5, 10.3
+ */
+export function deduplicateToneKeywords(keywords: ToneInfluence): ToneInfluence {
+  try {
+    return Array.from(new Set(keywords));
+  } catch (error) {
+    // Requirement 10.3: Graceful degradation - return original array on failure
+    logWarning("Failed to deduplicate tone keywords", {
+      error: error instanceof Error ? error.message : "Unknown",
+    });
+    return keywords; // Return original keywords if deduplication fails
+  }
+}
+
+/**
+ * Build tone context string for AI prompts.
+ * Returns empty string if no tone influence.
+ * Requirements 3.3, 3.4, 10.3
+ */
+function buildToneContext(toneInfluence?: ToneInfluence): string {
+  try {
+    if (!toneInfluence || toneInfluence.length === 0) {
+      return "";
+    }
+    
+    const uniqueKeywords = deduplicateToneKeywords(toneInfluence);
+    const keywordList = uniqueKeywords.join(", ");
+    return ` The player recently showed ${keywordList} reactions.`;
+  } catch (error) {
+    // Requirement 10.3: Graceful degradation - return empty string on failure
+    logWarning("Failed to build tone context", {
+      error: error instanceof Error ? error.message : "Unknown",
+    });
+    return ""; // Continue without tone influence
+  }
+}
+
 interface NarrativeContext {
   petName: string;
   stage: PetStage;
@@ -121,16 +181,18 @@ interface EvolutionContext extends NarrativeContext {
  * Generate AI narrative for feeding events
  */
 export async function generateFeedingNarrative(
-  context: FeedingContext
+  context: FeedingContext,
+  toneInfluence?: ToneInfluence
 ): Promise<string> {
   const { petName, stage, archetype, sanity, corruption, itemName, itemType, isOverfed } = context;
 
   // Handle overfeeding separately
   if (isOverfed) {
-    return generateOverfeedNarrative(context);
+    return generateOverfeedNarrative(context, toneInfluence);
   }
 
-  const prompt = `${petName} the ${stage.toLowerCase()} ${archetype.toLowerCase()} creature consumes "${itemName}" (a ${itemType.toLowerCase()} offering). Current sanity: ${sanity}%, corruption: ${corruption}%. Generate 1-2 sentences of atmospheric horror narrative describing this feeding moment.`;
+  const toneContext = buildToneContext(toneInfluence);
+  const prompt = `${petName} the ${stage.toLowerCase()} ${archetype.toLowerCase()} creature consumes "${itemName}" (a ${itemType.toLowerCase()} offering). Current sanity: ${sanity}%, corruption: ${corruption}%.${toneContext} Generate 1-2 sentences of atmospheric horror narrative describing this feeding moment.`;
 
   try {
     const response = await fetch("/api/chat", {
@@ -169,11 +231,13 @@ export async function generateFeedingNarrative(
  * Generate AI narrative for overfeeding events
  */
 async function generateOverfeedNarrative(
-  context: NarrativeContext
+  context: NarrativeContext,
+  toneInfluence?: ToneInfluence
 ): Promise<string> {
   const { petName, stage, archetype, sanity, corruption } = context;
 
-  const prompt = `${petName} the ${stage.toLowerCase()} ${archetype.toLowerCase()} creature has been overfed and is rejecting the excess. Sanity: ${sanity}%, corruption: ${corruption}%. Generate 1-2 sentences of visceral horror narrative about this rejection.`;
+  const toneContext = buildToneContext(toneInfluence);
+  const prompt = `${petName} the ${stage.toLowerCase()} ${archetype.toLowerCase()} creature has been overfed and is rejecting the excess. Sanity: ${sanity}%, corruption: ${corruption}%.${toneContext} Generate 1-2 sentences of visceral horror narrative about this rejection.`;
 
   try {
     const response = await fetch("/api/chat", {
@@ -211,15 +275,17 @@ async function generateOverfeedNarrative(
  * Generate AI narrative for evolution events
  */
 export async function generateEvolutionNarrative(
-  context: EvolutionContext
+  context: EvolutionContext,
+  toneInfluence?: ToneInfluence
 ): Promise<string> {
   const { petName, archetype, sanity, corruption, fromStage, toStage } = context;
 
   const isHatching = fromStage === "EGG";
+  const toneContext = buildToneContext(toneInfluence);
   
   const prompt = isHatching
-    ? `${petName} the ${archetype.toLowerCase()} creature hatches from its egg, emerging as a ${toStage.toLowerCase()}. Generate 1-2 sentences of atmospheric horror narrative about this birth.`
-    : `${petName} the ${archetype.toLowerCase()} creature evolves from ${fromStage.toLowerCase()} to ${toStage.toLowerCase()}. Sanity: ${sanity}%, corruption: ${corruption}%. Generate 1-2 sentences of body-horror narrative about this transformation.`;
+    ? `${petName} the ${archetype.toLowerCase()} creature hatches from its egg, emerging as a ${toStage.toLowerCase()}.${toneContext} Generate 1-2 sentences of atmospheric horror narrative about this birth.`
+    : `${petName} the ${archetype.toLowerCase()} creature evolves from ${fromStage.toLowerCase()} to ${toStage.toLowerCase()}. Sanity: ${sanity}%, corruption: ${corruption}%.${toneContext} Generate 1-2 sentences of body-horror narrative about this transformation.`;
 
   try {
     const response = await fetch("/api/chat", {
@@ -309,14 +375,18 @@ interface EpitaphContext {
  * 
  * Requirement 2.1, 2.5
  */
-export async function generateDeathNarrative(context: DeathContext): Promise<string> {
+export async function generateDeathNarrative(
+  context: DeathContext,
+  toneInfluence?: ToneInfluence
+): Promise<string> {
   const { petName, archetype, stage, age, cause, sanity = 0, corruption = 0 } = context;
 
   const causeDescription = cause === "STARVATION" 
     ? "starved to death from neglect" 
     : "lost its mind to insanity";
 
-  const prompt = `${petName} the ${stage.toLowerCase()} ${archetype.toLowerCase()} creature has ${causeDescription}. Age: ${age} minutes, final sanity: ${sanity}%, corruption: ${corruption}%. Generate 2-3 sentences of somber, atmospheric horror narrative describing this creature's final moments and passing.`;
+  const toneContext = buildToneContext(toneInfluence);
+  const prompt = `${petName} the ${stage.toLowerCase()} ${archetype.toLowerCase()} creature has ${causeDescription}. Age: ${age} minutes, final sanity: ${sanity}%, corruption: ${corruption}%.${toneContext} Generate 2-3 sentences of somber, atmospheric horror narrative describing this creature's final moments and passing.`;
 
   try {
     const response = await fetch("/api/chat", {
@@ -357,7 +427,10 @@ export async function generateDeathNarrative(context: DeathContext): Promise<str
  * 
  * Requirement 2.2
  */
-export async function generateEpitaph(context: EpitaphContext): Promise<string> {
+export async function generateEpitaph(
+  context: EpitaphContext,
+  toneInfluence?: ToneInfluence
+): Promise<string> {
   const { petName, archetype, stage, age, cause } = context;
 
   // Convert age to more readable format
@@ -367,7 +440,8 @@ export async function generateEpitaph(context: EpitaphContext): Promise<string> 
     ? `${hours} hour${hours !== 1 ? 's' : ''} and ${minutes} minute${minutes !== 1 ? 's' : ''}`
     : `${minutes} minute${minutes !== 1 ? 's' : ''}`;
 
-  const prompt = `Write a brief, poetic epitaph (1-2 sentences) for ${petName}, a ${archetype.toLowerCase()} creature who reached the ${stage.toLowerCase()} stage and lived for ${ageString} before dying of ${cause.toLowerCase()}. Make it somber and memorable.`;
+  const toneContext = buildToneContext(toneInfluence);
+  const prompt = `Write a brief, poetic epitaph (1-2 sentences) for ${petName}, a ${archetype.toLowerCase()} creature who reached the ${stage.toLowerCase()} stage and lived for ${ageString} before dying of ${cause.toLowerCase()}.${toneContext} Make it somber and memorable.`;
 
   try {
     const response = await fetch("/api/chat", {
@@ -419,7 +493,10 @@ interface PlacateContext {
  * 
  * Requirement 6.5, 6.8
  */
-export async function generatePlacateNarrative(context: PlacateContext): Promise<string> {
+export async function generatePlacateNarrative(
+  context: PlacateContext,
+  toneInfluence?: ToneInfluence
+): Promise<string> {
   const { petName, archetype, stage, sanity, corruption } = context;
 
   // Archetype-specific comfort descriptions
@@ -430,8 +507,9 @@ export async function generatePlacateNarrative(context: PlacateContext): Promise
   };
 
   const archetypeDesc = archetypeDescriptions[archetype];
+  const toneContext = buildToneContext(toneInfluence);
 
-  const prompt = `${petName} the ${stage.toLowerCase()} ${archetype.toLowerCase()} creature ${archetypeDesc}. Current sanity: ${sanity}%, corruption: ${corruption}%. Generate 1-2 sentences of atmospheric narrative describing how this creature responds to being comforted. Match the ${archetype.toLowerCase()} archetype's personality.`;
+  const prompt = `${petName} the ${stage.toLowerCase()} ${archetype.toLowerCase()} creature ${archetypeDesc}. Current sanity: ${sanity}%, corruption: ${corruption}%.${toneContext} Generate 1-2 sentences of atmospheric narrative describing how this creature responds to being comforted. Match the ${archetype.toLowerCase()} archetype's personality.`;
 
   try {
     const response = await fetch("/api/chat", {
@@ -483,10 +561,14 @@ interface VomitContext {
  * 
  * Requirement 9.3, 9.5
  */
-export async function generateVomitNarrative(context: VomitContext): Promise<string> {
+export async function generateVomitNarrative(
+  context: VomitContext,
+  toneInfluence?: ToneInfluence
+): Promise<string> {
   const { petName, archetype, stage, sanity, corruption } = context;
 
-  const prompt = `${petName} the ${stage.toLowerCase()} ${archetype.toLowerCase()} creature has been overfed and is violently rejecting the excess. Sanity: ${sanity}%, corruption: ${corruption}%. Generate 1-2 sentences of visceral, grotesque horror narrative describing this creature vomiting and expelling what it cannot contain. Be disturbing but not gratuitous.`;
+  const toneContext = buildToneContext(toneInfluence);
+  const prompt = `${petName} the ${stage.toLowerCase()} ${archetype.toLowerCase()} creature has been overfed and is violently rejecting the excess. Sanity: ${sanity}%, corruption: ${corruption}%.${toneContext} Generate 1-2 sentences of visceral, grotesque horror narrative describing this creature vomiting and expelling what it cannot contain. Be disturbing but not gratuitous.`;
 
   try {
     const response = await fetch("/api/chat", {
@@ -563,10 +645,14 @@ interface HauntContext {
  * 
  * Requirement 4.4, 4.7
  */
-export async function generateHauntNarrative(context: HauntContext): Promise<string> {
+export async function generateHauntNarrative(
+  context: HauntContext,
+  toneInfluence?: ToneInfluence
+): Promise<string> {
   const { petName, archetype, stage, sanity, corruption, ghostName, ghostArchetype, ghostStage, ghostDeathCause } = context;
 
-  const prompt = `${petName} the ${stage.toLowerCase()} ${archetype.toLowerCase()} creature is being haunted by the ghost of ${ghostName}, a ${ghostArchetype.toLowerCase()} creature who died as a ${ghostStage.toLowerCase()} from ${ghostDeathCause.toLowerCase()}. Current sanity: ${sanity}%, corruption: ${corruption}%. Generate 1-2 sentences of atmospheric horror narrative describing this haunting encounter. Reference the ghost's presence and how it affects ${petName}.`;
+  const toneContext = buildToneContext(toneInfluence);
+  const prompt = `${petName} the ${stage.toLowerCase()} ${archetype.toLowerCase()} creature is being haunted by the ghost of ${ghostName}, a ${ghostArchetype.toLowerCase()} creature who died as a ${ghostStage.toLowerCase()} from ${ghostDeathCause.toLowerCase()}. Current sanity: ${sanity}%, corruption: ${corruption}%.${toneContext} Generate 1-2 sentences of atmospheric horror narrative describing this haunting encounter. Reference the ghost's presence and how it affects ${petName}.`;
 
   try {
     const response = await fetch("/api/chat", {
@@ -612,7 +698,10 @@ function getHauntFallbackMessage(petName: string, ghostName: string): string {
   return `${petName} ${baseMessage} The spirit of ${ghostName} draws near.`;
 }
 
-export async function generateInsanityNarrative(context: InsanityContext): Promise<string> {
+export async function generateInsanityNarrative(
+  context: InsanityContext,
+  toneInfluence?: ToneInfluence
+): Promise<string> {
   const { petName, archetype, stage, sanity, corruption, eventType } = context;
 
   // Event type descriptions for the AI prompt
@@ -624,8 +713,9 @@ export async function generateInsanityNarrative(context: InsanityContext): Promi
   };
 
   const eventDesc = eventDescriptions[eventType];
+  const toneContext = buildToneContext(toneInfluence);
 
-  const prompt = `${petName} the ${stage.toLowerCase()} ${archetype.toLowerCase()} creature is experiencing a moment of insanity: ${eventDesc}. Sanity: ${sanity}%, corruption: ${corruption}%. Generate 1-2 sentences of atmospheric horror narrative describing this hallucination or disturbing perception. Match the ${eventType.toLowerCase()} theme.`;
+  const prompt = `${petName} the ${stage.toLowerCase()} ${archetype.toLowerCase()} creature is experiencing a moment of insanity: ${eventDesc}. Sanity: ${sanity}%, corruption: ${corruption}%.${toneContext} Generate 1-2 sentences of atmospheric horror narrative describing this hallucination or disturbing perception. Match the ${eventType.toLowerCase()} theme.`;
 
   try {
     const response = await fetch("/api/chat", {

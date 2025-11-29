@@ -15,6 +15,97 @@ interface GenerateImageRequest {
   stage: "EGG" | "BABY" | "TEEN" | "ABOMINATION";
   sourceImages: string[]; // Array of base64 data URLs or HTTP URLs
   itemType?: "PURITY" | "ROT";
+  eventType?: "evolution" | "death" | "placate" | "vomit" | "insanity" | "haunt" | "feed";
+  insanityEventType?: "WHISPERS" | "SHADOWS" | "GLITCH" | "INVERSION";
+  ghostName?: string;
+}
+
+/**
+ * Event-specific prompt extensions for specialized image generation
+ */
+const EVENT_PROMPT_EXTENSIONS: Record<string, string> = {
+  evolution: "dramatic transformation scene with morphing body horror elements, cosmic horror aesthetic, creature changing form",
+  death: "somber memorial scene, creature fading into spectral form, melancholic atmosphere, ghost wisps, soft mourning light",
+  vomit: "visceral expulsion scene, grotesque splatters, creature convulsing, body horror, disturbing biological details without gratuitousness",
+  haunt: "spectral visitation, translucent apparition appearing, memories bleeding through, current pet sensing presence, ethereal horror",
+  feed: "", // Regular feeding has no special extension
+};
+
+/**
+ * Archetype-specific descriptions for placate events
+ */
+const PLACATE_ARCHETYPE_EXTENSIONS: Record<string, string> = {
+  GLOOM: "intimate comforting moment, dark purple aura surrounding creature, gentle warmth amid horror",
+  SPARK: "intimate comforting moment, electric sparkles dancing around creature, gentle warmth amid horror",
+  ECHO: "intimate comforting moment, rippling echoes emanating from creature, gentle warmth amid horror",
+};
+
+/**
+ * Insanity event type variations
+ */
+const INSANITY_EVENT_EXTENSIONS: Record<string, string> = {
+  WHISPERS: "auditory hallucination visualized, soundwaves and whispers made visible, creature hearing voices",
+  SHADOWS: "visual hallucination, impossible shadows defying light sources, creature seeing things that aren't there",
+  GLITCH: "reality glitch, fragmented duplicates of creature, broken reality effect",
+  INVERSION: "inverted reality, upside-down environment, creature experiencing warped perception",
+};
+
+/**
+ * Build specialized prompt based on event type
+ */
+function buildEventImagePrompt(
+  eventType: string,
+  context: {
+    narrativeText: string;
+    petName: string;
+    archetype: string;
+    stage: string;
+    fromStage?: string;
+    toStage?: string;
+    insanityEventType?: string;
+    ghostName?: string;
+  }
+): string {
+  const { narrativeText, petName, archetype, stage, fromStage, toStage, insanityEventType, ghostName } = context;
+
+  const archetypeDescriptions: Record<string, string> = {
+    GLOOM: "shadowy, melancholic creature with hollow eyes",
+    SPARK: "electric, jittery creature with crackling energy",
+    ECHO: "ethereal, translucent creature with fading echoes",
+  };
+
+  const stageDescriptions: Record<string, string> = {
+    EGG: "mysterious egg form, pulsing with dark energy",
+    BABY: "small, vulnerable creature just hatched",
+    TEEN: "growing creature with developing features",
+    ABOMINATION: "twisted, horrific form of pure corruption",
+  };
+
+  const archetypeDesc = archetypeDescriptions[archetype] || "mysterious creature";
+  const stageDesc = stageDescriptions[stage] || "creature";
+
+  let eventExtension = "";
+
+  // Handle specialized event types
+  if (eventType === "evolution" && fromStage && toStage) {
+    eventExtension = `dramatic transformation scene with ${fromStage} morphing into ${toStage}, body horror elements, cosmic horror aesthetic`;
+  } else if (eventType === "death") {
+    eventExtension = `somber memorial scene, ${petName} fading into spectral form, melancholic atmosphere, ghost wisps, soft mourning light`;
+  } else if (eventType === "placate") {
+    eventExtension = PLACATE_ARCHETYPE_EXTENSIONS[archetype] || EVENT_PROMPT_EXTENSIONS.placate || "";
+  } else if (eventType === "insanity" && insanityEventType) {
+    eventExtension = INSANITY_EVENT_EXTENSIONS[insanityEventType] || "";
+  } else if (eventType === "haunt" && ghostName) {
+    eventExtension = `spectral visitation, ${ghostName} appearing as translucent apparition, memories bleeding through, current pet sensing presence, ethereal horror`;
+  } else {
+    eventExtension = EVENT_PROMPT_EXTENSIONS[eventType] || "";
+  }
+
+  return `Combine these images into a single realistic horror scene: use the first image (${petName} the ${archetype} pet sprite) as the main character. ${petName} is a ${archetypeDesc}, currently in ${stage} stage (${stageDesc}). ${eventExtension}
+
+Scene description from narrative: "${narrativeText}"
+
+Apply dark horror lighting with dramatic shadows, unsettling atmosphere, creepy companion pet aesthetic, digital horror art style. Keep the pet's exact appearance from the provided sprite. Maintain visual continuity with any previous images provided.`;
 }
 
 /**
@@ -72,6 +163,9 @@ export default async function handler(
     stage,
     sourceImages,
     itemType,
+    eventType,
+    insanityEventType,
+    ghostName,
   } = req.body as GenerateImageRequest;
 
   // Validate required fields
@@ -104,7 +198,22 @@ export default async function handler(
 
   try {
     // Build the prompt for image generation
-    const prompt = buildImagePrompt(narrativeText, petName, archetype, stage, itemType);
+    let prompt: string;
+    
+    if (eventType) {
+      // Use specialized prompt for event types
+      prompt = buildEventImagePrompt(eventType, {
+        narrativeText,
+        petName,
+        archetype,
+        stage,
+        insanityEventType,
+        ghostName,
+      });
+    } else {
+      // Use standard prompt
+      prompt = buildImagePrompt(narrativeText, petName, archetype, stage, itemType);
+    }
 
     // RunPod Nano Banana Edit endpoint
     const runpodUrl = "https://api.runpod.ai/v2/nano-banana-edit/run";

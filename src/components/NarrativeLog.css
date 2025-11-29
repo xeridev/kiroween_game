@@ -238,6 +238,31 @@
   }
 }
 
+/* ============================================
+   Reaction System Styles
+   ============================================ */
+
+/* Container for reaction buttons (Requirement 1.4) */
+.log-reactions {
+  margin-top: 0.5rem;
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+/* Screen reader only content (Requirement 9.4) */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
 /* Mobile Responsive */
 @media (max-width: 768px) {
   .narrative-log-panel {
@@ -260,6 +285,11 @@
 
   .fade-in-glitch {
     animation-duration: 0.2s;
+  }
+
+  /* Hide reaction buttons on mobile (Requirement 1.4, 8.1) */
+  .log-reactions {
+    display: none;
   }
 }
 

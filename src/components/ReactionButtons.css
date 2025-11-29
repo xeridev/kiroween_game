@@ -1,0 +1,27 @@
+/**
+ * ReactionButtons Container Component Styles
+ * 
+ * Container styling for reaction button groups with mobile responsive behavior.
+ * 
+ * Requirements: 1.4, 8.1
+ */
+
+/* Container for reaction buttons */
+.log-reactions {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  margin-top: 0.5rem;
+  padding: 0.25rem 0;
+  flex-wrap: wrap;
+}
+
+/* ============================================
+   Mobile Responsive (Requirements 1.4, 8.1)
+   Hide reaction buttons on mobile (≤768px)
+   ============================================ */
+@media (max-width: 768px) {
+  .log-reactions {
+    display: none;
+  }
+}

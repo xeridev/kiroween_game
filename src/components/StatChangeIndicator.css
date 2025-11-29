@@ -1,0 +1,135 @@
+/**
+ * StatChangeIndicator Component Styles
+ * 
+ * Floating stat change feedback with color-coded positive/negative indicators,
+ * GSAP-powered animations, and theme-aware styling.
+ * 
+ * Requirements: 7.1, 7.2, 7.3, 7.5
+ */
+
+/* Base indicator styles */
+.stat-change-indicator {
+  /* Layout */
+  position: absolute;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  z-index: 100;
+  
+  /* Typography */
+  font-family: 'Press Start 2P', cursive;
+  font-size: 1rem;
+  font-weight: bold;
+  line-height: 1;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  
+  /* Visual */
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  
+  /* Animation will be handled by GSAP */
+  will-change: transform, opacity;
+}
+
+/* ============================================
+   Color Coding (Requirements 7.2, 7.3)
+   Theme-aware positive and negative indicators
+   ============================================ */
+
+/* Positive stat change - Bright colors for cute, muted for horror */
+.stat-change--positive {
+  color: var(--theme-success, #5CB85C);
+  background: var(--theme-hover-bg, rgba(92, 184, 92, 0.2));
+  border: 1px solid var(--theme-success, rgba(92, 184, 92, 0.4));
+}
+
+/* Negative stat change - Danger colors */
+.stat-change--negative {
+  color: var(--theme-danger, #D9534F);
+  background: var(--theme-hover-bg, rgba(217, 83, 79, 0.2));
+  border: 1px solid var(--theme-danger, rgba(217, 83, 79, 0.4));
+}
+
+/* ============================================
+   Theme-Specific Styles
+   WCAG AA compliant contrast ratios
+   ============================================ */
+
+/* Cute Theme - Bright positive colors */
+[data-theme="cute"] .stat-change--positive {
+  color: #5CB85C;
+  background: rgba(92, 184, 92, 0.15);
+  border-color: rgba(92, 184, 92, 0.4);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="cute"] .stat-change--negative {
+  color: #D9534F;
+  background: rgba(217, 83, 79, 0.15);
+  border-color: rgba(217, 83, 79, 0.4);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+/* Horror Theme - Muted colors with glow */
+[data-theme="horror"] .stat-change--positive {
+  color: #2E7D32;
+  background: rgba(46, 125, 50, 0.2);
+  border-color: rgba(46, 125, 50, 0.5);
+  text-shadow: 0 0 4px rgba(46, 125, 50, 0.6);
+}
+
+[data-theme="horror"] .stat-change--negative {
+  color: #FF1744;
+  background: rgba(255, 23, 68, 0.2);
+  border-color: rgba(255, 23, 68, 0.5);
+  text-shadow: 0 0 4px rgba(255, 23, 68, 0.6);
+}
+
+/* ============================================
+   Mobile Responsive
+   Smaller size and faster animations
+   ============================================ */
+@media (max-width: 768px) {
+  .stat-change-indicator {
+    font-size: 0.875rem;
+    padding: 0.2rem 0.4rem;
+  }
+}
+
+/* ============================================
+   Reduced Motion (Requirement 7.5)
+   Instant display without animation
+   ============================================ */
+@media (prefers-reduced-motion: reduce) {
+  .stat-change-indicator {
+    /* Disable GSAP animations via component logic */
+    /* This class ensures no CSS transitions interfere */
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
+/* ============================================
+   Accessibility
+   Screen reader announcements
+   ============================================ */
+.stat-change-indicator[role="status"] {
+  /* Ensure aria-live region is properly positioned */
+  position: absolute;
+}
+
+/* Screen reader only text (if needed) */
+.stat-change-indicator .sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}

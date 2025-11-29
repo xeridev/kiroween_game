@@ -4,6 +4,9 @@ import type { GameState, Archetype, LogSource, AudioState, SoundContext, Offerin
 import { logError, logWarning, logCritical, logInfo } from "./utils/errorLogger";
 import { soundManager } from "./utils/soundManager";
 
+// In-memory fallback storage for reactions when localStorage is unavailable (Requirement 10.4)
+let inMemoryReactions: Map<string, import("./utils/types").ReactionData[]> = new Map();
+
 const initialState = {
   isInitialized: false,
   traits: {
@@ -46,6 +49,8 @@ const initialState = {
     eventType: null as import("./utils/types").InsanityEventType | null,
     timestamp: null as number | null,
   },
+  // Auto-image generation flag (Requirement 8.2)
+  autoGenerateImages: true,
 };
 
 // Default audio state (Requirements 4.1, 4.2)
@@ -358,17 +363,25 @@ export const useGameStore = create<GameState>()(
             }
           }
 
+          // Build API request body with eventType if available
+          const requestBody: any = {
+            narrativeText: log.text,
+            petName: state.traits.name,
+            archetype: state.traits.archetype,
+            stage: state.stage,
+            sourceImages,
+          };
+
+          // Include eventType for specialized prompts (Requirements 4.1-4.6, 5.1-5.6)
+          if (log.eventType) {
+            requestBody.eventType = log.eventType;
+          }
+
           // Call the API
           const response = await fetch("/api/generateImage", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              narrativeText: log.text,
-              petName: state.traits.name,
-              archetype: state.traits.archetype,
-              stage: state.stage,
-              sourceImages,
-            }),
+            body: JSON.stringify(requestBody),
           });
 
           if (!response.ok) {
@@ -585,7 +598,9 @@ export const useGameStore = create<GameState>()(
           import("./utils/narrativeGenerator").then(async ({ generateEvolutionNarrative, getPlaceholderText }) => {
             const eventType = fromStage === "EGG" ? "hatch" : "evolution";
             const placeholderText = getPlaceholderText(eventType, state.traits.name);
-            const logId = get().addLog(placeholderText, "SYSTEM", true);
+            // Requirement 4.1: Set autoGenerateImage for evolution events
+            // Pass "evolution" as eventType to trigger auto-generation
+            const logId = get().addLog(placeholderText, "SYSTEM", true, "evolution");
 
             // Log evolution for debugging
             logInfo("Evolution detected", { from: fromStage, to: newStage });
@@ -817,9 +832,11 @@ export const useGameStore = create<GameState>()(
         const { generateFeedingNarrative, generateVomitNarrative, getPlaceholderText } = await import("./utils/narrativeGenerator");
 
         // Add placeholder log immediately with pending state
-        const eventType = isOverfed ? "vomit" : "feed";
+        // Requirement 4.4: Set autoGenerateImage for vomit events
+        // Requirement 4.7: Do NOT set autoGenerateImage for regular feeding
+        const eventType: import("./utils/types").EventType = isOverfed ? "vomit" : "feed";
         const placeholderText = getPlaceholderText(eventType, state.traits.name);
-        const logId = get().addLog(placeholderText, "PET", true);
+        const logId = get().addLog(placeholderText, "PET", true, isOverfed ? eventType : undefined);
 
         // Requirement 5.1: Play sound with feeding context
         // Requirement 9.4: Play vomit sound on overfeed
@@ -886,15 +903,24 @@ export const useGameStore = create<GameState>()(
         set({ inventory: newInventory });
       },
 
-      addLog: (text: string, source: LogSource, isPending?: boolean) => {
+      addLog: (text: string, source: LogSource, isPending?: boolean, eventType?: import("./utils/types").EventType) => {
         const state = get();
         const logId = crypto.randomUUID();
+        
+        // Requirement 4.7: Regular feeding events should NOT trigger auto-generation
+        // Only set autoGenerateImage for specific event types (not "feed")
+        const shouldAutoGenerate = eventType && 
+                                   eventType !== "feed" && 
+                                   state.autoGenerateImages;
+        
         const newLog = {
           id: logId,
           text,
           source,
           timestamp: state.age,
           isPending: isPending ?? false,
+          // Set autoGenerateImage flag based on eventType and autoGenerateImages setting (Requirements 4.1-4.8, 8.3)
+          ...(shouldAutoGenerate && { autoGenerateImage: true, eventType }),
         };
 
         set({
@@ -1007,6 +1033,9 @@ export const useGameStore = create<GameState>()(
           deathData,
         });
 
+        // Add death log entry with auto-generation (Requirement 4.2)
+        get().addLog(deathNarrative, "SYSTEM", false, "death");
+
         // Play death sound
         get().playSound("death", {
           petName: state.traits.name,
@@ -1118,8 +1147,9 @@ export const useGameStore = create<GameState>()(
           const { generatePlacateNarrative, getPlaceholderText } = await import("./utils/narrativeGenerator");
           
           // Add placeholder log immediately
+          // Requirement 4.3: Set autoGenerateImage for placate events
           const placeholderText = getPlaceholderText("placate", state.traits.name);
-          const logId = get().addLog(placeholderText, "PET", true);
+          const logId = get().addLog(placeholderText, "PET", true, "placate");
 
           // Generate AI narrative async
           const aiNarrative = await generatePlacateNarrative({
@@ -1259,8 +1289,9 @@ export const useGameStore = create<GameState>()(
           const { generateInsanityNarrative, getPlaceholderText } = await import("./utils/narrativeGenerator");
           
           // Add placeholder log immediately
+          // Requirement 4.5: Set autoGenerateImage for insanity events
           const placeholderText = getPlaceholderText("insanity", state.traits.name);
-          const logId = get().addLog(placeholderText, "PET", true);
+          const logId = get().addLog(placeholderText, "PET", true, "insanity");
 
           // Generate AI narrative async
           const aiNarrative = await generateInsanityNarrative({
@@ -1366,8 +1397,9 @@ export const useGameStore = create<GameState>()(
           const { generateHauntNarrative } = await import("./utils/narrativeGenerator");
           
           // Add placeholder log immediately
+          // Requirement 4.6: Set autoGenerateImage for haunt events
           const placeholderText = `${state.traits.name} senses a familiar presence...`;
-          const logId = get().addLog(placeholderText, "SYSTEM", true);
+          const logId = get().addLog(placeholderText, "SYSTEM", true, "haunt");
 
           // Generate AI narrative async
           const aiNarrative = await generateHauntNarrative({
@@ -1399,6 +1431,150 @@ export const useGameStore = create<GameState>()(
           gameDay: state.gameDay,
         });
       },
+
+      // ============================================
+      // Reaction System Actions (Requirements 1.2, 1.5, 3.1)
+      // ============================================
+
+      /**
+       * Add a reaction to a narrative log entry.
+       * - Validate log exists
+       * - Check if log already has a reaction
+       * - Apply stat delta with clamping (0-100)
+       * - Store reaction data in log
+       * 
+       * Requirements: 1.2, 1.5, 10.1, 10.4, 10.5
+       */
+      addReaction: async (logId: string, reactionType: import("./utils/types").ReactionType) => {
+        try {
+          const state = get();
+
+          // Find the log entry (Requirement 10.5)
+          const log = state.logs.find(l => l.id === logId);
+          if (!log) {
+            logWarning("Cannot add reaction: log not found", { logId });
+            return;
+          }
+
+          // Check if log already has a reaction (prevent duplicates)
+          // Check both in-memory and persisted reactions
+          const hasPersistedReaction = log.reactions && log.reactions.length > 0;
+          const hasInMemoryReaction = inMemoryReactions.has(logId);
+          
+          if (hasPersistedReaction || hasInMemoryReaction) {
+            logWarning("Cannot add reaction: log already has a reaction", { logId });
+            return;
+          }
+
+          // Import stat deltas
+          const { REACTION_STAT_DELTAS } = await import("./utils/types");
+          const statDelta = REACTION_STAT_DELTAS[reactionType];
+
+          // Apply stat changes with clamping (0-100) (Requirement 1.5)
+          const newStats = { ...state.stats };
+          
+          if (statDelta.sanity !== undefined) {
+            newStats.sanity = Math.max(0, Math.min(100, newStats.sanity + statDelta.sanity));
+          }
+          
+          if (statDelta.corruption !== undefined) {
+            newStats.corruption = Math.max(0, Math.min(100, newStats.corruption + statDelta.corruption));
+          }
+          
+          if (statDelta.hunger !== undefined) {
+            newStats.hunger = Math.max(0, Math.min(100, newStats.hunger + statDelta.hunger));
+          }
+
+          // Create reaction data (Requirement 1.2)
+          const reactionData: import("./utils/types").ReactionData = {
+            reactionType,
+            timestamp: Date.now(),
+            statDelta,
+          };
+
+          // Try to update log with reaction data and stats
+          try {
+            set({
+              stats: newStats,
+              logs: state.logs.map(l =>
+                l.id === logId
+                  ? { ...l, reactions: [reactionData] }
+                  : l
+              ),
+            });
+
+            logInfo("Reaction added", {
+              logId,
+              reactionType,
+              statDelta,
+            });
+          } catch (storageError) {
+            // Requirement 10.4: Fallback to in-memory storage if localStorage fails
+            logWarning("localStorage unavailable, using in-memory storage for reaction", {
+              logId,
+              reactionType,
+              error: storageError instanceof Error ? storageError.message : "Unknown",
+            });
+            
+            // Store reaction in memory
+            inMemoryReactions.set(logId, [reactionData]);
+            
+            // Still update stats in the store (stats are more critical than reaction history)
+            set({ stats: newStats });
+            
+            logInfo("Reaction stored in memory", {
+              logId,
+              reactionType,
+              statDelta,
+            });
+          }
+        } catch (error) {
+          // Requirement 10.1: Log error and continue without crashing
+          logError(
+            "Failed to add reaction",
+            error instanceof Error ? error : new Error(String(error)),
+            { logId, reactionType }
+          );
+          // Game continues without applying the reaction
+        }
+      },
+
+      /**
+       * Get reaction history (last 10 reactions).
+       * Returns array of ReactionData from most recent logs.
+       * 
+       * Requirements: 3.1, 10.3, 10.4
+       */
+      getReactionHistory: (): import("./utils/types").ReactionData[] => {
+        try {
+          const state = get();
+          
+          // Collect all reactions from logs (persisted)
+          const allReactions: import("./utils/types").ReactionData[] = [];
+          
+          for (const log of state.logs) {
+            if (log.reactions && log.reactions.length > 0) {
+              allReactions.push(...log.reactions);
+            }
+          }
+          
+          // Also collect reactions from in-memory storage (Requirement 10.4)
+          for (const reactions of inMemoryReactions.values()) {
+            allReactions.push(...reactions);
+          }
+          
+          // Sort by timestamp (most recent first) and take last 10
+          const sortedReactions = allReactions.sort((a, b) => b.timestamp - a.timestamp);
+          return sortedReactions.slice(0, 10);
+        } catch (error) {
+          // Requirement 10.3: Graceful degradation - return empty array on failure
+          logError(
+            "Failed to retrieve reaction history",
+            error instanceof Error ? error : new Error(String(error))
+          );
+          return []; // Return empty array so narrative generation continues without tone influence
+        }
+      },
     }),
     {
       name: "creepy-companion-storage",
@@ -1414,7 +1590,7 @@ export const useGameStore = create<GameState>()(
         inventory: state.inventory,
         dailyFeeds: state.dailyFeeds,
         gameDay: state.gameDay,
-        logs: state.logs,
+        logs: state.logs, // Includes reaction data (Requirement 6.1, 6.2)
         lastTickTime: state.lastTickTime,
         // Pet sprite state (for image generation continuity)
         currentPetSpriteUrl: state.currentPetSpriteUrl,
@@ -1433,6 +1609,8 @@ export const useGameStore = create<GameState>()(
         deathData: state.deathData,
         lastPlacateTime: state.lastPlacateTime,
         lastHauntGameDay: state.lastHauntGameDay,
+        // Auto-image generation flag (Requirement 8.2)
+        autoGenerateImages: state.autoGenerateImages,
         // Note: hasUserInteracted is NOT persisted - must be re-established each session
       }),
       // Custom storage with error handling
@@ -1527,6 +1705,15 @@ export const useGameStore = create<GameState>()(
               sfxVolume: state.sfxVolume,
               ambientVolume: state.ambientVolume,
               isMuted: state.isMuted,
+            });
+            
+            // Detect mobile viewport and set autoGenerateImages flag (Requirement 8.2)
+            const isMobile = typeof window !== 'undefined' && window.innerWidth <= 768;
+            useGameStore.setState({ autoGenerateImages: !isMobile });
+            
+            logInfo('Mobile detection', {
+              isMobile,
+              autoGenerateImages: !isMobile,
             });
           }
 

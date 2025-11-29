@@ -91,6 +91,26 @@ export interface Offering {
 // Narrative System
 export type ImageStatus = "idle" | "generating" | "completed" | "failed";
 
+// Reaction System Types
+export type ReactionType = "COMFORT" | "FEAR" | "LOVE" | "DREAD" | "HOPE";
+
+export interface StatDelta {
+  sanity?: number;
+  corruption?: number;
+  hunger?: number;
+}
+
+export interface ReactionData {
+  reactionType: ReactionType;
+  timestamp: number;
+  statDelta: StatDelta;
+}
+
+export type ToneInfluence = string[];
+
+// Event types for specialized image prompts
+export type EventType = "evolution" | "death" | "placate" | "vomit" | "insanity" | "haunt" | "feed";
+
 export interface NarrativeLog {
   id: string;
   text: string;
@@ -100,6 +120,12 @@ export interface NarrativeLog {
   imageUrl?: string; // Generated image URL (base64 data URL)
   imageStatus?: ImageStatus; // Image generation status
   sourceImages?: string[]; // Source images used for generation
+  // Reaction system fields
+  reactions?: ReactionData[];
+  canReact?: boolean;
+  // Auto-image generation fields
+  autoGenerateImage?: boolean;
+  eventType?: EventType;
 }
 
 // Sound System Types
@@ -255,6 +281,9 @@ export interface GameState extends AudioState, AudioActions, SettingsState, Sett
   
   // Insanity Visual Effect State (Requirement 10.6)
   insanityEffect: InsanityEffectState;
+  
+  // Auto-image generation flag (Requirement 8.2)
+  autoGenerateImages: boolean;
 
   // Actions
   initializePet: (name: string, archetype: Archetype, color: number) => void;
@@ -262,7 +291,7 @@ export interface GameState extends AudioState, AudioActions, SettingsState, Sett
   scavenge: () => Promise<void>;
   feed: (itemId: string) => Promise<void>;
   reorderInventory: (newInventory: Offering[]) => void;
-  addLog: (text: string, source: LogSource, isPending?: boolean) => string;
+  addLog: (text: string, source: LogSource, isPending?: boolean, eventType?: EventType) => string;
   updateLogText: (logId: string, newText: string) => void;
   reset: () => void;
   
@@ -286,4 +315,46 @@ export interface GameState extends AudioState, AudioActions, SettingsState, Sett
   
   // Haunt System Actions (Requirements 4.4, 4.5, 4.6)
   triggerHaunt: () => Promise<void>;
+  
+  // Reaction System Actions (Requirements 1.2, 1.5, 3.1)
+  addReaction: (logId: string, reactionType: ReactionType) => Promise<void>;
+  getReactionHistory: () => ReactionData[];
 }
+
+// Reaction System Constants
+
+// Stat deltas for each reaction type
+export const REACTION_STAT_DELTAS: Record<ReactionType, StatDelta> = {
+  COMFORT: { sanity: 2 },
+  FEAR: { sanity: -3, corruption: 1 },
+  LOVE: { sanity: 3, corruption: -1 },
+  DREAD: { sanity: -2, corruption: 2 },
+  HOPE: { sanity: 1 },
+};
+
+// Tone keywords for AI narrative generation
+export const REACTION_TONE_KEYWORDS: Record<ReactionType, string> = {
+  COMFORT: "comforted",
+  FEAR: "terrified",
+  LOVE: "cherished",
+  DREAD: "haunted",
+  HOPE: "hopeful",
+};
+
+// Theme-aware emoji mapping for reactions
+export const REACTION_EMOJIS: Record<Theme, Record<ReactionType, string>> = {
+  cute: {
+    COMFORT: "🥰",
+    FEAR: "😊",
+    LOVE: "💖",
+    DREAD: "✨",
+    HOPE: "🌸",
+  },
+  horror: {
+    COMFORT: "😨",
+    FEAR: "😱",
+    LOVE: "🖤",
+    DREAD: "👻",
+    HOPE: "🩸",
+  },
+};
