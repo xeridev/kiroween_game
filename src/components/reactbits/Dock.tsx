@@ -67,7 +67,7 @@ export function Dock({
   spring: _spring = { mass: 0.1, stiffness: 150, damping: 12 },
   orientation = 'horizontal',
   disableAnimation = false,
-  hidden = true,
+  hidden = false
 }: DockProps) {
 
   if (hidden) {
