@@ -5,6 +5,67 @@ export type ItemType = "PURITY" | "ROT";
 export type LogSource = "SYSTEM" | "PET";
 export type Theme = "cute" | "horror";
 
+// Death System Types
+export type DeathCause = "STARVATION" | "INSANITY";
+
+export interface DeathData {
+  petName: string;
+  archetype: Archetype;
+  stage: PetStage;
+  age: number;
+  cause: DeathCause;
+  finalStats: PetStats;
+  timestamp: number;
+  deathNarrative: string;
+  epitaph: string;
+}
+
+export interface GhostData {
+  id: string;
+  petName: string;
+  archetype: Archetype;
+  stage: PetStage;
+  color: number;
+  deathCause: DeathCause;
+  deathTimestamp: number;
+  finalCorruption: number;
+  epitaph: string;
+}
+
+// Insanity Event Types
+export type InsanityEventType = "WHISPERS" | "SHADOWS" | "GLITCH" | "INVERSION";
+
+// Placate and Haunt State Types
+export interface PlacateState {
+  lastPlacateTime: number | null;
+  cooldownDuration: number; // 30 game minutes
+}
+
+// Placate Visual Effect State (Requirement 7.1)
+export interface PlacateEffectState {
+  isActive: boolean;
+  archetype: Archetype | null;
+  timestamp: number | null;
+}
+
+// Vomit Visual Effect State (Requirement 9.2)
+export interface VomitEffectState {
+  isActive: boolean;
+  timestamp: number | null;
+}
+
+// Insanity Visual Effect State (Requirement 10.6)
+export interface InsanityEffectState {
+  isActive: boolean;
+  eventType: InsanityEventType | null;
+  timestamp: number | null;
+}
+
+export interface HauntState {
+  lastHauntGameDay: number;
+  hauntsEnabled: boolean;
+}
+
 // Pet Identity
 export interface PetTraits {
   name: string;
@@ -181,6 +242,20 @@ export interface GameState extends AudioState, AudioActions, SettingsState, Sett
   // Timestamps
   lastTickTime: number; // Real-world timestamp for offline decay
 
+  // Death System State (Requirements 1.4, 6.4, 4.3)
+  deathData: DeathData | null;
+  lastPlacateTime: number | null;
+  lastHauntGameDay: number;
+  
+  // Placate Visual Effect State (Requirement 7.1)
+  placateEffect: PlacateEffectState;
+  
+  // Vomit Visual Effect State (Requirement 9.2)
+  vomitEffect: VomitEffectState;
+  
+  // Insanity Visual Effect State (Requirement 10.6)
+  insanityEffect: InsanityEffectState;
+
   // Actions
   initializePet: (name: string, archetype: Archetype, color: number) => void;
   tick: () => void;
@@ -190,4 +265,25 @@ export interface GameState extends AudioState, AudioActions, SettingsState, Sett
   addLog: (text: string, source: LogSource, isPending?: boolean) => string;
   updateLogText: (logId: string, newText: string) => void;
   reset: () => void;
+  
+  // Death System Actions (Requirements 1.3, 5.3, 5.4)
+  triggerDeath: (cause: DeathCause) => Promise<void>;
+  startNewPet: () => void;
+  
+  // Placate Action (Requirements 6.1, 6.2, 6.3, 6.4, 6.6)
+  placate: () => Promise<void>;
+  
+  // Placate Visual Effect Actions (Requirement 7.1)
+  triggerPlacateEffect: () => void;
+  clearPlacateEffect: () => void;
+  
+  // Vomit Visual Effect Actions (Requirement 9.2)
+  clearVomitEffect: () => void;
+  
+  // Insanity Event Actions (Requirements 10.1, 10.2, 10.6)
+  triggerInsanityEvent: () => Promise<void>;
+  clearInsanityEffect: () => void;
+  
+  // Haunt System Actions (Requirements 4.4, 4.5, 4.6)
+  triggerHaunt: () => Promise<void>;
 }

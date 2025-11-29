@@ -14,9 +14,10 @@ import {
   type Modifier,
 } from '@dnd-kit/core';
 import { sortableKeyboardCoordinates } from '@dnd-kit/sortable';
-import { useGameStore } from "../store";
+import { useGameStore, getPlacateCooldownRemaining } from "../store";
 import { ThemeProvider } from "../contexts/ThemeContext";
 import CreationScreen from "./CreationScreen";
+import { DeathScreen } from "./DeathScreen";
 import { GameCanvas, type GameCanvasHandle } from "./GameCanvas";
 import { InventoryPanel } from "./InventoryPanel";
 import { StatsPanel } from "./StatsPanel";
@@ -90,6 +91,9 @@ function AppContent() {
 
   const isInitialized = useGameStore((state) => state.isInitialized);
   const initializePet = useGameStore((state) => state.initializePet);
+  const isAlive = useGameStore((state) => state.isAlive);
+  const deathData = useGameStore((state) => state.deathData);
+  const startNewPet = useGameStore((state) => state.startNewPet);
   const traits = useGameStore((state) => state.traits);
   const stage = useGameStore((state) => state.stage);
   const stats = useGameStore((state) => state.stats);
@@ -109,6 +113,11 @@ function AppContent() {
   const retroMode = useGameStore((state) => state.retroMode);
   const theme = useGameStore((state) => state.theme);
   const updatePetSprite = useGameStore((state) => state.updatePetSprite);
+  const placate = useGameStore((state) => state.placate);
+  const lastPlacateTime = useGameStore((state) => state.lastPlacateTime);
+  const placateEffect = useGameStore((state) => state.placateEffect);
+  const vomitEffect = useGameStore((state) => state.vomitEffect);
+  const insanityEffect = useGameStore((state) => state.insanityEffect);
   
   // Get the currently dragged item for DragOverlay
   const activeItem: Offering | undefined = activeId 
@@ -507,11 +516,21 @@ function AppContent() {
     initializePet(name, archetype, color);
   };
 
+  // Show CreationScreen if pet not initialized
   if (!isInitialized) {
     return <CreationScreen onComplete={handlePetCreation} />;
   }
 
+  // Show DeathScreen if pet has died (Requirements 5.1, 5.4)
+  if (!isAlive && deathData) {
+    return <DeathScreen deathData={deathData} onStartNew={startNewPet} />;
+  }
+
   const canScavenge = inventory.length < 3 && !isScavenging;
+
+  // Calculate placate cooldown state (Requirement 6.7)
+  const placateCooldownRemaining = getPlacateCooldownRemaining(lastPlacateTime, age);
+  const isPlacateOnCooldown = placateCooldownRemaining > 0;
 
   // Determine sanity state for data attribute (critical when below 30)
   const sanityState = stats.sanity < 30 ? "critical" : "normal";
@@ -548,6 +567,16 @@ function AppContent() {
                 age={age}
                 gameDay={gameDay}
                 dailyFeeds={dailyFeeds}
+                onCriticalWarning={() => {
+                  // Requirement 8.4: Play alarm sound on first threshold crossing
+                  useGameStore.getState().playSound("critical_warning", {
+                    petName: traits.name,
+                    stage,
+                    archetype: traits.archetype,
+                    sanity: stats.sanity,
+                    corruption: stats.corruption,
+                  });
+                }}
               />
               {/* Audio Controls - accessible during gameplay (Requirements 6.1, 6.2) */}
               <AudioControls />
@@ -556,8 +585,11 @@ function AppContent() {
                 onScavenge={handleScavenge}
                 onSettings={() => setSettingsPanelOpen(true)}
                 onZenMode={() => setZenMode(true)}
+                onPlacate={placate}
                 isScavenging={isScavenging}
                 canScavenge={canScavenge}
+                isPlacateOnCooldown={isPlacateOnCooldown}
+                placateCooldownRemaining={placateCooldownRemaining}
                 reduceMotion={reduceMotion}
                 retroMode={retroMode}
               />
@@ -576,6 +608,9 @@ function AppContent() {
               reduceMotion={reduceMotion}
               retroMode={retroMode}
               onSpriteCapture={updatePetSprite}
+              placateEffect={placateEffect}
+              vomitEffect={vomitEffect}
+              insanityEffect={insanityEffect}
             />
             {zenMode && (
               <button

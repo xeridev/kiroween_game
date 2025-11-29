@@ -29,6 +29,17 @@ interface GameCanvasProps {
   reduceMotion?: boolean; // Whether to disable animations (Requirement 3.4)
   retroMode?: boolean; // Whether retro mode is enabled (Requirement 8.3)
   onSpriteCapture?: (spriteUrl: string) => void; // Callback when sprite is captured
+  placateEffect?: {
+    isActive: boolean;
+    archetype: string | null;
+  }; // Placate visual effect state (Requirement 7.1)
+  vomitEffect?: {
+    isActive: boolean;
+  }; // Vomit visual effect state (Requirement 9.2)
+  insanityEffect?: {
+    isActive: boolean;
+    eventType: string | null;
+  }; // Insanity visual effect state (Requirement 10.6)
 }
 
 // Mobile breakpoint constant
@@ -82,6 +93,9 @@ export const GameCanvas = forwardRef<GameCanvasHandle, GameCanvasProps>(function
   reduceMotion = false,
   retroMode = false,
   onSpriteCapture,
+  placateEffect,
+  vomitEffect,
+  insanityEffect,
 }, ref) {
   const canvasRef = useRef<HTMLDivElement>(null);
   
@@ -743,6 +757,37 @@ export const GameCanvas = forwardRef<GameCanvasHandle, GameCanvasProps>(function
           >
             <span className="drop-indicator-text">Drop to Feed</span>
           </div>
+        )}
+        
+        {/* Placate visual effect overlay (Requirements 7.1, 7.2, 7.3, 7.4) */}
+        {placateEffect?.isActive && !reduceMotion && (
+          <div 
+            className={`placate-effect placate-effect-${placateEffect.archetype?.toLowerCase() || 'gloom'}`}
+            aria-hidden="true"
+          />
+        )}
+        
+        {/* Vomit particle effect overlay (Requirement 9.2) */}
+        {vomitEffect?.isActive && !reduceMotion && (
+          <div 
+            className="vomit-effect"
+            aria-hidden="true"
+          >
+            {/* Splatter particles */}
+            <div className="vomit-splatter vomit-splatter-1" />
+            <div className="vomit-splatter vomit-splatter-2" />
+            <div className="vomit-splatter vomit-splatter-3" />
+            <div className="vomit-splatter vomit-splatter-4" />
+            <div className="vomit-splatter vomit-splatter-5" />
+          </div>
+        )}
+        
+        {/* Insanity visual effect overlay (Requirement 10.6) */}
+        {insanityEffect?.isActive && !reduceMotion && (
+          <div 
+            className={`insanity-effect insanity-effect-${insanityEffect.eventType?.toLowerCase() || 'whispers'}`}
+            aria-hidden="true"
+          />
         )}
       </div>
     </div>

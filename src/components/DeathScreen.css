@@ -1,0 +1,362 @@
+/* =============================================================================
+   DEATH SCREEN - Dark Memorial Aesthetic
+   Requirements: 2.3 - Full-screen death memorial
+   ============================================================================= */
+
+.death-screen {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #0a0a0a;
+  padding: 2rem;
+  position: relative;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+/* Dark vignette overlay */
+.death-screen::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(
+    ellipse at center,
+    transparent 0%,
+    rgba(0, 0, 0, 0.4) 60%,
+    rgba(0, 0, 0, 0.8) 100%
+  );
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Subtle CRT scanlines */
+.death-screen::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    rgba(18, 16, 16, 0) 50%,
+    rgba(0, 0, 0, 0.15) 50%
+  );
+  background-size: 100% 2px;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.death-container {
+  max-width: 500px;
+  width: 100%;
+  background: linear-gradient(180deg, #0d0d0d 0%, #050505 100%);
+  border: 3px solid #3a1a1a;
+  padding: 2.5rem 2rem;
+  box-shadow: 
+    0 0 60px rgba(80, 20, 20, 0.4),
+    inset 0 0 40px rgba(0, 0, 0, 0.8);
+  position: relative;
+  z-index: 2;
+  text-align: center;
+}
+
+/* Memorial Header */
+.memorial-header {
+  margin-bottom: 1.5rem;
+}
+
+.memorial-icon {
+  font-size: 3rem;
+  display: block;
+  margin-bottom: 0.75rem;
+  filter: grayscale(30%);
+  animation: pulse-glow 3s ease-in-out infinite;
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    filter: grayscale(30%) drop-shadow(0 0 8px rgba(139, 0, 0, 0.5));
+  }
+  50% {
+    filter: grayscale(30%) drop-shadow(0 0 15px rgba(139, 0, 0, 0.8));
+  }
+}
+
+.memorial-title {
+  font-family: 'Press Start 2P', cursive;
+  font-size: 1.1rem;
+  color: #8b0000;
+  text-transform: uppercase;
+  letter-spacing: 4px;
+  text-shadow: 0 0 10px rgba(139, 0, 0, 0.6);
+  margin: 0;
+}
+
+/* Memorial Card */
+.memorial-card {
+  background: rgba(20, 10, 10, 0.6);
+  border: 2px solid #2a1515;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.pet-identity {
+  margin-bottom: 1.25rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #2a1515;
+}
+
+.archetype-icon {
+  font-size: 2rem;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.pet-name {
+  font-family: 'Press Start 2P', cursive;
+  font-size: 1rem;
+  color: #cc4444;
+  margin: 0 0 0.5rem 0;
+  text-shadow: 0 0 8px rgba(204, 68, 68, 0.5);
+  word-break: break-word;
+}
+
+.pet-archetype {
+  font-family: 'VT323', monospace;
+  font-size: 1.2rem;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+}
+
+/* Stats Grid */
+.memorial-stats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.stat-label {
+  font-family: 'VT323', monospace;
+  font-size: 0.9rem;
+  color: #555;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.stat-value {
+  font-family: 'Press Start 2P', cursive;
+  font-size: 0.7rem;
+  color: #888;
+}
+
+.cause-value {
+  color: #8b0000;
+  text-shadow: 0 0 5px rgba(139, 0, 0, 0.4);
+}
+
+/* Narrative Section */
+.narrative-section {
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background: rgba(10, 5, 5, 0.5);
+  border-left: 3px solid #3a1a1a;
+}
+
+.death-narrative {
+  font-family: 'VT323', monospace;
+  font-size: 1.15rem;
+  color: #999;
+  line-height: 1.6;
+  margin: 0;
+  font-style: italic;
+}
+
+/* Epitaph Section */
+.epitaph-section {
+  margin-bottom: 2rem;
+}
+
+.epitaph {
+  font-family: 'VT323', monospace;
+  font-size: 1.3rem;
+  color: #666;
+  line-height: 1.5;
+  margin: 0;
+  font-style: italic;
+}
+
+/* Start New Button */
+.start-new-button {
+  padding: 1rem 2rem;
+  font-family: 'Press Start 2P', cursive;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  background: #8b0000;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  box-shadow: 4px 4px 0 #3a1a1a;
+  transition: none;
+  margin-bottom: 1rem;
+}
+
+.start-new-button:hover,
+.start-new-button:focus {
+  background: #a00000;
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0 #3a1a1a;
+  outline: none;
+}
+
+.start-new-button:focus-visible {
+  outline: 2px dashed #8b0000;
+  outline-offset: 4px;
+}
+
+.start-new-button:active {
+  transform: translate(4px, 4px);
+  box-shadow: none;
+}
+
+/* Ghost Notice */
+.ghost-notice {
+  font-family: 'VT323', monospace;
+  font-size: 1rem;
+  color: #444;
+  margin: 0;
+  font-style: italic;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .death-screen {
+    padding: 1rem;
+  }
+
+  .death-container {
+    padding: 2rem 1.5rem;
+  }
+
+  .memorial-icon {
+    font-size: 2.5rem;
+  }
+
+  .memorial-title {
+    font-size: 0.9rem;
+    letter-spacing: 2px;
+  }
+
+  .pet-name {
+    font-size: 0.85rem;
+  }
+
+  .memorial-stats {
+    gap: 0.75rem;
+  }
+
+  .stat-label {
+    font-size: 0.8rem;
+  }
+
+  .stat-value {
+    font-size: 0.6rem;
+  }
+
+  .death-narrative {
+    font-size: 1.05rem;
+  }
+
+  .epitaph {
+    font-size: 1.15rem;
+  }
+
+  .start-new-button {
+    padding: 0.85rem 1.5rem;
+    font-size: 0.7rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .death-screen {
+    padding: 0.5rem;
+  }
+
+  .death-container {
+    padding: 1.5rem 1rem;
+    border-width: 2px;
+  }
+
+  .memorial-icon {
+    font-size: 2rem;
+  }
+
+  .memorial-title {
+    font-size: 0.75rem;
+  }
+
+  .archetype-icon {
+    font-size: 1.5rem;
+  }
+
+  .pet-name {
+    font-size: 0.75rem;
+  }
+
+  .pet-archetype {
+    font-size: 1rem;
+  }
+
+  .memorial-card {
+    padding: 1rem;
+  }
+
+  .stat-label {
+    font-size: 0.75rem;
+  }
+
+  .stat-value {
+    font-size: 0.55rem;
+  }
+
+  .death-narrative {
+    font-size: 1rem;
+  }
+
+  .epitaph {
+    font-size: 1.1rem;
+  }
+
+  .start-new-button {
+    padding: 0.75rem 1.25rem;
+    font-size: 0.6rem;
+    letter-spacing: 1px;
+  }
+
+  .ghost-notice {
+    font-size: 0.9rem;
+  }
+}
+
+/* Reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .memorial-icon {
+    animation: none;
+  }
+
+  .start-new-button:hover,
+  .start-new-button:focus {
+    transform: none;
+  }
+}

@@ -204,6 +204,926 @@
   animation: evolution-flash 0.8s ease-out;
 }
 
+/* ============================================
+   Placate Visual Effects (Requirements 7.1, 7.2, 7.3, 7.4)
+   ============================================ */
+
+/* Base placate effect overlay */
+.placate-effect {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  z-index: 4;
+  border-radius: inherit;
+  opacity: 0;
+}
+
+/* GLOOM: Dark purple glow pulse (Requirement 7.2) */
+.placate-effect-gloom {
+  background: radial-gradient(
+    ellipse at center,
+    rgba(128, 0, 128, 0.4) 0%,
+    rgba(75, 0, 130, 0.3) 30%,
+    rgba(48, 0, 48, 0.2) 60%,
+    transparent 80%
+  );
+  box-shadow: 
+    inset 0 0 60px rgba(128, 0, 128, 0.5),
+    inset 0 0 120px rgba(75, 0, 130, 0.3);
+  animation: placate-gloom-pulse 1.5s ease-out forwards;
+}
+
+@keyframes placate-gloom-pulse {
+  0% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  20% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+  40% {
+    opacity: 0.8;
+    transform: scale(1);
+  }
+  60% {
+    opacity: 0.9;
+    transform: scale(1.02);
+  }
+  80% {
+    opacity: 0.5;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1);
+  }
+}
+
+/* SPARK: Bright sparkle particles (Requirement 7.3) */
+.placate-effect-spark {
+  background: radial-gradient(
+    ellipse at center,
+    rgba(255, 255, 100, 0.3) 0%,
+    rgba(255, 200, 50, 0.2) 30%,
+    rgba(255, 150, 0, 0.1) 60%,
+    transparent 80%
+  );
+  animation: placate-spark-burst 1.5s ease-out forwards;
+}
+
+.placate-effect-spark::before,
+.placate-effect-spark::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+}
+
+/* Sparkle particles using pseudo-elements */
+.placate-effect-spark::before {
+  background-image: 
+    radial-gradient(circle at 20% 30%, rgba(255, 255, 255, 0.9) 0%, transparent 8%),
+    radial-gradient(circle at 80% 20%, rgba(255, 255, 200, 0.8) 0%, transparent 6%),
+    radial-gradient(circle at 60% 70%, rgba(255, 255, 150, 0.9) 0%, transparent 7%),
+    radial-gradient(circle at 30% 80%, rgba(255, 200, 100, 0.8) 0%, transparent 5%),
+    radial-gradient(circle at 70% 50%, rgba(255, 255, 255, 0.7) 0%, transparent 6%),
+    radial-gradient(circle at 40% 40%, rgba(255, 220, 100, 0.9) 0%, transparent 8%);
+  animation: sparkle-dance 1.5s ease-out forwards;
+}
+
+.placate-effect-spark::after {
+  background-image: 
+    radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.6) 0%, transparent 10%),
+    radial-gradient(circle at 25% 60%, rgba(255, 255, 200, 0.7) 0%, transparent 5%),
+    radial-gradient(circle at 75% 35%, rgba(255, 200, 50, 0.8) 0%, transparent 6%),
+    radial-gradient(circle at 45% 25%, rgba(255, 255, 150, 0.7) 0%, transparent 7%);
+  animation: sparkle-dance-alt 1.5s ease-out forwards;
+}
+
+@keyframes placate-spark-burst {
+  0% {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  15% {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+  30% {
+    opacity: 0.9;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.7;
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.2);
+  }
+}
+
+@keyframes sparkle-dance {
+  0% {
+    opacity: 0;
+    transform: scale(0.8) rotate(0deg);
+  }
+  20% {
+    opacity: 1;
+    transform: scale(1) rotate(5deg);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.1) rotate(-3deg);
+  }
+  80% {
+    opacity: 0.4;
+    transform: scale(1.2) rotate(2deg);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.3) rotate(0deg);
+  }
+}
+
+@keyframes sparkle-dance-alt {
+  0% {
+    opacity: 0;
+    transform: scale(0.9) rotate(0deg);
+  }
+  25% {
+    opacity: 0.9;
+    transform: scale(1.05) rotate(-5deg);
+  }
+  55% {
+    opacity: 0.7;
+    transform: scale(1.15) rotate(3deg);
+  }
+  85% {
+    opacity: 0.3;
+    transform: scale(1.25) rotate(-2deg);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.35) rotate(0deg);
+  }
+}
+
+/* ECHO: Rippling wave effect (Requirement 7.4) */
+.placate-effect-echo {
+  animation: placate-echo-ripple 1.5s ease-out forwards;
+}
+
+.placate-effect-echo::before,
+.placate-effect-echo::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 50%;
+  height: 50%;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  border: 3px solid rgba(100, 200, 255, 0.6);
+  box-shadow: 
+    0 0 20px rgba(100, 200, 255, 0.4),
+    inset 0 0 20px rgba(100, 200, 255, 0.2);
+}
+
+.placate-effect-echo::before {
+  animation: echo-ripple-1 1.5s ease-out forwards;
+}
+
+.placate-effect-echo::after {
+  animation: echo-ripple-2 1.5s ease-out 0.2s forwards;
+}
+
+@keyframes placate-echo-ripple {
+  0% {
+    opacity: 0;
+    background: radial-gradient(
+      ellipse at center,
+      rgba(100, 200, 255, 0.3) 0%,
+      transparent 50%
+    );
+  }
+  20% {
+    opacity: 1;
+    background: radial-gradient(
+      ellipse at center,
+      rgba(100, 200, 255, 0.4) 0%,
+      rgba(100, 200, 255, 0.2) 30%,
+      transparent 60%
+    );
+  }
+  100% {
+    opacity: 0;
+    background: radial-gradient(
+      ellipse at center,
+      rgba(100, 200, 255, 0.1) 0%,
+      transparent 80%
+    );
+  }
+}
+
+@keyframes echo-ripple-1 {
+  0% {
+    width: 20%;
+    height: 20%;
+    opacity: 0;
+    border-width: 4px;
+  }
+  20% {
+    opacity: 1;
+    border-width: 3px;
+  }
+  100% {
+    width: 120%;
+    height: 120%;
+    opacity: 0;
+    border-width: 1px;
+  }
+}
+
+@keyframes echo-ripple-2 {
+  0% {
+    width: 15%;
+    height: 15%;
+    opacity: 0;
+    border-width: 4px;
+  }
+  20% {
+    opacity: 0.8;
+    border-width: 3px;
+  }
+  100% {
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    border-width: 1px;
+  }
+}
+
+/* ============================================
+   Vomit Visual Effects (Requirement 9.2)
+   ============================================ */
+
+/* Base vomit effect container */
+.vomit-effect {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  z-index: 6;
+  border-radius: inherit;
+  overflow: hidden;
+  animation: vomit-flash 1.5s ease-out forwards;
+}
+
+@keyframes vomit-flash {
+  0% {
+    background: rgba(0, 0, 0, 0);
+  }
+  10% {
+    background: rgba(100, 150, 50, 0.3);
+  }
+  30% {
+    background: rgba(80, 120, 40, 0.2);
+  }
+  100% {
+    background: rgba(0, 0, 0, 0);
+  }
+}
+
+/* Individual splatter particles */
+.vomit-splatter {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(120, 180, 60, 0.9) 0%,
+    rgba(80, 140, 40, 0.7) 40%,
+    rgba(60, 100, 30, 0.5) 70%,
+    transparent 100%
+  );
+  box-shadow: 
+    0 0 10px rgba(100, 150, 50, 0.6),
+    inset 0 0 5px rgba(150, 200, 80, 0.4);
+}
+
+/* Splatter 1 - Large center burst */
+.vomit-splatter-1 {
+  width: 120px;
+  height: 100px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  animation: splatter-burst-1 1.5s ease-out forwards;
+}
+
+@keyframes splatter-burst-1 {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.2);
+  }
+  15% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.2);
+  }
+  40% {
+    opacity: 0.8;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(1.3) translateY(30%);
+  }
+}
+
+/* Splatter 2 - Upper left */
+.vomit-splatter-2 {
+  width: 60px;
+  height: 50px;
+  top: 30%;
+  left: 25%;
+  animation: splatter-burst-2 1.5s ease-out 0.1s forwards;
+  opacity: 0;
+}
+
+@keyframes splatter-burst-2 {
+  0% {
+    opacity: 0;
+    transform: scale(0.3) rotate(-15deg);
+  }
+  20% {
+    opacity: 1;
+    transform: scale(1.1) rotate(-15deg);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(0.9) rotate(-10deg);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.2) rotate(-5deg) translateY(40px);
+  }
+}
+
+/* Splatter 3 - Upper right */
+.vomit-splatter-3 {
+  width: 70px;
+  height: 55px;
+  top: 25%;
+  right: 20%;
+  animation: splatter-burst-3 1.5s ease-out 0.05s forwards;
+  opacity: 0;
+}
+
+@keyframes splatter-burst-3 {
+  0% {
+    opacity: 0;
+    transform: scale(0.2) rotate(20deg);
+  }
+  18% {
+    opacity: 1;
+    transform: scale(1.15) rotate(20deg);
+  }
+  45% {
+    opacity: 0.75;
+    transform: scale(0.95) rotate(15deg);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.1) rotate(10deg) translateY(50px);
+  }
+}
+
+/* Splatter 4 - Lower left */
+.vomit-splatter-4 {
+  width: 50px;
+  height: 45px;
+  bottom: 35%;
+  left: 30%;
+  animation: splatter-burst-4 1.5s ease-out 0.15s forwards;
+  opacity: 0;
+}
+
+@keyframes splatter-burst-4 {
+  0% {
+    opacity: 0;
+    transform: scale(0.4) rotate(-25deg);
+  }
+  25% {
+    opacity: 0.9;
+    transform: scale(1.05) rotate(-25deg);
+  }
+  55% {
+    opacity: 0.6;
+    transform: scale(0.85) rotate(-20deg);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1) rotate(-15deg) translateY(35px);
+  }
+}
+
+/* Splatter 5 - Lower right */
+.vomit-splatter-5 {
+  width: 55px;
+  height: 48px;
+  bottom: 30%;
+  right: 25%;
+  animation: splatter-burst-5 1.5s ease-out 0.08s forwards;
+  opacity: 0;
+}
+
+@keyframes splatter-burst-5 {
+  0% {
+    opacity: 0;
+    transform: scale(0.3) rotate(30deg);
+  }
+  22% {
+    opacity: 0.95;
+    transform: scale(1.1) rotate(30deg);
+  }
+  50% {
+    opacity: 0.65;
+    transform: scale(0.9) rotate(25deg);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.05) rotate(20deg) translateY(45px);
+  }
+}
+
+/* Drip effect using pseudo-elements */
+.vomit-effect::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 80px;
+  background: linear-gradient(
+    to bottom,
+    rgba(100, 150, 50, 0.8) 0%,
+    rgba(80, 130, 40, 0.6) 50%,
+    transparent 100%
+  );
+  border-radius: 10px 10px 50% 50%;
+  transform: translate(-50%, 0);
+  animation: vomit-drip 1.5s ease-in forwards;
+  opacity: 0;
+}
+
+@keyframes vomit-drip {
+  0% {
+    opacity: 0;
+    height: 20px;
+    transform: translate(-50%, 0);
+  }
+  20% {
+    opacity: 0.9;
+    height: 60px;
+    transform: translate(-50%, 10px);
+  }
+  60% {
+    opacity: 0.7;
+    height: 100px;
+    transform: translate(-50%, 40px);
+  }
+  100% {
+    opacity: 0;
+    height: 120px;
+    transform: translate(-50%, 80px);
+  }
+}
+
+/* ============================================
+   Insanity Visual Effects (Requirement 10.6)
+   ============================================ */
+
+/* Base insanity effect overlay */
+.insanity-effect {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  z-index: 7;
+  border-radius: inherit;
+  overflow: hidden;
+}
+
+/* WHISPERS: Ethereal, ghostly overlay with subtle movement */
+.insanity-effect-whispers {
+  background: radial-gradient(
+    ellipse at center,
+    rgba(100, 100, 150, 0.2) 0%,
+    rgba(50, 50, 80, 0.3) 50%,
+    rgba(20, 20, 40, 0.4) 100%
+  );
+  animation: insanity-whispers 2s ease-out forwards;
+}
+
+.insanity-effect-whispers::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    radial-gradient(circle at 20% 30%, rgba(200, 200, 255, 0.15) 0%, transparent 30%),
+    radial-gradient(circle at 80% 60%, rgba(180, 180, 220, 0.12) 0%, transparent 25%),
+    radial-gradient(circle at 50% 80%, rgba(150, 150, 200, 0.1) 0%, transparent 35%);
+  animation: whisper-float 2s ease-in-out forwards;
+}
+
+@keyframes insanity-whispers {
+  0% {
+    opacity: 0;
+  }
+  15% {
+    opacity: 1;
+  }
+  70% {
+    opacity: 0.8;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes whisper-float {
+  0% {
+    transform: translateY(0) scale(1);
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  50% {
+    transform: translateY(-10px) scale(1.05);
+  }
+  80% {
+    opacity: 0.6;
+  }
+  100% {
+    transform: translateY(-20px) scale(1.1);
+    opacity: 0;
+  }
+}
+
+/* SHADOWS: Dark, creeping shadows from edges */
+.insanity-effect-shadows {
+  background: radial-gradient(
+    ellipse at center,
+    transparent 20%,
+    rgba(0, 0, 0, 0.3) 50%,
+    rgba(0, 0, 0, 0.6) 80%,
+    rgba(0, 0, 0, 0.8) 100%
+  );
+  animation: insanity-shadows 2s ease-out forwards;
+}
+
+.insanity-effect-shadows::before,
+.insanity-effect-shadows::after {
+  content: '';
+  position: absolute;
+  background: rgba(0, 0, 0, 0.7);
+  border-radius: 50%;
+  filter: blur(20px);
+}
+
+.insanity-effect-shadows::before {
+  width: 150px;
+  height: 200px;
+  top: -50px;
+  left: -30px;
+  animation: shadow-creep-left 2s ease-out forwards;
+}
+
+.insanity-effect-shadows::after {
+  width: 180px;
+  height: 220px;
+  bottom: -60px;
+  right: -40px;
+  animation: shadow-creep-right 2s ease-out forwards;
+}
+
+@keyframes insanity-shadows {
+  0% {
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  60% {
+    opacity: 0.9;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes shadow-creep-left {
+  0% {
+    transform: translate(-100%, -50%) scale(0.5);
+    opacity: 0;
+  }
+  30% {
+    transform: translate(0, 0) scale(1);
+    opacity: 1;
+  }
+  70% {
+    transform: translate(20px, 10px) scale(1.1);
+    opacity: 0.8;
+  }
+  100% {
+    transform: translate(40px, 20px) scale(1.2);
+    opacity: 0;
+  }
+}
+
+@keyframes shadow-creep-right {
+  0% {
+    transform: translate(100%, 50%) scale(0.5);
+    opacity: 0;
+  }
+  35% {
+    transform: translate(0, 0) scale(1);
+    opacity: 1;
+  }
+  65% {
+    transform: translate(-20px, -10px) scale(1.1);
+    opacity: 0.8;
+  }
+  100% {
+    transform: translate(-40px, -20px) scale(1.2);
+    opacity: 0;
+  }
+}
+
+/* GLITCH: Digital distortion with RGB split and scan lines */
+.insanity-effect-glitch {
+  animation: insanity-glitch 2s steps(1) forwards;
+}
+
+.insanity-effect-glitch::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent 0px,
+    transparent 2px,
+    rgba(0, 255, 255, 0.03) 2px,
+    rgba(0, 255, 255, 0.03) 4px
+  );
+  animation: glitch-scanlines 2s linear forwards;
+}
+
+.insanity-effect-glitch::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    linear-gradient(90deg, rgba(255, 0, 0, 0.1) 0%, transparent 33%),
+    linear-gradient(90deg, transparent 66%, rgba(0, 0, 255, 0.1) 100%);
+  animation: glitch-rgb-split 2s steps(3) forwards;
+}
+
+@keyframes insanity-glitch {
+  0%, 100% {
+    opacity: 0;
+    clip-path: inset(0 0 0 0);
+  }
+  5% {
+    opacity: 1;
+    clip-path: inset(10% 0 80% 0);
+  }
+  10% {
+    clip-path: inset(40% 0 40% 0);
+  }
+  15% {
+    clip-path: inset(80% 0 5% 0);
+  }
+  20% {
+    clip-path: inset(20% 0 60% 0);
+  }
+  25% {
+    clip-path: inset(0 0 0 0);
+  }
+  30% {
+    clip-path: inset(60% 0 20% 0);
+  }
+  35% {
+    clip-path: inset(0 0 0 0);
+  }
+  40%, 70% {
+    opacity: 0.8;
+    clip-path: inset(0 0 0 0);
+  }
+  75% {
+    clip-path: inset(30% 0 50% 0);
+  }
+  80% {
+    clip-path: inset(0 0 0 0);
+  }
+  85% {
+    opacity: 0.5;
+  }
+  90% {
+    opacity: 0.3;
+  }
+  95% {
+    opacity: 0.1;
+  }
+}
+
+@keyframes glitch-scanlines {
+  0% {
+    opacity: 0;
+    transform: translateY(0);
+  }
+  10% {
+    opacity: 1;
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+  80% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes glitch-rgb-split {
+  0%, 100% {
+    opacity: 0;
+    transform: translateX(0);
+  }
+  10% {
+    opacity: 1;
+    transform: translateX(-3px);
+  }
+  20% {
+    transform: translateX(3px);
+  }
+  30% {
+    transform: translateX(-2px);
+  }
+  40% {
+    transform: translateX(2px);
+  }
+  50% {
+    transform: translateX(0);
+  }
+  60% {
+    transform: translateX(-4px);
+  }
+  70% {
+    transform: translateX(4px);
+    opacity: 0.8;
+  }
+  80% {
+    transform: translateX(0);
+    opacity: 0.5;
+  }
+  90% {
+    opacity: 0.2;
+  }
+}
+
+/* INVERSION: Color inversion with warping effect */
+.insanity-effect-inversion {
+  background: rgba(255, 255, 255, 0.1);
+  mix-blend-mode: difference;
+  animation: insanity-inversion 2s ease-out forwards;
+}
+
+.insanity-effect-inversion::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(255, 255, 255, 0.3) 0%,
+    rgba(200, 200, 200, 0.2) 40%,
+    transparent 70%
+  );
+  animation: inversion-pulse 2s ease-in-out forwards;
+}
+
+.insanity-effect-inversion::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: conic-gradient(
+    from 0deg at 50% 50%,
+    rgba(255, 0, 0, 0.1) 0deg,
+    rgba(0, 255, 0, 0.1) 120deg,
+    rgba(0, 0, 255, 0.1) 240deg,
+    rgba(255, 0, 0, 0.1) 360deg
+  );
+  animation: inversion-rotate 2s linear forwards;
+}
+
+@keyframes insanity-inversion {
+  0% {
+    opacity: 0;
+    filter: hue-rotate(0deg);
+  }
+  15% {
+    opacity: 1;
+    filter: hue-rotate(90deg);
+  }
+  30% {
+    filter: hue-rotate(180deg);
+  }
+  50% {
+    filter: hue-rotate(270deg);
+  }
+  70% {
+    filter: hue-rotate(360deg);
+    opacity: 0.8;
+  }
+  85% {
+    opacity: 0.4;
+  }
+  100% {
+    opacity: 0;
+    filter: hue-rotate(0deg);
+  }
+}
+
+@keyframes inversion-pulse {
+  0% {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+  20% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  80% {
+    transform: scale(1);
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(1.5);
+    opacity: 0;
+  }
+}
+
+@keyframes inversion-rotate {
+  0% {
+    transform: rotate(0deg);
+    opacity: 0;
+  }
+  20% {
+    opacity: 0.5;
+  }
+  50% {
+    transform: rotate(180deg);
+  }
+  80% {
+    opacity: 0.3;
+  }
+  100% {
+    transform: rotate(360deg);
+    opacity: 0;
+  }
+}
+
 /* Reduced motion preference */
 @media (prefers-reduced-motion: reduce) {
   .game-canvas-container {
@@ -220,5 +1140,29 @@
   
   .canvas-container.evolution-flash .game-canvas-container {
     animation: none;
+  }
+  
+  /* Disable placate animations for reduced motion */
+  .placate-effect,
+  .placate-effect::before,
+  .placate-effect::after {
+    animation: none !important;
+    opacity: 0 !important;
+  }
+  
+  /* Disable vomit animations for reduced motion */
+  .vomit-effect,
+  .vomit-effect::before,
+  .vomit-splatter {
+    animation: none !important;
+    opacity: 0 !important;
+  }
+  
+  /* Disable insanity animations for reduced motion */
+  .insanity-effect,
+  .insanity-effect::before,
+  .insanity-effect::after {
+    animation: none !important;
+    opacity: 0 !important;
   }
 }

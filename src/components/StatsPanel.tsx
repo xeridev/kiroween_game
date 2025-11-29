@@ -12,6 +12,7 @@ interface StatsPanelProps {
   age: number;
   gameDay: number;
   dailyFeeds: number;
+  onCriticalWarning?: () => void; // Callback when critical state is first entered
 }
 
 // Threshold for emphasis animation (Requirement 3.5)
@@ -108,10 +109,14 @@ function useTickThrottledValue(value: number): number {
   return throttledValue;
 }
 
+// Critical state thresholds (Requirement 8.3)
+const CRITICAL_HUNGER_THRESHOLD = 90;
+const CRITICAL_SANITY_THRESHOLD = 10;
+
 /**
  * StatsPanel - Pet statistics display with glassmorphism styling
  * 
- * Requirements: 6.2, 6.4, 6.5
+ * Requirements: 6.2, 6.4, 6.5, 8.3, 8.4
  */
 export function StatsPanel({
   stats,
@@ -119,6 +124,7 @@ export function StatsPanel({
   age,
   gameDay,
   dailyFeeds,
+  onCriticalWarning,
 }: StatsPanelProps) {
   // Refs for emphasis animation elements
   const hungerRef = useRef<HTMLDivElement>(null);
@@ -128,8 +134,23 @@ export function StatsPanel({
   const prevHunger = useRef(stats.hunger);
   const prevSanity = useRef(stats.sanity);
   
+  // Track previous critical state for threshold crossing detection (Requirement 8.4)
+  const wasCritical = useRef(false);
+  
   // Get theme mode for styling
   const { mode } = useTheme();
+  
+  // Calculate if currently in critical state (Requirement 8.3)
+  const isCritical = stats.hunger >= CRITICAL_HUNGER_THRESHOLD || stats.sanity <= CRITICAL_SANITY_THRESHOLD;
+  
+  // Detect critical threshold crossing and trigger sound (Requirement 8.4)
+  useEffect(() => {
+    // Only trigger on first crossing into critical state
+    if (isCritical && !wasCritical.current) {
+      onCriticalWarning?.();
+    }
+    wasCritical.current = isCritical;
+  }, [isCritical, onCriticalWarning]);
   
   // Apply tick throttling (Requirement 8.3)
   const throttledHunger = useTickThrottledValue(stats.hunger);
@@ -207,9 +228,17 @@ export function StatsPanel({
 
   const sanityClass = getSanityClass();
 
+  // Combine sanity class with critical class for styling
+  const panelClasses = [
+    'stats-panel-content',
+    `stats-panel-content--${mode}`,
+    sanityClass,
+    isCritical ? 'stats-panel-critical' : '',
+  ].filter(Boolean).join(' ');
+
   return (
     <GlassPanel
-      className={`stats-panel-content stats-panel-content--${mode} ${sanityClass}`}
+      className={panelClasses}
       variant="stats"
       role="complementary"
       aria-label="Pet statistics"

@@ -49,6 +49,43 @@
   }
 }
 
+/* ============================================
+   Critical Warning State (Requirement 8.3)
+   Pulsing red border when hunger >= 90 OR sanity <= 10
+   ============================================ */
+.stats-panel-content.stats-panel-critical {
+  box-shadow: 
+    inset 0 0 0 3px var(--critical-border-color, #ff1744),
+    0 0 20px rgba(255, 23, 68, 0.4);
+  animation: critical-pulse 0.8s ease-in-out infinite;
+  position: relative;
+}
+
+/* Critical pulse animation - high contrast pulsing red border */
+@keyframes critical-pulse {
+  0%, 100% {
+    box-shadow: 
+      inset 0 0 0 3px var(--critical-border-color, #ff1744),
+      0 0 20px rgba(255, 23, 68, 0.4);
+  }
+  50% {
+    box-shadow: 
+      inset 0 0 0 4px var(--critical-border-color-bright, #ff5252),
+      0 0 30px rgba(255, 23, 68, 0.6);
+  }
+}
+
+/* Theme-specific critical colors */
+.stats-panel-content--cute.stats-panel-critical {
+  --critical-border-color: #D9534F;
+  --critical-border-color-bright: #E57373;
+}
+
+.stats-panel-content--horror.stats-panel-critical {
+  --critical-border-color: #FF1744;
+  --critical-border-color-bright: #FF5252;
+}
+
 /* Stats Section */
 .stats-section {
   display: flex;
@@ -150,6 +187,12 @@ Reduced motion support (Requirement 6.4) */
 @media (prefers-reduced-motion: reduce) {
   .stats-panel-content.critical {
     animation: none !important;
+  }
+
+  .stats-panel-content.stats-panel-critical {
+    animation: none !important;
+    /* Keep static border for visibility without animation */
+    box-shadow: inset 0 0 0 3px var(--critical-border-color, #ff1744);
   }
 
   .stat-bar {

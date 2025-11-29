@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import type { GameState, Archetype, LogSource, AudioState, SoundContext, Offering, Theme, ImageStatus } from "./utils/types";
+import type { GameState, Archetype, LogSource, AudioState, SoundContext, Offering, Theme, ImageStatus, DeathData, DeathCause } from "./utils/types";
 import { logError, logWarning, logCritical, logInfo } from "./utils/errorLogger";
 import { soundManager } from "./utils/soundManager";
 
@@ -25,6 +25,27 @@ const initialState = {
   logs: [],
   lastTickTime: Date.now(),
   currentPetSpriteUrl: null as string | null,
+  // Death system state (Requirements 1.4, 6.4, 4.3)
+  deathData: null as DeathData | null,
+  lastPlacateTime: null as number | null,
+  lastHauntGameDay: 0,
+  // Placate visual effect state (Requirement 7.1)
+  placateEffect: {
+    isActive: false,
+    archetype: null as import("./utils/types").Archetype | null,
+    timestamp: null as number | null,
+  },
+  // Vomit visual effect state (Requirement 9.2)
+  vomitEffect: {
+    isActive: false,
+    timestamp: null as number | null,
+  },
+  // Insanity visual effect state (Requirement 10.6)
+  insanityEffect: {
+    isActive: false,
+    eventType: null as import("./utils/types").InsanityEventType | null,
+    timestamp: null as number | null,
+  },
 };
 
 // Default audio state (Requirements 4.1, 4.2)
@@ -45,6 +66,29 @@ const initialSettingsState = {
   theme: "cute" as const,  // Default to cute theme (Requirement 1.4)
 };
 
+// Placate cooldown duration in game minutes (Requirement 6.4)
+const PLACATE_COOLDOWN_DURATION = 30;
+
+/**
+ * Calculate remaining placate cooldown in game minutes.
+ * Returns 0 if not on cooldown.
+ * 
+ * Requirement 6.7: Return remaining game minutes (0 if not on cooldown)
+ */
+export const getPlacateCooldownRemaining = (
+  lastPlacateTime: number | null,
+  currentAge: number
+): number => {
+  if (lastPlacateTime === null) {
+    return 0;
+  }
+  
+  const elapsed = currentAge - lastPlacateTime;
+  const remaining = PLACATE_COOLDOWN_DURATION - elapsed;
+  
+  return remaining > 0 ? remaining : 0;
+};
+
 // Helper function to calculate offline decay
 const calculateOfflineDecay = (state: any, elapsedRealSeconds: number) => {
   if (!state.isInitialized || !state.isAlive) {
@@ -54,12 +98,42 @@ const calculateOfflineDecay = (state: any, elapsedRealSeconds: number) => {
   // 1 real second = 1 game minute
   const gameMinutesElapsed = elapsedRealSeconds;
 
-  // Apply decay: hunger increases by 0.05 per minute, sanity decreases by 0.02 per minute
-  const newHunger = Math.min(
-    100,
-    state.stats.hunger + gameMinutesElapsed * 0.05
-  );
-  const newSanity = Math.max(0, state.stats.sanity - gameMinutesElapsed * 0.02);
+  // ============================================
+  // Starvation Consequences (Requirements 8.1, 8.2)
+  // ============================================
+  // For offline decay, we simulate minute-by-minute to properly apply
+  // accelerated decay rates when thresholds are crossed
+  
+  let currentHunger = state.stats.hunger;
+  let currentSanity = state.stats.sanity;
+  
+  for (let i = 0; i < gameMinutesElapsed; i++) {
+    // Base decay rates
+    let hungerIncreaseRate = 0.05;  // Base: 0.05 per minute
+    let sanityDecayRate = 0.02;     // Base: 0.02 per minute
+    
+    // Requirement 8.1: When hunger > 80, sanity decays at 0.05/min instead of 0.02/min
+    if (currentHunger > 80) {
+      sanityDecayRate = 0.05;
+    }
+    
+    // Requirement 8.2: When hunger >= 90, hunger increases at 0.1/min instead of 0.05/min
+    if (currentHunger >= 90) {
+      hungerIncreaseRate = 0.1;
+    }
+    
+    // Apply decay with calculated rates
+    currentHunger = Math.min(100, currentHunger + hungerIncreaseRate);
+    currentSanity = Math.max(0, currentSanity - sanityDecayRate);
+    
+    // Early exit if pet would die (hunger >= 100 or sanity <= 0)
+    if (currentHunger >= 100 || currentSanity <= 0) {
+      break;
+    }
+  }
+  
+  const newHunger = currentHunger;
+  const newSanity = currentSanity;
   const newAge = state.age + gameMinutesElapsed;
 
   // Calculate daily resets
@@ -439,9 +513,27 @@ export const useGameStore = create<GameState>()(
         // Advance game time by 1 minute (1 real second = 1 game minute)
         const newAge = state.age + 1;
 
-        // Apply decay: hunger increases, sanity decreases
-        const newHunger = Math.min(100, state.stats.hunger + 0.05);
-        const newSanity = Math.max(0, state.stats.sanity - 0.02);
+        // ============================================
+        // Starvation Consequences (Requirements 8.1, 8.2)
+        // ============================================
+        
+        // Base decay rates
+        let hungerIncreaseRate = 0.05;  // Base: 0.05 per minute
+        let sanityDecayRate = 0.02;     // Base: 0.02 per minute
+        
+        // Requirement 8.1: When hunger > 80, sanity decays at 0.05/min instead of 0.02/min
+        if (state.stats.hunger > 80) {
+          sanityDecayRate = 0.05;
+        }
+        
+        // Requirement 8.2: When hunger >= 90, hunger increases at 0.1/min instead of 0.05/min
+        if (state.stats.hunger >= 90) {
+          hungerIncreaseRate = 0.1;
+        }
+
+        // Apply decay with calculated rates
+        const newHunger = Math.min(100, state.stats.hunger + hungerIncreaseRate);
+        const newSanity = Math.max(0, state.stats.sanity - sanityDecayRate);
 
         // Check for daily reset (24 game hours = 1440 minutes)
         let newDailyFeeds = state.dailyFeeds;
@@ -562,6 +654,23 @@ export const useGameStore = create<GameState>()(
           }
         }
 
+        // ============================================
+        // Death Detection (Requirements 1.1, 1.2)
+        // ============================================
+        
+        // Check for death conditions AFTER state update
+        // Hunger >= 100 triggers STARVATION death
+        if (newHunger >= 100) {
+          get().triggerDeath("STARVATION");
+          return; // Stop tick processing after death
+        }
+        
+        // Sanity <= 0 triggers INSANITY death
+        if (newSanity <= 0) {
+          get().triggerDeath("INSANITY");
+          return; // Stop tick processing after death
+        }
+
         // Check for critical events and add warnings (only on first occurrence)
         if (newHunger >= 100 && state.stats.hunger < 100) {
           get().addLog(`WARNING: ${state.traits.name} is starving!`, "SYSTEM");
@@ -580,6 +689,38 @@ export const useGameStore = create<GameState>()(
             "SYSTEM"
           );
         }
+
+        // ============================================
+        // Insanity Events (Requirements 10.1, 10.2)
+        // ============================================
+        // 1% chance per tick when sanity < 30
+        if (newSanity < 30) {
+          const insanityRoll = Math.random();
+          if (insanityRoll < 0.01) {
+            // Trigger insanity event asynchronously
+            get().triggerInsanityEvent();
+          }
+        }
+
+        // ============================================
+        // Haunt Events (Requirements 4.1, 4.2, 4.3)
+        // ============================================
+        // Evaluate haunt trigger each tick when sanity < 50
+        // Uses shouldTriggerHaunt which checks:
+        // - Sanity < 50 threshold (Requirement 4.2)
+        // - 1% chance per tick (Requirement 4.2)
+        // - Max 1 haunt per game day (Requirement 4.3)
+        // - Ghosts exist in storage (Requirement 4.1)
+        import("./utils/hauntSystem").then(({ shouldTriggerHaunt }) => {
+          // Use the updated gameDay (newGameDay) for the check
+          const currentGameDay = newGameDay;
+          const lastHauntDay = get().lastHauntGameDay;
+          
+          if (shouldTriggerHaunt(newSanity, lastHauntDay, currentGameDay)) {
+            // Trigger haunt event asynchronously
+            get().triggerHaunt();
+          }
+        });
       },
 
       scavenge: async () => {
@@ -668,34 +809,60 @@ export const useGameStore = create<GameState>()(
           },
           inventory: newInventory,
           dailyFeeds: newDailyFeeds,
+          // Trigger vomit effect if overfed (Requirement 9.2)
+          ...(isOverfed && { vomitEffect: { isActive: true, timestamp: Date.now() } }),
         });
 
         // Import narrative generator
-        const { generateFeedingNarrative, getPlaceholderText } = await import("./utils/narrativeGenerator");
+        const { generateFeedingNarrative, generateVomitNarrative, getPlaceholderText } = await import("./utils/narrativeGenerator");
 
         // Add placeholder log immediately with pending state
-        const eventType = isOverfed ? "overfeed" : "feed";
+        const eventType = isOverfed ? "vomit" : "feed";
         const placeholderText = getPlaceholderText(eventType, state.traits.name);
         const logId = get().addLog(placeholderText, "PET", true);
 
         // Requirement 5.1: Play sound with feeding context
-        get().playSound("feed", {
-          itemType: offering.type,
-          narrativeText: placeholderText,
-        });
-
-        // Generate AI narrative async
-        try {
-          const aiNarrative = await generateFeedingNarrative({
+        // Requirement 9.4: Play vomit sound on overfeed
+        if (isOverfed) {
+          get().playSound("vomit", {
             petName: state.traits.name,
             stage: state.stage,
             archetype: state.traits.archetype,
             sanity: newSanity,
             corruption: newCorruption,
-            itemName: offering.description,
-            itemType: offering.type,
-            isOverfed,
           });
+        } else {
+          get().playSound("feed", {
+            itemType: offering.type,
+            narrativeText: placeholderText,
+          });
+        }
+
+        // Generate AI narrative async
+        try {
+          let aiNarrative: string;
+          
+          if (isOverfed) {
+            // Requirement 9.3: Generate vomit narrative for overfeed
+            aiNarrative = await generateVomitNarrative({
+              petName: state.traits.name,
+              archetype: state.traits.archetype,
+              stage: state.stage,
+              sanity: newSanity,
+              corruption: newCorruption,
+            });
+          } else {
+            aiNarrative = await generateFeedingNarrative({
+              petName: state.traits.name,
+              stage: state.stage,
+              archetype: state.traits.archetype,
+              sanity: newSanity,
+              corruption: newCorruption,
+              itemName: offering.description,
+              itemType: offering.type,
+              isOverfed,
+            });
+          }
 
           // Update log with AI-generated text
           get().updateLogText(logId, aiNarrative);
@@ -704,6 +871,13 @@ export const useGameStore = create<GameState>()(
           logWarning("Failed to generate feeding narrative", {
             error: error instanceof Error ? error.message : "Unknown",
           });
+        }
+
+        // Auto-clear vomit effect after animation duration (1.5 seconds)
+        if (isOverfed) {
+          setTimeout(() => {
+            get().clearVomitEffect();
+          }, 1500);
         }
       },
 
@@ -743,6 +917,488 @@ export const useGameStore = create<GameState>()(
       reset: () => {
         set({ ...initialState, ...initialAudioState });
       },
+
+      // ============================================
+      // Death System Actions (Requirements 1.3, 1.4, 3.1, 2.4)
+      // ============================================
+
+      /**
+       * Trigger death event for the pet.
+       * Sets isAlive to false, creates DeathData, saves ghost, plays death sound.
+       * 
+       * Requirements: 1.3, 1.4, 3.1, 2.4
+       */
+      triggerDeath: async (cause: DeathCause) => {
+        const state = get();
+        
+        // Don't trigger death if already dead
+        if (!state.isAlive) {
+          return;
+        }
+
+        // Import narrative generator for death narrative and epitaph
+        const { generateDeathNarrative, generateEpitaph } = await import("./utils/narrativeGenerator");
+        
+        // Import haunt system for ghost storage
+        const { saveGhost, createGhostFromPet } = await import("./utils/hauntSystem");
+
+        // Generate death narrative and epitaph
+        let deathNarrative = "";
+        let epitaph = "";
+        
+        try {
+          deathNarrative = await generateDeathNarrative({
+            petName: state.traits.name,
+            archetype: state.traits.archetype,
+            stage: state.stage,
+            age: state.age,
+            cause,
+            sanity: state.stats.sanity,
+            corruption: state.stats.corruption,
+          });
+        } catch (error) {
+          logWarning("Failed to generate death narrative", {
+            error: error instanceof Error ? error.message : "Unknown",
+          });
+          // Fallback will be handled by narrativeGenerator
+        }
+
+        try {
+          epitaph = await generateEpitaph({
+            petName: state.traits.name,
+            archetype: state.traits.archetype,
+            stage: state.stage,
+            age: state.age,
+            cause,
+          });
+        } catch (error) {
+          logWarning("Failed to generate epitaph", {
+            error: error instanceof Error ? error.message : "Unknown",
+          });
+          // Fallback will be handled by narrativeGenerator
+        }
+
+        // Create DeathData with all required fields
+        const deathData: DeathData = {
+          petName: state.traits.name,
+          archetype: state.traits.archetype,
+          stage: state.stage,
+          age: state.age,
+          cause,
+          finalStats: { ...state.stats },
+          timestamp: Date.now(),
+          deathNarrative,
+          epitaph,
+        };
+
+        // Create and save ghost to localStorage
+        const ghost = createGhostFromPet(
+          state.traits,
+          state.stats,
+          state.stage,
+          cause,
+          epitaph
+        );
+        saveGhost(ghost);
+
+        // Update state: set isAlive to false and store death data
+        set({
+          isAlive: false,
+          deathData,
+        });
+
+        // Play death sound
+        get().playSound("death", {
+          petName: state.traits.name,
+          stage: state.stage,
+          archetype: state.traits.archetype,
+        });
+
+        logInfo("Pet death triggered", {
+          petName: state.traits.name,
+          cause,
+          age: state.age,
+          stage: state.stage,
+        });
+      },
+
+      /**
+       * Start a new pet after death.
+       * Resets game state to initial values while preserving ghost data.
+       * 
+       * Requirements: 5.3, 5.4
+       */
+      startNewPet: () => {
+        // Reset game state to initial values
+        // Ghost data is stored in separate localStorage key ("creepy-companion-ghosts")
+        // and is NOT affected by this reset
+        set({
+          ...initialState,
+          ...initialAudioState,
+          ...initialSettingsState,
+          // Explicitly set isInitialized to false to show CreationScreen
+          isInitialized: false,
+          // Reset death data
+          deathData: null,
+          lastPlacateTime: null,
+          lastHauntGameDay: 0,
+        });
+
+        logInfo("New pet started - game state reset");
+      },
+
+      // ============================================
+      // Placate Action (Requirements 6.1, 6.2, 6.3, 6.4, 6.6)
+      // ============================================
+
+      /**
+       * Execute placate action to restore sanity.
+       * - Check isAlive and cooldown before executing
+       * - Increase sanity by 15 (or 5 if sanity >= 80 and corruption < 50)
+       * - Increase hunger by 5
+       * - Set lastPlacateTime to current age
+       * - Play placate sound
+       * 
+       * Requirements: 6.1, 6.2, 6.3, 6.4, 6.6
+       */
+      placate: async () => {
+        const state = get();
+
+        // Check if pet is alive (Requirement 6.1)
+        if (!state.isAlive) {
+          logWarning("Cannot placate: pet is not alive");
+          return;
+        }
+
+        // Check cooldown (Requirement 6.4)
+        const cooldownRemaining = getPlacateCooldownRemaining(
+          state.lastPlacateTime,
+          state.age
+        );
+        if (cooldownRemaining > 0) {
+          logWarning("Cannot placate: on cooldown", { cooldownRemaining });
+          return;
+        }
+
+        // Calculate sanity increase (Requirements 6.1, 6.2)
+        // Normal: +15 sanity
+        // Reduced: +5 sanity if sanity >= 80 AND corruption < 50
+        let sanityIncrease = 15;
+        if (state.stats.sanity >= 80 && state.stats.corruption < 50) {
+          sanityIncrease = 5;
+        }
+
+        const newSanity = Math.min(100, state.stats.sanity + sanityIncrease);
+        
+        // Increase hunger by 5 (Requirement 6.3)
+        const newHunger = Math.min(100, state.stats.hunger + 5);
+
+        // Update state
+        set({
+          stats: {
+            ...state.stats,
+            sanity: newSanity,
+            hunger: newHunger,
+          },
+          // Set lastPlacateTime to current age (Requirement 6.4)
+          lastPlacateTime: state.age,
+        });
+
+        // Play placate sound (Requirement 6.6)
+        get().playSound("placate", {
+          petName: state.traits.name,
+          stage: state.stage,
+          archetype: state.traits.archetype,
+          sanity: newSanity,
+          corruption: state.stats.corruption,
+        });
+
+        // Generate placate narrative (Requirement 6.5)
+        try {
+          const { generatePlacateNarrative, getPlaceholderText } = await import("./utils/narrativeGenerator");
+          
+          // Add placeholder log immediately
+          const placeholderText = getPlaceholderText("placate", state.traits.name);
+          const logId = get().addLog(placeholderText, "PET", true);
+
+          // Generate AI narrative async
+          const aiNarrative = await generatePlacateNarrative({
+            petName: state.traits.name,
+            archetype: state.traits.archetype,
+            stage: state.stage,
+            sanity: newSanity,
+            corruption: state.stats.corruption,
+          });
+
+          // Update log with AI-generated text
+          get().updateLogText(logId, aiNarrative);
+        } catch (error) {
+          logWarning("Failed to generate placate narrative", {
+            error: error instanceof Error ? error.message : "Unknown",
+          });
+        }
+
+        logInfo("Placate action executed", {
+          sanityIncrease,
+          newSanity,
+          newHunger,
+        });
+
+        // Trigger placate visual effect (Requirement 7.1)
+        get().triggerPlacateEffect();
+      },
+
+      // ============================================
+      // Placate Visual Effect Actions (Requirement 7.1)
+      // ============================================
+
+      /**
+       * Trigger placate visual effect animation.
+       * Sets the effect state to active with current archetype.
+       * 
+       * Requirement 7.1: Display glow pulse animation on pet sprite
+       */
+      triggerPlacateEffect: () => {
+        const state = get();
+        set({
+          placateEffect: {
+            isActive: true,
+            archetype: state.traits.archetype,
+            timestamp: Date.now(),
+          },
+        });
+
+        // Auto-clear effect after animation duration (1.5 seconds)
+        setTimeout(() => {
+          get().clearPlacateEffect();
+        }, 1500);
+      },
+
+      /**
+       * Clear placate visual effect animation.
+       * Resets the effect state to inactive.
+       */
+      clearPlacateEffect: () => {
+        set({
+          placateEffect: {
+            isActive: false,
+            archetype: null,
+            timestamp: null,
+          },
+        });
+      },
+
+      // ============================================
+      // Vomit Visual Effect Actions (Requirement 9.2)
+      // ============================================
+
+      /**
+       * Clear vomit visual effect animation.
+       * Resets the effect state to inactive.
+       * 
+       * Requirement 9.2: Particle splatter animation on overfeed
+       */
+      clearVomitEffect: () => {
+        set({
+          vomitEffect: {
+            isActive: false,
+            timestamp: null,
+          },
+        });
+      },
+
+      // ============================================
+      // Insanity Event Actions (Requirements 10.1, 10.2, 10.3, 10.4, 10.5, 10.6)
+      // ============================================
+
+      /**
+       * Trigger an insanity event with random event type.
+       * - Select random InsanityEventType (WHISPERS, SHADOWS, GLITCH, INVERSION)
+       * - Play appropriate sound based on event type
+       * - Generate insanity narrative
+       * - Trigger visual effect
+       * 
+       * Requirements: 10.1, 10.2, 10.3, 10.4, 10.5, 10.6
+       */
+      triggerInsanityEvent: async () => {
+        const state = get();
+
+        // Don't trigger if pet is not alive
+        if (!state.isAlive) {
+          return;
+        }
+
+        // Select random InsanityEventType (Requirement 10.2)
+        const eventTypes: import("./utils/types").InsanityEventType[] = ["WHISPERS", "SHADOWS", "GLITCH", "INVERSION"];
+        const randomIndex = Math.floor(Math.random() * eventTypes.length);
+        const eventType = eventTypes[randomIndex];
+
+        // Trigger visual effect (Requirement 10.6)
+        set({
+          insanityEffect: {
+            isActive: true,
+            eventType,
+            timestamp: Date.now(),
+          },
+        });
+
+        // Play appropriate sound (Requirements 10.3, 10.4)
+        // WHISPERS: playSound("insanity_whispers")
+        // Others: playSound("insanity_stinger")
+        const soundEventType = eventType === "WHISPERS" ? "insanity_whispers" : "insanity_stinger";
+        get().playSound(soundEventType, {
+          petName: state.traits.name,
+          stage: state.stage,
+          archetype: state.traits.archetype,
+          sanity: state.stats.sanity,
+          corruption: state.stats.corruption,
+        });
+
+        // Generate insanity narrative (Requirement 10.5)
+        try {
+          const { generateInsanityNarrative, getPlaceholderText } = await import("./utils/narrativeGenerator");
+          
+          // Add placeholder log immediately
+          const placeholderText = getPlaceholderText("insanity", state.traits.name);
+          const logId = get().addLog(placeholderText, "PET", true);
+
+          // Generate AI narrative async
+          const aiNarrative = await generateInsanityNarrative({
+            petName: state.traits.name,
+            archetype: state.traits.archetype,
+            stage: state.stage,
+            sanity: state.stats.sanity,
+            corruption: state.stats.corruption,
+            eventType,
+          });
+
+          // Update log with AI-generated text
+          get().updateLogText(logId, aiNarrative);
+        } catch (error) {
+          logWarning("Failed to generate insanity narrative", {
+            error: error instanceof Error ? error.message : "Unknown",
+            eventType,
+          });
+        }
+
+        logInfo("Insanity event triggered", {
+          eventType,
+          sanity: state.stats.sanity,
+        });
+
+        // Auto-clear effect after animation duration (2 seconds for insanity effects)
+        setTimeout(() => {
+          get().clearInsanityEffect();
+        }, 2000);
+      },
+
+      /**
+       * Clear insanity visual effect animation.
+       * Resets the effect state to inactive.
+       * 
+       * Requirement 10.6
+       */
+      clearInsanityEffect: () => {
+        set({
+          insanityEffect: {
+            isActive: false,
+            eventType: null,
+            timestamp: null,
+          },
+        });
+      },
+
+      // ============================================
+      // Haunt System Actions (Requirements 4.4, 4.5, 4.6)
+      // ============================================
+
+      /**
+       * Trigger a haunt event from a deceased pet's ghost.
+       * - Select random ghost from storage
+       * - Reduce sanity by 5
+       * - Generate haunt narrative
+       * - Update lastHauntGameDay
+       * - Play haunt sound
+       * 
+       * Requirements: 4.4, 4.5, 4.6
+       */
+      triggerHaunt: async () => {
+        const state = get();
+
+        // Don't trigger if pet is not alive
+        if (!state.isAlive) {
+          return;
+        }
+
+        // Import haunt system functions
+        const { getRandomGhost } = await import("./utils/hauntSystem");
+
+        // Select random ghost from storage (Requirement 4.3)
+        const ghost = getRandomGhost();
+        if (!ghost) {
+          logWarning("Cannot trigger haunt: no ghosts available");
+          return;
+        }
+
+        // Reduce sanity by 5 (Requirement 4.5)
+        const newSanity = Math.max(0, state.stats.sanity - 5);
+
+        // Update state with new sanity and lastHauntGameDay
+        set({
+          stats: {
+            ...state.stats,
+            sanity: newSanity,
+          },
+          lastHauntGameDay: state.gameDay,
+        });
+
+        // Play haunt sound (Requirement 4.6)
+        get().playSound("haunt", {
+          petName: state.traits.name,
+          stage: state.stage,
+          archetype: state.traits.archetype,
+          sanity: newSanity,
+          corruption: state.stats.corruption,
+        });
+
+        // Generate haunt narrative (Requirement 4.4)
+        try {
+          const { generateHauntNarrative } = await import("./utils/narrativeGenerator");
+          
+          // Add placeholder log immediately
+          const placeholderText = `${state.traits.name} senses a familiar presence...`;
+          const logId = get().addLog(placeholderText, "SYSTEM", true);
+
+          // Generate AI narrative async
+          const aiNarrative = await generateHauntNarrative({
+            petName: state.traits.name,
+            archetype: state.traits.archetype,
+            stage: state.stage,
+            sanity: newSanity,
+            corruption: state.stats.corruption,
+            ghostName: ghost.petName,
+            ghostArchetype: ghost.archetype,
+            ghostStage: ghost.stage,
+            ghostDeathCause: ghost.deathCause,
+          });
+
+          // Update log with AI-generated text
+          get().updateLogText(logId, aiNarrative);
+        } catch (error) {
+          logWarning("Failed to generate haunt narrative", {
+            error: error instanceof Error ? error.message : "Unknown",
+            ghostName: ghost.petName,
+          });
+        }
+
+        logInfo("Haunt event triggered", {
+          ghostName: ghost.petName,
+          ghostArchetype: ghost.archetype,
+          sanityReduction: 5,
+          newSanity,
+          gameDay: state.gameDay,
+        });
+      },
     }),
     {
       name: "creepy-companion-storage",
@@ -773,6 +1429,10 @@ export const useGameStore = create<GameState>()(
         reduceMotion: state.reduceMotion,
         retroMode: state.retroMode,
         theme: state.theme,
+        // Death system state (Requirements 11.1, 11.3)
+        deathData: state.deathData,
+        lastPlacateTime: state.lastPlacateTime,
+        lastHauntGameDay: state.lastHauntGameDay,
         // Note: hasUserInteracted is NOT persisted - must be re-established each session
       }),
       // Custom storage with error handling
